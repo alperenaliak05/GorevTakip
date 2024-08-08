@@ -1,0 +1,14 @@
+﻿<!-- UserProfile.cshtml -->
+@model Users
+
+@{
+    ViewData["Title"] = "Profil Bilgileri";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Profil Bilgileri</h1>
+
+<p>Ad: @Model.FirstName</p>
+<p>Soyad: @Model.LastName</p>
+<p>Email: @Model.Email</p>
+<p>Departman: @Model.Department.Name</p>

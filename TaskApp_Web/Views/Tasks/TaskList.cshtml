@@ -1,0 +1,31 @@
+﻿<!-- TaskList.cshtml -->
+@model IEnumerable<ToDoTask>
+
+@{
+    ViewData["Title"] = "Görev Listesi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Görev Listesi</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Başlık</th>
+            <th>Durum</th>
+            <th>Son Tarih</th>
+            <th>Detaylar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Status</td>
+                <td>@task.DueDate.ToShortDateString()</td>
+                <td><a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-info">Detaylar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

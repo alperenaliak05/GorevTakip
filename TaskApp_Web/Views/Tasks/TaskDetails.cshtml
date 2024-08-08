@@ -1,0 +1,14 @@
+﻿<!-- TaskDetails.cshtml -->
+@model ToDoTask
+
+@{
+    ViewData["Title"] = "Görev Detayları";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Görev Detayları</h1>
+
+<p>Başlık: @Model.Title</p>
+<p>Durum: @Model.Status</p>
+<p>Son Tarih: @Model.DueDate.ToShortDateString()</p>
+<p>Açıklama: @Model.Description</p>

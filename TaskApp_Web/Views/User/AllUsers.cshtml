@@ -1,0 +1,33 @@
+﻿<!-- AllUsers.cshtml -->
+@model IEnumerable<Users>
+
+@{
+    ViewData["Title"] = "Tüm Kullanıcılar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Tüm Kullanıcılar</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>Email</th>
+            <th>Departman</th>
+            <th>Profil</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.FirstName</td>
+                <td>@user.LastName</td>
+                <td>@user.Email</td>
+                <td>@user.Department.Name</td>
+                <td><a asp-action="UserProfile" asp-route-id="@user.Id" class="btn btn-info">Profil</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
