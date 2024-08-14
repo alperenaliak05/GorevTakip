@@ -5,8 +5,12 @@
 <table class="table">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Başlık</th>
             <th>Açıklama</th>
+            <th>Atanan Kişi ID</th>
+            <th>Görevi Atayan Kişi ID</th>
+            <th>Bitiş Tarihi</th>
             <th>Durum</th>
             <th>İşlemler</th>
         </tr>
@@ -15,9 +19,13 @@
         @foreach (var task in Model)
         {
             <tr>
+                <td>@task.Id</td>
                 <td>@task.Title</td>
                 <td>@task.Description</td>
-                <td>@task.Status</td>
+                <td>@task.AssignedToUserId</td>
+                <td>@task.AssignedByUserId</td>
+                <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
+                <td>@task.Status.ToString()</td> <!-- Enum değeri string'e çevriliyor ve gösteriliyor -->
                 <td>
                     <a href="/Tasks/CompleteTask/@task.Id" class="btn btn-success">Tamamla</a>
                     <a href="/Tasks/IncompleteTask/@task.Id" class="btn btn-warning">Tamamlanmadı</a>

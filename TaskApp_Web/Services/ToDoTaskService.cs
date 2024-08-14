@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TaskApp_Web.Models;
+using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Repositories;
 using TaskApp_Web.Services.IServices;
 
@@ -20,7 +21,7 @@ namespace TaskApp_Web.Services
             return await _toDoTaskRepository.GetAllTasksAsync();
         }
 
-        public async Task<IEnumerable<ToDoTasks>> GetTasksByUserIdAsync(int userId)
+        public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
         {
             return await _toDoTaskRepository.GetTasksByUserIdAsync(userId);
         }

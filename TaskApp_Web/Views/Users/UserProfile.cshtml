@@ -1,14 +1,17 @@
-﻿<!-- UserProfile.cshtml -->
-@model Users
+﻿@model TaskApp_Web.Models.UserProfileViewModel
 
-@{
-    ViewData["Title"] = "Profil Bilgileri";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+<div class="profile-container">
+    <!-- Profil Resmi -->
+    <div class="profile-picture" style="background-image: url('@Model.ProfilePictureUrl');">
+        <!-- Eğer profil resmi yoksa default bir resim gösterebiliriz -->
+    </div>
 
-<h1>Profil Bilgileri</h1>
-
-<p>Ad: @Model.FirstName</p>
-<p>Soyad: @Model.LastName</p>
-<p>Email: @Model.Email</p>
-<p>Departman: @Model.Department.Name</p>
+    <!-- Profil Detayları -->
+    <div class="profile-details">
+        <h2>Profil Bilgileri</h2>
+        <p><strong>Ad:</strong> @Model.FirstName</p>
+        <p><strong>Soyad:</strong> @Model.LastName</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Departman:</strong> @Model.DepartmentName</p>
+    </div>
+</div>

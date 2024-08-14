@@ -3,7 +3,7 @@
     public enum TaskStatus
     {
         Bekliyor,
-        DevamEdiyor,
-        Tamamlandı
+        DevamEdiyor, 
+        Tamamlandı 
     }
 }

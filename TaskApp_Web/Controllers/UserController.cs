@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TaskApp_Web.Controllers
 {
-   
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -16,6 +15,7 @@ namespace TaskApp_Web.Controllers
             _userRepository = userRepository;
         }
 
+        [Authorize]
         public async Task<IActionResult> AllUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
@@ -32,15 +32,24 @@ namespace TaskApp_Web.Controllers
                 return NotFound();
             }
 
-            return View(user);
+            // Kullanıcının verilerini UserProfileViewModel'e aktar
+            var model = new UserProfileViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                DepartmentName = user.Department?.Name,
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(Users model)
+        public async Task<IActionResult> UpdateProfile(UserProfileViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await _userRepository.GetUserByIdAsync(model.Id);
+                var user = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
 
                 if (user == null)
                 {
@@ -50,6 +59,7 @@ namespace TaskApp_Web.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Email = model.Email;
+               
 
                 await _userRepository.UpdateUserAsync(user);
 
@@ -59,7 +69,6 @@ namespace TaskApp_Web.Controllers
             return View("UserProfile", model);
         }
 
-      
         public async Task<IActionResult> Delete(int id)
         {
             await _userRepository.DeleteUserAsync(id);

@@ -14,7 +14,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" href="@Url.Action("Index", "Home")">TKT Görev Yönetim</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">TKT Görev Yönetim</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -23,13 +23,13 @@
                         @if (HttpContextAccessor.HttpContext?.User.Identity.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Index", "Home")">Ana Sayfa</a>
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("AllUsers", "Users")">Tüm Kullanıcılar</a>
+                                <a class="nav-link" asp-controller="Users" asp-action="AllUsers">Tüm Kullanıcılar</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("MyTasks", "ToDoTask")">Görevlerim</a>
+                                <a class="nav-link" asp-controller="ToDoTask" asp-action="MyTasks">Görevlerim</a>
                             </li>
                         }
                     </ul>
@@ -37,16 +37,18 @@
                         @if (HttpContextAccessor.HttpContext?.User.Identity.IsAuthenticated == true)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("UserProfile", "Users")">Profilim</a>
+                                <a class="nav-link" asp-controller="Users" asp-action="UserProfile">Profilim</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Login", "Account")">Çıkış Yap</a>
+                                <form asp-controller="Account" asp-action="Logout" method="post">
+                                    <button type="submit" class="btn btn-link nav-link">Çıkış Yap</button>
+                                </form>
                             </li>
                         }
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link" href="@Url.Action("Login", "Account")">Giriş Yap</a>
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Giriş Yap</a>
                             </li>
                         }
                     </ul>
@@ -61,7 +63,7 @@
     </div>
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now.Year - TKGörevYönetim - <a href="/Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - TKGörevYönetim - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

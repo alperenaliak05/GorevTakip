@@ -45,7 +45,7 @@ public class AuthService : IAuthService
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
         };
 
-        var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -63,16 +63,8 @@ public class AuthService : IAuthService
         // Kullanıcıyı cookie tabanlı olarak oturum açmış olarak işaretleyin
         await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-        // JWT token'ı session'a kaydet
+        // Session kullanarak JWT token'ı sakla (isteğe bağlı)
         _httpContextAccessor.HttpContext.Session.SetString("JwtToken", tokenString);
-
-        // JWT token'ı cookie'ye kaydet
-        _httpContextAccessor.HttpContext.Response.Cookies.Append("JwtToken", tokenString, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            Expires = DateTimeOffset.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:DurationInMinutes"]))
-        });
 
         return new APIResponse
         {
@@ -82,10 +74,5 @@ public class AuthService : IAuthService
                 Token = tokenString
             }
         };
-    }
-
-    public Task<APIResponse> RegisterAsync(RegistrationRequestDTO registrationRequest)
-    {
-        throw new NotImplementedException();
     }
 }

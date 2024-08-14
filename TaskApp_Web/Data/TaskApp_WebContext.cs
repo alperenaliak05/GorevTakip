@@ -12,7 +12,7 @@ namespace TaskApp_Web.Data
 
         public DbSet<Users> Users { get; set; }
         public DbSet<Departments> Departments { get; set; }
-        public DbSet<ToDoTasks> ToDoTasks { get; set; }
+        public DbSet<ToDoTasks> Tasks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

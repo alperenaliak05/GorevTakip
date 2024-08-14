@@ -44,16 +44,20 @@ namespace TaskApp_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            // Cookie'deki token'ı sil
-            HttpContext.Response.Cookies.Delete("JwtToken");
-
-            // Session'daki token'ı sil
+            // Session'daki tüm verileri temizle
             HttpContext.Session.Clear();
+
+            // Cookie'deki JWT token'ı ve diğer oturum cookie'lerini sil
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Antiforgery");
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Session");
+            HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
+            HttpContext.Response.Cookies.Delete("JwtToken");
 
             // Cookie tabanlı oturum kapatma işlemi
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login", "Account");
         }
+
     }
 }

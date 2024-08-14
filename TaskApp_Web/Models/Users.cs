@@ -12,5 +12,6 @@ namespace TaskApp_Web.Models
         public Departments Department { get; set; }
         public ICollection<ToDoTasks> Tasks { get; set; }
         public ICollection<ToDoTasks> AssignedTasks { get; set; }
+      
     }
 }

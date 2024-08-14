@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Xml.Linq;
 using TaskApp_Web.Data;
 using TaskApp_Web.Models;
+using TaskApp_Web.Models.DTO;
 
 namespace TaskApp_Web.Repositories
 {
@@ -16,32 +14,28 @@ namespace TaskApp_Web.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<ToDoTasks>> GetTasksByUserIdAsync(int userId)
-        {
-            return await _context.ToDoTasks
-                .Include(t => t.AssignedToUser)
-                .Include(t => t.AssignedByUser)
-                .Where(t => t.AssignedToUserId == userId)
-                .ToListAsync();
-        }
+        // Bu metot IToDoTaskRepository arayüzüyle uyumludur ve doğru şekilde implemente edilmiştir.
+
+
 
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
         {
-            return await _context.ToDoTasks
+            return await _context.Tasks
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.AssignedByUser)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .Where(t => t.Id == id)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<bool> AddTaskAsync(ToDoTasks task)
         {
-            await _context.ToDoTasks.AddAsync(task);
+            await _context.Tasks.AddAsync(task);
             return await _context.SaveChangesAsync() > 0;
         }
 
         public async Task<bool> UpdateTaskAsync(ToDoTasks task)
         {
-            _context.ToDoTasks.Update(task);
+            _context.Tasks.Update(task);
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -50,15 +44,35 @@ namespace TaskApp_Web.Repositories
             var task = await GetTaskByIdAsync(id);
             if (task != null)
             {
-                _context.ToDoTasks.Remove(task);
+                _context.Tasks.Remove(task);
                 return await _context.SaveChangesAsync() > 0;
             }
             return false;
         }
 
-        public Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
+        public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Tasks
+                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedByUser)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
+        {
+            return await _context.Tasks
+               .Where(t => t.AssignedToUserId == userId)
+               .Select(t => new TaskDTO
+               {
+                   Id = t.Id,
+                   Title = t.Title,
+                   Description = t.Description,
+                   AssignedToUserId = t.AssignedToUserId,
+                   AssignedByUserId = t.AssignedByUserId,
+                   DueDate = t.DueDate,
+                   Status = (int)t.Status // Enum'dan int'e açık dönüşüm yapılıyor
+               })
+               .ToListAsync();
         }
     }
 }
