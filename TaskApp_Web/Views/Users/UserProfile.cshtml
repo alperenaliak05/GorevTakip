@@ -1,12 +1,9 @@
 ﻿@model TaskApp_Web.Models.UserProfileViewModel
 
 <div class="profile-container">
-    <!-- Profil Resmi -->
-    <div class="profile-picture" style="background-image: url('@Model.ProfilePictureUrl');">
-        <!-- Eğer profil resmi yoksa default bir resim gösterebiliriz -->
+    <div class="profile-picture" style="background-image: url('https://iagq.tmgrup.com.tr/original/17-06/22/user_male_circle_filled1600.png'); border-radius: 50%; width: 150px; height: 150px; background-size: cover; margin: 0 auto;">
     </div>
 
-    <!-- Profil Detayları -->
     <div class="profile-details">
         <h2>Profil Bilgileri</h2>
         <p><strong>Ad:</strong> @Model.FirstName</p>
@@ -15,3 +12,4 @@
         <p><strong>Departman:</strong> @Model.DepartmentName</p>
     </div>
 </div>
+
