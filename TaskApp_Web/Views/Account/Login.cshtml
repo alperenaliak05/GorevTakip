@@ -3,20 +3,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="login-container">
+<h2>Görev Yönetim</h2>
     <div class="login-box">
-        <h2>Görev Yönetim Sistemi</h2>
+        <h4 class="login-text">Giriş</h4>
         <form asp-action="Login" method="post">
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" class="form-control" required />
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" name="rememberMe" /> Oturumu açık tut
-                </label>
-            </div>
-            <button type="submit" class="btn btn-primary">Oturum Aç</button>
+            <center>
+                <input placeholder="email" type="email" id="email" name="email" class="form-control" required>
+                <button id="btn-login" type="submit" class="btn btn-primary">Giriş Yap</button>
+            </center>
         </form>
     </div>
-</div>

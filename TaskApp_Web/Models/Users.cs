@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 namespace TaskApp_Web.Models
 {
     public class Users
@@ -9,11 +10,7 @@ namespace TaskApp_Web.Models
         public string Email { get; set; }
         public int DepartmentId { get; set; }
         public Departments Department { get; set; }
-        public ICollection<ToDoTask> Tasks { get; set; }
-
-        internal object Where(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
-        }
+        public ICollection<ToDoTasks> Tasks { get; set; }
+        public ICollection<ToDoTasks> AssignedTasks { get; set; }
     }
 }

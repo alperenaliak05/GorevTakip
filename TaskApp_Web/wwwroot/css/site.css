@@ -1,22 +1,177 @@
+/* Mevcut site.css içeriðiniz */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+/* Yeni eklenen kodlar */
+@import url(//fonts.googleapis.com/css?family=Lato:100,300,300i,400);
+
+body {
+    box-sizing: border-box;
+    font-family: Lato, Arial;
+    color: #000; /* Metin rengini siyah yaptýk */
+    background-color: #e0f7fa; /* Arka plan rengini açýk mavi yaptýk */
+}
+
+/* Ana container için stil */
+.main-container {
+    display: flex;
+    justify-content: center; /* Yatayda ortala */
+    align-items: center; /* Dikeyde ortala */
+    height: 100vh; /* Yüksekliði tam ekran yap */
+    text-align: center; /* Metni ortala */
+    flex-direction: column; /* Ýçerikleri dikey hizala */
+}
+
+/* Baþlýk stilleri */
+h1, h2 {
+    margin: 0.5em 0;
+    color: #00796b; /* Baþlýk rengi: koyu turkuaz */
+    font-weight: 400;
+    text-align: center;
+    letter-spacing: 4px;
+}
+
+h1 {
+    font-size: 3em; /* Baþlýk boyutunu büyüt */
+}
+
+h2 {
+    font-size: 2em; /* Baþlýk boyutunu büyüt */
+}
+
+h4 {
+    margin-top: 1em;
+    color: #00796b; /* H4 baþlýk rengi: koyu turkuaz */
+    font-size: 150%;
+    font-weight: 300;
+    text-align: center;
+}
+
+/* Genel buton stili */
+button, .btn {
+    display: inline;
+    background: #4b5563;
+    color: #fff;
+    border: 0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    button:hover, .btn:hover {
+        background-color: #0288d1; /* Hover durumunda daha koyu mavi */
+    }
+
+/* Form input stili */
+input {
+    display: block;
+    width: 98%;
+    height: 30px;
+    margin-top: 1.0em;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+/* Small etiket için stil */
+small {
+    display: inline-block;
+    margin-top: 5px;
+    color: #00796b; /* Koyu turkuaz */
+    font-size: 100%;
+}
+
+/* Login kutusu stili */
+.login-box {
+    padding: 1em 1em 1em 1em;
+    margin: auto;
+    text-align: center;
+    display: block;
+    background-color: #ffffff;
+    border-radius: 8px;
+    width: 60%;
+    height: auto;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+}
+
+/* Dýþ kutu stili */
+.outer-box {
+    display: block;
+    margin: auto;
+    background: #6f92dc;
+    border-radius: 5px;
+    width: 50%;
+    height: auto;
+}
+
+/* Giriþ butonu stili */
+#btn-login {
+    display: block;
+    width: 100%;
+    height: 40px;
+    margin-top: 2.0em;
+    border-radius: 4px;
+    background-color: #3366cc;
+    color: #fff;
+}
+
+
+/* Tablo stilini iyileþtirme */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    table thead th {
+        background-color: #00796b; /* Koyu turkuaz */
+        color: black; /* Siyah yazý rengi */
+        padding: 10px;
+        text-align: left;
+        border-bottom: 2px solid #004d40; /* Daha koyu bir çizgi */
+    }
+
+    table tbody tr {
+        background-color: #ffffff; /* Beyaz arka plan */
+        color: #000; /* Siyah yazý rengi */
+    }
+
+        table tbody tr:nth-child(even) {
+            background-color: #b2dfdb; /* Daha açýk turkuaz */
+        }
+
+    table td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd; /* Ýnce alt çizgi */
+    }
+
+/* Footer stili */
+footer {
+    background-color: #00796b; /* Koyu turkuaz */
+    color: #ffffff; /* Beyaz yazý rengi */
+    padding: 10px 0;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }

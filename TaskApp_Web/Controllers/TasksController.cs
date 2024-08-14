@@ -9,9 +9,9 @@ namespace TaskApp_Web.Controllers
     [ApiController]
     public class TasksController : Controller
     {
-        private readonly ITaskRepository _taskRepository;
+        private readonly IToDoTaskRepository _taskRepository;
 
-        public TasksController(ITaskRepository taskRepository)
+        public TasksController(IToDoTaskRepository taskRepository)
         {
             _taskRepository = taskRepository;
         }
@@ -34,7 +34,7 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateTask(ToDoTask task)
+        public IActionResult CreateTask(ToDoTasks task)
         {
             if (ModelState.IsValid)
             {
