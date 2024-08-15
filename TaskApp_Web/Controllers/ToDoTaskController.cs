@@ -44,11 +44,12 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask([FromBody] ToDoTasks task)
+        public async Task<IActionResult> CreateTask(ToDoTasks task)
         {
             if (ModelState.IsValid)
             {
                 task.AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
                 await _taskService.AddTaskAsync(task);
                 return RedirectToAction("TaskList");
             }
@@ -62,6 +63,8 @@ namespace TaskApp_Web.Controllers
 
             return View(task);
         }
+
+
 
         [HttpGet]
         [Route("MyTasks")]
