@@ -1,6 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject IHttpContextAccessor HttpContextAccessor
-
 <!DOCTYPE html>
 <html lang="tr">
 <head>
@@ -31,6 +30,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="ToDoTask" asp-action="MyTasks">Görevlerim</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ToDoTask" asp-action="CreateTask">Görevlendir</a>
+                            </li>
                         }
                     </ul>
                     <ul class="navbar-nav ms-auto">
@@ -56,11 +58,13 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+   
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; @DateTime.Now.Year - TKGörevYönetim - <a asp-controller="Home" asp-action="Privacy">Privacy</a>

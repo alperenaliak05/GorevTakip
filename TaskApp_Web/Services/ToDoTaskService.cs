@@ -10,10 +10,12 @@ namespace TaskApp_Web.Services
     public class ToDoTaskService : IToDoTaskService
     {
         private readonly IToDoTaskRepository _toDoTaskRepository;
+        private readonly IUserRepository _userRepository;
 
-        public ToDoTaskService(IToDoTaskRepository toDoTaskRepository)
+        public ToDoTaskService(IToDoTaskRepository toDoTaskRepository, IUserRepository userRepository)
         {
             _toDoTaskRepository = toDoTaskRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
@@ -29,6 +31,11 @@ namespace TaskApp_Web.Services
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
         {
             return await _toDoTaskRepository.GetTaskByIdAsync(id);
+        }
+
+        public async Task<IEnumerable<Users>> GetAllUsersAsync()
+        {
+            return await _userRepository.GetAllUsersAsync();
         }
 
         public async Task<bool> AddTaskAsync(ToDoTasks task)

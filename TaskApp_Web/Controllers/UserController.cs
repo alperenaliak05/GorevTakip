@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace TaskApp_Web.Controllers
 {
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -15,33 +16,56 @@ namespace TaskApp_Web.Controllers
             _userRepository = userRepository;
         }
 
-        [Authorize]
         public async Task<IActionResult> AllUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
             return View(users);
         }
 
-        public async Task<IActionResult> UserProfile()
+        [Route("Users/UserProfile/{id?}")]
+        public async Task<IActionResult> UserProfile(int? id)
         {
-            var userEmail = User.Identity.Name;
-            var user = await _userRepository.GetUserByEmailAsync(userEmail);
-
-            if (user == null)
+            if (id == null)
             {
-                return NotFound();
+                // Eğer id parametresi gelmemişse, giriş yapan kullanıcının profilini göster
+                var userEmail = User.Identity.Name;
+                var user = await _userRepository.GetUserByEmailAsync(userEmail);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var model = new UserProfileViewModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    DepartmentName = user.Department?.Name,
+                };
+
+                return View(model);
             }
-
-            // Kullanıcının verilerini UserProfileViewModel'e aktar
-            var model = new UserProfileViewModel
+            else
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                DepartmentName = user.Department?.Name,
-            };
+                // Eğer id parametresi varsa, ilgili kullanıcının profilini göster
+                var user = await _userRepository.GetUserByIdAsync(id.Value);
 
-            return View(model);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var model = new UserProfileViewModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    DepartmentName = user.Department?.Name,
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -59,11 +83,10 @@ namespace TaskApp_Web.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Email = model.Email;
-               
 
                 await _userRepository.UpdateUserAsync(user);
 
-                return RedirectToAction("UserProfile");
+                return RedirectToAction("UserProfile", new { id = user.Id });
             }
 
             return View("UserProfile", model);

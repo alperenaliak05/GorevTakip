@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using TaskApp_Web.Models;
-using TaskApp_Web.Repositories;
 using TaskApp_Web.Models.DTO;
-using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using TaskApp_Web.Services.IServices;
 
 namespace TaskApp_Web.Controllers
 {
@@ -12,38 +11,55 @@ namespace TaskApp_Web.Controllers
     [ApiController]
     public class ToDoTaskController : Controller
     {
-        private readonly IToDoTaskRepository _taskRepository;
+        private readonly IToDoTaskService _taskService;
 
-        public ToDoTaskController(IToDoTaskRepository taskRepository)
+        public ToDoTaskController(IToDoTaskService taskService)
         {
-            _taskRepository = taskRepository;
+            _taskService = taskService;
         }
 
         public async Task<IActionResult> TaskList()
         {
-            var tasks = await _taskRepository.GetAllTasksAsync();
+            var tasks = await _taskService.GetAllTasksAsync();
             return View(tasks);
         }
 
         public async Task<IActionResult> TaskDetails(int id)
         {
-            var task = await _taskRepository.GetTaskByIdAsync(id);
+            var task = await _taskService.GetTaskByIdAsync(id);
             return View(task);
         }
 
-        public IActionResult CreateTask()
+        [HttpGet]
+        public async Task<IActionResult> CreateTask()
         {
+            var users = await _taskService.GetAllUsersAsync();
+            ViewBag.Users = users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = u.FirstName + " " + u.LastName
+            }).ToList();
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(ToDoTasks task)
+        public async Task<IActionResult> CreateTask([FromBody] ToDoTasks task)
         {
             if (ModelState.IsValid)
             {
-                await _taskRepository.AddTaskAsync(task);
+                task.AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                await _taskService.AddTaskAsync(task);
                 return RedirectToAction("TaskList");
             }
+
+            var users = await _taskService.GetAllUsersAsync();
+            ViewBag.Users = users.Select(u => new SelectListItem
+            {
+                Value = u.Id.ToString(),
+                Text = u.FirstName + " " + u.LastName
+            }).ToList();
+
             return View(task);
         }
 
@@ -51,34 +67,30 @@ namespace TaskApp_Web.Controllers
         [Route("MyTasks")]
         public async Task<IActionResult> MyTasks()
         {
-            // Token veya Cookie'den kullanıcının kimliğini al
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null)
             {
-                // Kullanıcı kimliği bulunamazsa, hata döndür veya oturum açma sayfasına yönlendir
                 return RedirectToAction("Login", "Account");
             }
 
-            var userId = int.Parse(userIdClaim.Value); // Kimlik değeri integer ise parse edilir
+            var userId = int.Parse(userIdClaim.Value);
 
-            // Kullanıcıya ait tüm görevleri veritabanından al
-            var tasks = await _taskRepository.GetTasksByUserIdAsync(userId);
+            var tasks = await _taskService.GetTasksByUserIdAsync(userId);
 
-            // Görevleri DTO formatında bir listeye dönüştür
             var taskDTOs = tasks.Select(task => new TaskDTO
             {
                 Id = task.Id,
                 Title = task.Title,
                 Description = task.Description,
-                Status = (int)task.Status,  // Açık tür dönüşümü yapılıyor
+                Status = (int)task.Status,
                 AssignedToUserId = task.AssignedToUserId,
                 AssignedByUserId = task.AssignedByUserId,
+                AssignedByUserFirstName = task.AssignedByUserFirstName,
+                AssignedByUserLastName = task.AssignedByUserLastName,
                 DueDate = task.DueDate
             }).ToList();
 
-
-            // MyTasks Razor View'a yönlendir
             return View(taskDTOs);
         }
     }

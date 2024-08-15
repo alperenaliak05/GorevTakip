@@ -5,13 +5,10 @@
 <table class="table">
     <thead>
         <tr>
-            <th>ID</th>
             <th>Başlık</th>
             <th>Açıklama</th>
-            <th>Atanan Kişi ID</th>
-            <th>Görevi Atayan Kişi ID</th>
+            <th>Görevi Atayan Kişi</th>
             <th>Bitiş Tarihi</th>
-            <th>Durum</th>
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -19,17 +16,13 @@
         @foreach (var task in Model)
         {
             <tr>
-                <td>@task.Id</td>
                 <td>@task.Title</td>
                 <td>@task.Description</td>
-                <td>@task.AssignedToUserId</td>
-                <td>@task.AssignedByUserId</td>
+                <td>@task.AssignedByUserFirstName @task.AssignedByUserLastName</td>
                 <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
-                <td>@task.Status.ToString()</td> <!-- Enum değeri string'e çevriliyor ve gösteriliyor -->
                 <td>
-                    <a href="/Tasks/CompleteTask/@task.Id" class="btn btn-success">Tamamla</a>
-                    <a href="/Tasks/IncompleteTask/@task.Id" class="btn btn-warning">Tamamlanmadı</a>
-                    <a href="/Tasks/SetTaskInProgress/@task.Id" class="btn btn-info">İlerliyor</a>
+                    <a href="/Tasks/IncompleteTask/@task.Id" class="btn btn-warning">Tamamlandı</a>
+                    <a href="/Tasks/SetTaskInProgress/@task.Id" class="btn btn-red">Reddedildi</a>
                 </td>
             </tr>
         }

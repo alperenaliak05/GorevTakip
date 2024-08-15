@@ -14,10 +14,6 @@ namespace TaskApp_Web.Repositories
             _context = context;
         }
 
-        // Bu metot IToDoTaskRepository arayüzüyle uyumludur ve doğru şekilde implemente edilmiştir.
-
-
-
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
         {
             return await _context.Tasks
@@ -61,18 +57,23 @@ namespace TaskApp_Web.Repositories
         public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
         {
             return await _context.Tasks
-               .Where(t => t.AssignedToUserId == userId)
-               .Select(t => new TaskDTO
-               {
-                   Id = t.Id,
-                   Title = t.Title,
-                   Description = t.Description,
-                   AssignedToUserId = t.AssignedToUserId,
-                   AssignedByUserId = t.AssignedByUserId,
-                   DueDate = t.DueDate,
-                   Status = (int)t.Status // Enum'dan int'e açık dönüşüm yapılıyor
-               })
-               .ToListAsync();
+                .Include(t => t.AssignedByUser)  // Görevi atayan kişiyi dahil ediyoruz
+                .Where(t => t.AssignedToUserId == userId)
+                .Select(t => new TaskDTO
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    AssignedByUserFirstName = t.AssignedByUser.FirstName,  // Atayan kişinin adı
+                    AssignedByUserLastName = t.AssignedByUser.LastName,    // Atayan kişinin soyadı
+                    DueDate = t.DueDate,
+                    Status = (int)t.Status
+                })
+                .ToListAsync();
         }
+
+
+
     }
+
 }
