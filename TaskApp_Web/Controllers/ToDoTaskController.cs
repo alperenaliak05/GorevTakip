@@ -2,8 +2,9 @@
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskApp_Web.Services.IServices;
+using TaskStatus = TaskApp_Web.Models.TaskStatus;
+using Models;
 
 namespace TaskApp_Web.Controllers
 {
@@ -18,50 +19,63 @@ namespace TaskApp_Web.Controllers
             _taskService = taskService;
         }
 
-        public async Task<IActionResult> TaskList()
-        {
-            var tasks = await _taskService.GetAllTasksAsync();
-            return View(tasks);
-        }
-
-        public async Task<IActionResult> TaskDetails(int id)
-        {
-            var task = await _taskService.GetTaskByIdAsync(id);
-            return View(task);
-        }
-
         [HttpGet]
         public async Task<IActionResult> CreateTask()
         {
             var users = await _taskService.GetAllUsersAsync();
-            ViewBag.Users = users.Select(u => new SelectListItem
+
+            var userViewModels = users.Select(u => new UserViewModel
             {
-                Value = u.Id.ToString(),
-                Text = u.FirstName + " " + u.LastName
+                FullName = u.FirstName + " " + u.LastName,
+                Id = u.Id
             }).ToList();
 
-            return View();
+            var taskViewModel = new TaskViewModel
+            {
+                Users = userViewModels,
+                Status =(int)TaskStatus.Bekliyor,
+            };
+
+            return View(taskViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTask(ToDoTasks task)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateTask([FromForm] TaskViewModel model)
         {
             if (ModelState.IsValid)
             {
-                task.AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var task = new ToDoTasks
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    AssignedToUserId = model.AssignedToUserId,
+                    AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    DueDate = model.DueDate,
+                    Status =(TaskStatus)model.Status,
+                };
+
+                if (task.Status == (TaskStatus)model.Status)
+                {
+                    task.Status = 0;
+                }
+                else
+                {
+                    task.Status = task.Status; 
+                }
 
                 await _taskService.AddTaskAsync(task);
-                return RedirectToAction("TaskList");
+                return RedirectToAction("MyTasks");
             }
 
             var users = await _taskService.GetAllUsersAsync();
-            ViewBag.Users = users.Select(u => new SelectListItem
+            model.Users = users.Select(u => new UserViewModel
             {
-                Value = u.Id.ToString(),
-                Text = u.FirstName + " " + u.LastName
+                FullName = u.FirstName + " " + u.LastName,
+                Email = u.Email
             }).ToList();
 
-            return View(task);
+            return View(model);
         }
 
 
@@ -86,7 +100,7 @@ namespace TaskApp_Web.Controllers
                 Id = task.Id,
                 Title = task.Title,
                 Description = task.Description,
-                Status = (int)task.Status,
+                Status = task.Status,
                 AssignedToUserId = task.AssignedToUserId,
                 AssignedByUserId = task.AssignedByUserId,
                 AssignedByUserFirstName = task.AssignedByUserFirstName,

@@ -1,32 +1,73 @@
-﻿@model TaskApp_Web.Models.ToDoTasks
+﻿@model TaskApp_Web.Models.TaskViewModel
 
 @{
-    ViewBag.Title = "Görev Oluştur";
+    ViewData["Title"] = "Görev Oluştur";
 }
 
-<h2>Görev Oluştur</h2>
+<h1>Görev Oluştur</h1>
 
 <form asp-action="CreateTask" method="post">
+    @Html.AntiForgeryToken()
+
     <div class="form-group">
         <label for="Title">Başlık</label>
-        <input type="text" class="form-control" id="Title" name="Title" required />
+        <input type="text" class="form-control" id="Title" asp-for="Title" required />
     </div>
+
     <div class="form-group">
         <label for="Description">Açıklama</label>
-        <textarea class="form-control" id="Description" name="Description" required></textarea>
+        <textarea class="form-control" id="Description" asp-for="Description" required></textarea>
     </div>
+
     <div class="form-group">
-        <label for="AssignedToUserId">Kullanıcı Seç</label>
-        <select class="form-control" id="AssignedToUserId" name="AssignedToUserId">
-            @foreach (var user in ViewBag.Users)
-            {
-                <option value="@user.Value">@user.Text</option>
-            }
+        <label for="AssignedToUserId">Görevi Atanan Kullanıcı</label>
+        <select class="form-control" id="AssignedToUserId" asp-for="AssignedToUserId" asp-items="@(new SelectList(Model.Users, "Id", "FullName"))">
+            <option value="">Lütfen bir kullanıcı seçin</option>
         </select>
     </div>
+
     <div class="form-group">
         <label for="DueDate">Bitiş Tarihi</label>
-        <input type="date" class="form-control" id="DueDate" name="DueDate" required />
+        <input type="date" class="form-control" id="DueDate" asp-for="DueDate" required />
     </div>
-    <button type="submit" class="btn btn-primary">Görev Oluştur</button>
+
+    <button type="submit" class="btn btn-primary">Görevi Kaydet</button>
 </form>
+
+<script>
+    const form = document.querySelector('form[asp-action="CreateTask"]');
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const formData = {
+            Title: document.getElementById('Title').value,
+            Description: document.getElementById('Description').value,
+            AssignedToUserId: document.getElementById('AssignedToUserId').value,
+            DueDate: document.getElementById('DueDate').value,
+            AssignedByUserId: document.getElementById('AssignedToUserId').value,
+            __RequestVerificationToken: document.querySelector('input[name="__RequestVerificationToken"]').value
+        };
+
+        try {
+            const response = await fetch('/api/ToDoTask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                window.location.href = '/api/ToDoTask/MyTasks';
+            } else {
+                const errorData = await response.json();
+                console.error('Görev oluşturma hatası:', errorData);
+                // Hata mesajlarını kullanıcıya göstermek için gerekli işlemleri yapın
+            }
+        } catch (error) {
+            console.error('Fetch hatası:', error);
+            // Ağ hatası durumunu işle
+        }
+    });
+</script>

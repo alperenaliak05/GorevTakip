@@ -27,6 +27,7 @@ namespace TaskApp_Web.Repositories
         {
             await _context.Tasks.AddAsync(task);
             return await _context.SaveChangesAsync() > 0;
+        
         }
 
         public async Task<bool> UpdateTaskAsync(ToDoTasks task)
@@ -61,7 +62,7 @@ namespace TaskApp_Web.Repositories
                 .Where(t => t.AssignedToUserId == userId)
                 .Select(t => new TaskDTO
                 {
-                    Id = t.Id,
+                    Id = Convert.ToInt32(t.Id),
                     Title = t.Title,
                     Description = t.Description,
                     AssignedByUserFirstName = t.AssignedByUser.FirstName,  // Atayan kişinin adı
