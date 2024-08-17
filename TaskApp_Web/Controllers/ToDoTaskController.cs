@@ -33,7 +33,7 @@ namespace TaskApp_Web.Controllers
             var taskViewModel = new TaskViewModel
             {
                 Users = userViewModels,
-                Status =(int)TaskStatus.Bekliyor,
+                Status = (int)TaskStatus.Bekliyor,
             };
 
             return View(taskViewModel);
@@ -52,17 +52,8 @@ namespace TaskApp_Web.Controllers
                     AssignedToUserId = model.AssignedToUserId,
                     AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     DueDate = model.DueDate,
-                    Status =(TaskStatus)model.Status,
+                    Status = (int)TaskStatus.Bekliyor, // Status Bekliyor olarak ayarlandı
                 };
-
-                if (task.Status == (TaskStatus)model.Status)
-                {
-                    task.Status = 0;
-                }
-                else
-                {
-                    task.Status = task.Status; 
-                }
 
                 await _taskService.AddTaskAsync(task);
                 return RedirectToAction("MyTasks");
@@ -77,8 +68,6 @@ namespace TaskApp_Web.Controllers
 
             return View(model);
         }
-
-
 
         [HttpGet]
         [Route("MyTasks")]
@@ -105,10 +94,42 @@ namespace TaskApp_Web.Controllers
                 AssignedByUserId = task.AssignedByUserId,
                 AssignedByUserFirstName = task.AssignedByUserFirstName,
                 AssignedByUserLastName = task.AssignedByUserLastName,
+
                 DueDate = task.DueDate
             }).ToList();
 
             return View(taskDTOs);
+        }
+
+        // Tamamlandı butonu için action metodu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Tasks/CompleteTask/{id}")]
+        public async Task<IActionResult> CompleteTask(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task != null)
+            {
+                task.Status = (int)TaskStatus.Tamamlandı;
+                await _taskService.UpdateTaskAsync(task);
+                return RedirectToAction("MyTasks");
+            }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("Tasks/RejectTask/{id}")]
+        public async Task<IActionResult> RejectTask(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task != null)
+            {
+                task.Status = (int)TaskStatus.Reddedildi; 
+                await _taskService.UpdateTaskAsync(task);
+                return RedirectToAction("MyTasks");
+            }
+            return NotFound();
         }
     }
 }

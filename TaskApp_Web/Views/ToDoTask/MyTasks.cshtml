@@ -21,8 +21,12 @@
                 <td>@task.AssignedByUserFirstName @task.AssignedByUserLastName</td>
                 <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a href="/Tasks/IncompleteTask/@task.Id" class="btn btn-warning">Tamamlandı</a>
-                    <a href="/Tasks/SetTaskInProgress/@task.Id" class="btn btn-red">Reddedildi</a>
+                    <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-success">Tamamlandı</button>
+                    </form>
+                    <form asp-action="RejectTask" asp-route-id="@task.Id" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-red">Reddedildi</button>
+                    </form>
                 </td>
             </tr>
         }
