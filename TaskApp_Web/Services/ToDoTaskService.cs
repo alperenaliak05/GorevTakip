@@ -52,5 +52,11 @@ namespace TaskApp_Web.Services
         {
             return await _toDoTaskRepository.DeleteTaskAsync(id);
         }
+
+        // Yeni eklenen metot
+        public async Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId)
+        {
+            return await _toDoTaskRepository.GetTasksAssignedByUserAsync(userId);
+        }
     }
 }

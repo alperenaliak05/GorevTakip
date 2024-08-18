@@ -37,7 +37,7 @@ namespace TaskApp_Web.Data
 
             modelBuilder.Entity<ToDoTasks>()
                .Property(t => t.Status)
-               .HasConversion<string>();
+               .HasConversion<int>();
         }
     }
 }

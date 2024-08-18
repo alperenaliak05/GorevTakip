@@ -1,0 +1,28 @@
+﻿@model TaskApp_Web.Models.TaskViewModel
+
+<h2>Görevi Düzenle</h2>
+
+<form asp-action="EditTask" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label for="Title">Başlık</label>
+        <input type="text" class="form-control" id="Title" asp-for="Title" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Açıklama</label>
+        <textarea class="form-control" id="Description" asp-for="Description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="DueDate">Bitiş Tarihi</label>
+        <input type="date" class="form-control" id="DueDate" asp-for="DueDate" />
+    </div>
+    <div class="form-group">
+        <label for="Status">Durum</label>
+        <select class="form-control" id="Status" asp-for="Status">
+            <option value="0">Bekliyor</option>
+            <option value="1">Reddedildi</option>
+            <option value="2">Tamamlandı</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>

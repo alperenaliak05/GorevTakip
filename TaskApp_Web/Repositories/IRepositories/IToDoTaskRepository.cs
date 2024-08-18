@@ -11,5 +11,6 @@ namespace TaskApp_Web.Repositories
         Task<bool> UpdateTaskAsync(ToDoTasks task);
         Task<bool> DeleteTaskAsync(int id);
         Task<IEnumerable<ToDoTasks>> GetAllTasksAsync();
+        Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId);
     }
 }

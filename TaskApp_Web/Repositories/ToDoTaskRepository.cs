@@ -19,8 +19,7 @@ namespace TaskApp_Web.Repositories
             return await _context.Tasks
                 .Include(t => t.AssignedToUser)
                 .Include(t => t.AssignedByUser)
-                .Where(t => t.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<bool> AddTaskAsync(ToDoTasks task)
@@ -57,21 +56,36 @@ namespace TaskApp_Web.Repositories
         public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedByUser)  // Görevi atayan kişiyi dahil ediyoruz
+                .Include(t => t.AssignedByUser)
                 .Where(t => t.AssignedToUserId == userId)
                 .Select(t => new TaskDTO
                 {
-                    Id = t.Id, 
+                    Id = t.Id,
                     Title = t.Title,
                     Description = t.Description,
                     AssignedByUserFirstName = t.AssignedByUser.FirstName,
                     AssignedByUserLastName = t.AssignedByUser.LastName,
                     DueDate = t.DueDate,
-                  
+                    Status = t.Status
                 })
                 .ToListAsync();
         }
 
-
+        public async Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId)
+        {
+            return await _context.Tasks
+                .Include(t => t.AssignedToUser)
+                .Where(t => t.AssignedByUserId == userId)
+                .Select(t => new TaskTrackingDTO
+                {
+                    TaskId = (int)t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    AssignedToUserName = t.AssignedToUser.FirstName + " " + t.AssignedToUser.LastName,
+                    DueDate = t.DueDate,
+                    Status = t.Status
+                })
+                .ToListAsync();
+        }
     }
 }

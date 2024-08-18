@@ -1,0 +1,36 @@
+﻿@model TaskApp_Web.Models.CreateUserViewModel
+
+@{
+    ViewData["Title"] = "Yeni Kullanıcı Ekle";
+}
+
+<h1>Yeni Kullanıcı Ekle</h1>
+
+<form asp-action="CreateUser" method="post">
+    @Html.AntiForgeryToken()
+    <div class="form-group">
+        <label asp-for="FirstName" class="control-label"></label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName" class="control-label"></label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DepartmentId" class="control-label"></label>
+        <select asp-for="DepartmentId" class="form-control" asp-items="Model.Departments"></select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+<div>
+    <a asp-action="AllUsers">Geri Dön</a>
+</div>

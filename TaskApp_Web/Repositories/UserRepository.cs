@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskApp_Web.Data;
 using TaskApp_Web.Models;
+using TaskApp_Web.Data;
+using Models;
 
 namespace TaskApp_Web.Repositories
 {
@@ -52,5 +53,14 @@ namespace TaskApp_Web.Repositories
             }
             return false;
         }
+
+  
+
+        public async Task<List<Departments>> GetAllDepartmentsAsync()
+        {
+            // Metodu async olarak işaretleyin ve await kullanarak asenkron işlemi gerçekleştirin.
+            return await _context.Departments.ToListAsync();
+        }
+
     }
 }

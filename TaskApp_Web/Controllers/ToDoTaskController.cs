@@ -3,8 +3,8 @@ using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using System.Security.Claims;
 using TaskApp_Web.Services.IServices;
-using TaskStatus = TaskApp_Web.Models.TaskStatus;
 using Models;
+using TaskStatus = TaskApp_Web.Models.TaskStatus;
 
 namespace TaskApp_Web.Controllers
 {
@@ -52,7 +52,7 @@ namespace TaskApp_Web.Controllers
                     AssignedToUserId = model.AssignedToUserId,
                     AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     DueDate = model.DueDate,
-                    Status = (int)TaskStatus.Bekliyor, // Status Bekliyor olarak ayarlandı
+                    Status = (int)TaskStatus.Bekliyor,
                 };
 
                 await _taskService.AddTaskAsync(task);
@@ -94,14 +94,12 @@ namespace TaskApp_Web.Controllers
                 AssignedByUserId = task.AssignedByUserId,
                 AssignedByUserFirstName = task.AssignedByUserFirstName,
                 AssignedByUserLastName = task.AssignedByUserLastName,
-
                 DueDate = task.DueDate
             }).ToList();
 
             return View(taskDTOs);
         }
 
-        // Tamamlandı butonu için action metodu
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Route("Tasks/CompleteTask/{id}")]
@@ -110,7 +108,7 @@ namespace TaskApp_Web.Controllers
             var task = await _taskService.GetTaskByIdAsync(id);
             if (task != null)
             {
-                task.Status = (int)TaskStatus.Tamamlandı;
+                task.Status = TaskStatus.Tamamlandı;
                 await _taskService.UpdateTaskAsync(task);
                 return RedirectToAction("MyTasks");
             }
@@ -125,11 +123,79 @@ namespace TaskApp_Web.Controllers
             var task = await _taskService.GetTaskByIdAsync(id);
             if (task != null)
             {
-                task.Status = (int)TaskStatus.Reddedildi; 
+                task.Status = TaskStatus.Reddedildi;
                 await _taskService.UpdateTaskAsync(task);
                 return RedirectToAction("MyTasks");
             }
             return NotFound();
+        }
+
+        [HttpGet]
+        [Route("TaskTracking")]
+        public async Task<IActionResult> TaskTracking()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            int userId = int.Parse(userIdClaim.Value);
+            var tasks = await _taskService.GetTasksAssignedByUserAsync(userId);
+            return View(tasks);
+        }
+
+        [HttpGet]
+        [Route("EditTask/{id}")]
+        public async Task<IActionResult> EditTask(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task == null) return NotFound();
+
+            var model = new TaskViewModel
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                Status = task.Status
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("EditTask/{id}")]
+        public async Task<IActionResult> EditTask(int id, [FromForm] TaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var task = await _taskService.GetTaskByIdAsync(id);
+                if (task == null) return NotFound();
+
+                task.Title = model.Title;
+                task.Description = model.Description;
+                task.DueDate = model.DueDate;
+                task.Status = model.Status;
+
+                await _taskService.UpdateTaskAsync(task);
+                return RedirectToAction("TaskTracking");
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Route("DeleteTask/{id}")]
+        public async Task<IActionResult> DeleteTask(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task == null) return NotFound();
+
+            await _taskService.DeleteTaskAsync(id);
+            return RedirectToAction("TaskTracking");
         }
     }
 }

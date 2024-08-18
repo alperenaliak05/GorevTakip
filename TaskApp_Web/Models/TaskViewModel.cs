@@ -10,7 +10,7 @@ namespace TaskApp_Web.Models
         public string? Description { get; set; }
         public int AssignedToUserId { get; set; }
         public int AssignedByUserId { get; set; }
-        public int Status { get; set; } = (int)TaskStatus.Bekliyor; // Varsayılan Bekliyor
+        public TaskStatus Status { get; set; } = (int)TaskStatus.Bekliyor; 
         public string StatusDescription => ((TaskStatus)Status).ToString();
         public string? AssignedByUserFirstName { get; set; }
         public string? AssignedByUserLastName { get; set; }

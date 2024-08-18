@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TaskApp_Web.Models;
 using TaskApp_Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering; 
 
 namespace TaskApp_Web.Controllers
 {
@@ -19,6 +20,10 @@ namespace TaskApp_Web.Controllers
         public async Task<IActionResult> AllUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+
+            ViewBag.UserDepartment = currentUser.Department?.Name;
+
             return View(users);
         }
 
@@ -27,7 +32,6 @@ namespace TaskApp_Web.Controllers
         {
             if (id == null)
             {
-                // Eğer id parametresi gelmemişse, giriş yapan kullanıcının profilini göster
                 var userEmail = User.Identity.Name;
                 var user = await _userRepository.GetUserByEmailAsync(userEmail);
 
@@ -48,7 +52,6 @@ namespace TaskApp_Web.Controllers
             }
             else
             {
-                // Eğer id parametresi varsa, ilgili kullanıcının profilini göster
                 var user = await _userRepository.GetUserByIdAsync(id.Value);
 
                 if (user == null)
@@ -96,6 +99,40 @@ namespace TaskApp_Web.Controllers
         {
             await _userRepository.DeleteUserAsync(id);
             return RedirectToAction("AllUsers");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateUser()
+        {
+            var departments = await _userRepository.GetAllDepartmentsAsync();
+            var model = new CreateUserViewModel
+            {
+                Departments = new SelectList(departments, "Id", "Name") // Burada dönüşüm yapılıyor
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new Users
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    DepartmentId = model.DepartmentId
+                };
+
+                await _userRepository.AddUserAsync(user);
+                return RedirectToAction("AllUsers");
+            }
+
+            var departments = await _userRepository.GetAllDepartmentsAsync();
+            model.Departments = new SelectList(departments, "Id", "Name"); // Burada dönüşüm yapılıyor
+            return View(model);
         }
     }
 }

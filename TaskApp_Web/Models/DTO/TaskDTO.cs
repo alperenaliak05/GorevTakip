@@ -1,4 +1,6 @@
-﻿namespace TaskApp_Web.Models.DTO
+﻿using Models;
+
+namespace TaskApp_Web.Models.DTO
 {
     public class TaskDTO
     {
@@ -10,6 +12,6 @@
         public string AssignedByUserFirstName { get; set; } // Yeni eklenen alan
         public string AssignedByUserLastName { get; set; }  // Yeni eklenen alan
         public DateTime DueDate { get; set; }
-        public int? Status { get; set; }
+        public TaskStatus Status { get; set; }
     }
 }

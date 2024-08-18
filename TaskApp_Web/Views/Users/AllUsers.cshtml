@@ -3,12 +3,32 @@
 @{
     ViewData["Title"] = "Tüm Kullanıcılar";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var userDepartment = ViewBag.UserDepartment as string;
+    var isHR = userDepartment == "İnsan Kaynakları Uzmanı"; 
 }
 
 <h1>Tüm Kullanıcılar</h1>
 
+@if (isHR)
+{
+    <a asp-action="CreateUser" class="btn btn-primary mb-3">Yeni Kullanıcı Ekle</a>
+}
+else
+{
+    <p class="text-warning">Bu sayfada yeni kullanıcı ekleme yetkiniz yok.</p>
+}
+
+<p>Kullanıcı departmanı: @userDepartment</p>
+
 <table class="table">
     <thead>
+        <tr>
+            <th><input type="text" id="searchName" placeholder="Kişi Ara" class="form-control"></th>
+            <th><input type="text" id="searchSurname" placeholder="Soyad Ara" class="form-control"></th>
+            <th><input type="text" id="searchEmail" placeholder="Mail Adresi Ara" class="form-control"></th>
+            <th><input type="text" id="searchDepartment" placeholder="Departman Ara" class="form-control"></th>
+            <th>Profil</th>
+        </tr>
         <tr>
             <th>Ad</th>
             <th>Soyad</th>
@@ -17,7 +37,7 @@
             <th>Profil</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="userTable">
         @foreach (var user in Model)
         {
             <tr>
@@ -30,3 +50,37 @@
         }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var searchInputs = document.querySelectorAll('input[id^="search"]');
+
+        searchInputs.forEach(function (input) {
+            input.addEventListener("input", function () {
+                filterTable();
+            });
+        });
+
+        function filterTable() {
+            var table, rows, i, j, cell, shouldShow;
+            table = document.getElementById("userTable");
+            rows = table.getElementsByTagName("tr");
+
+            for (i = 0; i < rows.length; i++) {
+                shouldShow = true;
+                for (j = 0; j < searchInputs.length; j++) {
+                    cell = rows[i].getElementsByTagName("td")[j];
+                    if (cell) {
+                        var searchText = searchInputs[j].value.toLowerCase();
+                        var cellText = cell.textContent.toLowerCase();
+                        if (cellText.indexOf(searchText) === -1) {
+                            shouldShow = false;
+                            break;
+                        }
+                    }
+                }
+                rows[i].style.display = shouldShow ? "" : "none";
+            }
+        }
+    });
+</script>
