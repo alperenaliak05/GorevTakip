@@ -22,17 +22,23 @@ Bu proje, bir görev yönetim sistemi olan **GörevTakip**'i içerir. Bu sistem,
 ## KURULUM
 
 1-Proje Deposunu Kopyalayın:
-git clone https://github.com/alperenaliak05/GörevTakip.git
 
+```bash
+git clone https://github.com/alperenaliak05/GörevTakip.git
+```
 2-Gerekli Bağımlılıkları Yükleyin: Proje dizinine gidin ve gerekli NuGet paketlerini yükleyin.
+```bash
 cd GörevTakip
 dotnet restore
-
+```
 3-Veritabanını Göç Ettirin:Veritabanı şemasını oluşturmak için Entity Framework Core göçlerini çalıştırın.
+```bash
 dotnet ef database update
-
+```
 4-Projeyi Çalıştırın:
+```bash
 dotnet run --project TaskApp_Web
+```
 Bu komut, projeyi çalıştıracak ve tarayıcınızda açılacaktır.
 
 ## Kullanım
