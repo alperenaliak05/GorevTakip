@@ -44,7 +44,34 @@ Projeyi çalıştırdıktan sonra, web tarayıcınızda http://localhost:5000 ad
 ![Giriş](https://github.com/user-attachments/assets/cca381f9-92ac-4ca2-9596-326dbf05a55b)
 
 ### Ana Sayfa
-https://github.com/user-attachments/assets/48d0d803-4e31-4be3-b040-f9b26913212d
+![ANA SAYFA](https://github.com/user-attachments/assets/48d0d803-4e31-4be3-b040-f9b26913212d)
+
+### Tüm Kullanıcılar
+![TÜM K](https://github.com/user-attachments/assets/57f6d5fa-f140-40c8-b219-35b01f308339)
+
+### Görevlerim
+![GÖREVLERİM](https://github.com/user-attachments/assets/6d9cc8fd-3ffe-4397-a9b5-30329fa92007)
+
+### Görev Oluştur
+![GÖREV OLUŞTUR](https://github.com/user-attachments/assets/1f68af99-60de-45a9-b869-48139775e96f)
+
+### Görev Takibi
+![GÖREV TAKİBİ](https://github.com/user-attachments/assets/9f190261-9de4-41aa-9248-245ca2a1c475)
+
+### Profilim 
+![PROFİL](https://github.com/user-attachments/assets/76c4c082-1b6c-4cf2-81fe-0f201a1ef5d3)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
