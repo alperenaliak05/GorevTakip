@@ -17,7 +17,7 @@ html, body {
     padding: 0;
     font-family: 'Lato', Arial, sans-serif;
     color: #333;
-    background: linear-gradient(135deg, #b2ebf2, #4dd0e1); /* Arka plan rengi daha koyu turkuaz */
+    background: linear-gradient(135deg, #eeeeee, #cccccc); /* Arka plan rengi beyazdan griye */
     box-sizing: border-box;
     overflow-x: hidden; /* Yatay kaydýrmayý gizle */
 }
@@ -29,9 +29,9 @@ html, body {
     width: 400px;
     padding: 40px;
     transform: translate(-50%, -50%);
-    background: rgba(0,0,0,.5);
+    background: rgba(50, 50, 50, .5); /* Arka planý daha koyu gri */
     box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, .6);
     border-radius: 10px;
 }
 
@@ -58,32 +58,13 @@ html, body {
             background: transparent;
         }
 
-            /* Tarayýcý otomatik doldurma stilini özelleþtirme */
-            .login-box .user-box input:-webkit-autofill {
-                -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5) inset;
-                -webkit-text-fill-color: #fff;
-                border-bottom: 1px solid #fff;
-            }
-
-                .login-box .user-box input:-webkit-autofill:focus {
-                    -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5) inset;
-                    -webkit-text-fill-color: #fff;
-                    border-bottom: 1px solid #fff;
-                }
-
-                .login-box .user-box input:-webkit-autofill:hover {
-                    -webkit-box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5) inset;
-                    -webkit-text-fill-color: #fff;
-                    border-bottom: 1px solid #fff;
-                }
-
         .login-box .user-box label {
             position: absolute;
             top: 0;
             left: 0;
             padding: 10px 0;
             font-size: 16px;
-            color: #01579b; /* E-posta yazýsýnýn koyu mavi rengi */
+            color: #999999; /* E-posta yazýsýnýn açýk gri rengi */
             pointer-events: none;
             transition: .5s;
         }
@@ -92,7 +73,7 @@ html, body {
         .login-box .user-box input:valid ~ label {
             top: -20px;
             left: 0;
-            color: #01579b; /* E-posta yazýsýnýn koyu mavi rengi */
+            color: #999999; /* E-posta yazýsýnýn açýk gri rengi */
             font-size: 12px;
         }
 
@@ -102,7 +83,7 @@ html, body {
     height: 40px;
     margin-top: 2.0em;
     border-radius: 4px;
-    background-color: #0277bd; /* Giriþ butonunun koyu mavi rengi */
+    background-color: #555555; /* Giriþ butonunun koyu gri rengi */
     color: #fff;
     border: none;
     cursor: pointer;
@@ -110,7 +91,7 @@ html, body {
 }
 
     #btn-login:hover {
-        background-color: #01579b; /* Hover durumunda giriþ butonunun daha koyu mavi rengi */
+        background-color: #333333; /* Hover durumunda giriþ butonunun daha koyu gri rengi */
     }
 
 /* Diðer genel stiller */
@@ -163,7 +144,7 @@ h4 {
 /* Hoþ geldiniz! metni için özel stil */
 .welcome-text {
     font-size: 2em; /* Daha büyük ve dikkat çekici hale getirme */
-    color: #00796b; /* Hoþ bir yeþil tonu */
+    color: #8B4513; /* Açýk kahverengi tonu */
     font-weight: bold;
     text-align: center;
     margin-top: 1em;
@@ -179,7 +160,7 @@ h4 {
 }
 
 button, .btn {
-    background: #00796b;
+    background: #8B4513; /* Açýk kahverengi */
     color: #fff;
     border: none;
     border-radius: 20px;
@@ -193,28 +174,36 @@ button, .btn {
 }
 
     button:hover, .btn:hover {
-        background: #004d40;
+        background: #5D3A00; /* Koyu kahverengi */
     }
 
 .btn-red {
-    background: #e74c3c; /* Reddedildi butonu için kýrmýzý */
+    background: #B22222; /* Koyu kýrmýzý (Reddedildi butonu için) */
 }
 
     .btn-red:hover {
-        background: #c0392b; /* Reddedildi butonu hover */
+        background: #8B0000; /* Daha koyu kýrmýzý */
+    }
+
+.btn-green {
+    background: #006400; /* Koyu yeþil (Tamamlandý butonu için) */
+}
+
+    .btn-green:hover {
+        background: #004d00; /* Daha koyu yeþil */
     }
 
 small {
     display: inline-block;
     margin-top: 5px;
-    color: #00796b;
+    color: #8B4513;
     font-size: 100%;
 }
 
 .outer-box {
     display: block;
     margin: auto;
-    background: #6f92dc;
+    background: #8B4513;
     border-radius: 5px;
     width: 50%;
     height: auto;
@@ -225,14 +214,17 @@ table {
     border-collapse: collapse;
     margin-bottom: 20px;
     table-layout: fixed;
+    background-color: #ffffff; /* Tablo arka planý beyaz */
+    border-radius: 5px; /* Tablo köþelerini yuvarlama */
+    overflow: hidden; /* Kenar taþmalarýný önleme */
 }
 
     table thead th {
-        background-color: #00796b;
-        color: #000000;
+        background-color: #555555; /* Koyu gri */
+        color: #ffffff;
         padding: 10px;
         text-align: left;
-        border-bottom: 2px solid #004d40;
+        border-bottom: 2px solid #333333; /* Daha koyu gri */
         white-space: nowrap;
     }
 
@@ -242,11 +234,11 @@ table {
     }
 
         table tbody tr:nth-child(even) {
-            background-color: #b2dfdb;
+            background-color: #dddddd; /* Daha açýk gri ton */
         }
 
         table tbody tr:hover {
-            background-color: #e0f2f1;
+            background-color: #f2f2f2;
         }
 
     table td {
@@ -258,14 +250,6 @@ table {
         text-align: left;
         white-space: normal; /* Satýr kaymasý için normal */
     }
-
-        table td:nth-child(1), /* Baþlýk sütunu */
-        table td:nth-child(2), /* Açýklama sütunu */
-        table td:nth-child(3), /* Görevi Atayan Kiþi sütunu */
-        table td:nth-child(4), /* Bitiþ Tarihi sütunu */
-        table td:nth-child(5) /* Ýþlemler sütunu */ {
-            min-width: 150px; /* Minimum geniþlik ayarý */
-        }
 
 .actions .btn {
     margin-right: 5px;
@@ -304,7 +288,7 @@ table {
 
 footer {
     background: none; /* Arka planý kaldýr */
-    color: #ffffff; /* Yazý rengini beyaz yap */
+    color: #000000; /* Yazý rengini siyah yap */
     font-size: 12px; /* Yazý boyutunu küçült */
     text-align: center;
     padding: 10px 0;
@@ -321,7 +305,7 @@ footer {
     width: 250px;
     position: fixed;
     height: 100%;
-    background-color: #f8f9fa;
+    background-color: #e9ecef;
     padding: 20px;
     overflow-y: auto; /* Kaydýrma için eklenmiþtir */
 }
@@ -369,5 +353,5 @@ footer {
 
     .header a {
         text-decoration: none;
-        color: #007bff;
+        color: #333;
     }
