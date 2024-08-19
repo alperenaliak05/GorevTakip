@@ -19,6 +19,7 @@ html, body {
     color: #333;
     background: linear-gradient(135deg, #b2ebf2, #4dd0e1); /* Arka plan rengi daha koyu turkuaz */
     box-sizing: border-box;
+    overflow-x: hidden; /* Yatay kaydýrmayý gizle */
 }
 
 .login-box {
@@ -117,7 +118,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     text-align: center;
     flex-direction: column;
 }
@@ -129,6 +130,8 @@ html, body {
     background: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding-top: 100px; /* Header ve baþlýk için üstte boþluk býrak */
+    overflow-y: auto; /* Yatay kaydýrma için */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -141,10 +144,12 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
     font-size: 3em;
+    margin-top: 0.5em; /* Baþlýðýn yukarýya daha yakýn olmasý için üst boþluk */
 }
 
 h2 {
-    font-size: 2em;
+    font-size: 2.5em; /* Baþlýðý daha büyük yap */
+    margin-top: 0.5em; /* Baþlýðýn yukarýya daha yakýn olmasý için üst boþluk */
 }
 
 h4 {
@@ -153,6 +158,24 @@ h4 {
     font-size: 150%;
     font-weight: 300;
     text-align: center;
+}
+
+/* Hoþ geldiniz! metni için özel stil */
+.welcome-text {
+    font-size: 2em; /* Daha büyük ve dikkat çekici hale getirme */
+    color: #00796b; /* Hoþ bir yeþil tonu */
+    font-weight: bold;
+    text-align: center;
+    margin-top: 1em;
+}
+
+/* Diðer metinler için daha okunaklý bir stil */
+.info-text {
+    font-size: 1.2em; /* Yazý boyutunu büyütme */
+    color: #333333; /* Daha koyu gri ton */
+    line-height: 1.6; /* Satýrlar arasýnda daha fazla boþluk */
+    text-align: center;
+    margin: 0.5em 0;
 }
 
 button, .btn {
@@ -257,6 +280,7 @@ table {
     background: #fff;
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Yatay kaydýrma */
 }
 
 .profile-picture {
@@ -279,11 +303,12 @@ table {
     }
 
 footer {
-    background: linear-gradient(135deg, #b2ebf2, #4dd0e1); /* Koyulaþtýrýlmýþ turkuaz arka plan */
-    color: #ffffff;
-    padding: 10px 0;
+    background: none; /* Arka planý kaldýr */
+    color: #ffffff; /* Yazý rengini beyaz yap */
+    font-size: 12px; /* Yazý boyutunu küçült */
     text-align: center;
-    position: absolute;
+    padding: 10px 0;
+    position: fixed; /* Footer'ý sabitle */
     bottom: 0;
     width: 100%;
 }
@@ -298,6 +323,7 @@ footer {
     height: 100%;
     background-color: #f8f9fa;
     padding: 20px;
+    overflow-y: auto; /* Kaydýrma için eklenmiþtir */
 }
 
     .sidebar .profile {
@@ -322,6 +348,9 @@ footer {
 .main-content {
     margin-left: 270px;
     padding: 20px;
+    padding-top: 60px; /* Header için üstte boþluk býrak */
+    overflow-y: auto; /* Yatay kaydýrma */
+    min-height: calc(100vh - 60px); /* Ýçeriðin min yüksekliði, footer'ý alta itmek için */
 }
 
 .header {
@@ -330,6 +359,12 @@ footer {
     gap: 20px;
     background-color: #e9ecef;
     padding: 10px;
+    position: fixed; /* Sabit pozisyon */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Diðer öðelerin üzerinde görünmesi için yüksek bir z-index */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Hafif bir gölge ekleyerek daha belirgin hale getirme */
 }
 
     .header a {

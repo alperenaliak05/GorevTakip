@@ -62,15 +62,13 @@
         </nav>
     </header>
 
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-   
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; @DateTime.Now.Year - TKGörevYönetim - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <main role="main" class="container-fluid pb-3">
+        @RenderBody()
+    </main>
+
+    <footer class="footer text-muted">
+        <div class="container-fluid text-center">
+            &copy; @DateTime.Now.Year - TKTGörevYönetim - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
