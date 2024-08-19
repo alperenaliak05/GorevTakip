@@ -42,7 +42,7 @@ Projeyi çalıştırdıktan sonra, web tarayıcınızda http://localhost:5000 ad
 ## Ekran Görüntüleri
 ### Giriş
 <img src="https://github.com/user-attachments/assets/cca381f9-92ac-4ca2-9596-326dbf05a55b
-"/>
+" alt ="Giriş"/>
 ### Ana Sayfa
 https://github.com/user-attachments/assets/48d0d803-4e31-4be3-b040-f9b26913212d
 
