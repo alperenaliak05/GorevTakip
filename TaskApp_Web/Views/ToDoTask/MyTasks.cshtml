@@ -24,12 +24,17 @@
                     @if (task.Status == TaskAppWeb.Models.TaskStatus.Tamamlandı)
                     {
                         <!-- Tamamlandı durumu -->
-                        <button class="btn btn-success" disabled>Tamamlandı</button>
+                        <button class="btn btn-green" disabled>Tamamlandı</button>
                     }
                     else if (task.Status == TaskAppWeb.Models.TaskStatus.Reddedildi)
                     {
                         <!-- Reddedildi durumu -->
-                        <button class="btn btn-danger" disabled>Reddedildi</button>
+                        <button class="btn btn-red" disabled>Reddedildi</button>
+                    }
+                    else if (task.Status == TaskAppWeb.Models.TaskStatus.SuresiGecti)
+                    {
+                        <!-- Süresi Geçti durumu -->
+                        <button class="btn btn-warning" disabled>Süresi Geçti</button>
                     }
                     else
                     {

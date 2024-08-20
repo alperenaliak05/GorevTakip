@@ -1,10 +1,74 @@
-﻿<!-- Index.cshtml -->
-@{
+﻿@{
     ViewData["Title"] = "Ana Sayfa";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>GÖREV YÖNETİM SİSTEMİ</h1>
-<p>Hoş geldiniz!</p>
-<p>Bu uygulamada görevleriniz görebilir, görev durumunu güncelleyebilirsiniz.</p>
-<p>Verilen görevi zamanında yapmaya özen gösterelim iyi çalışmalar.</p>
+<style>
+    /* Dijital Saatin Ortalanması ve Stili */
+    .digital-clock-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #f0f0f0;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .digital-clock {
+        font-size: 2em;
+        color: #333;
+    }
+
+    /* İçerikleri yukarı çekme ve ortalama */
+    .centered-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start; /* Üst tarafa hizalama */
+        align-items: center;
+        height: 100vh; /* Tüm yüksekliği kullan */
+        padding-top: 50px; /* Üstten boşluk bırakma */
+        text-align: center;
+    }
+
+    /* Hoş geldiniz yazısını büyütme */
+    .welcome-message {
+        font-size: 8em; /* Yazı boyutunu büyüt */
+        color: #8B4513; /* Hoş geldiniz yazısını kahverengi yap */
+        font-weight: bold;
+        margin-top: 10px; /* Başlıkla arasını açma */
+    }
+
+    /* Genel yazı stilini güzelleştirme */
+    .centered-content p {
+        font-size: 1.5em;
+        color: #333;
+    }
+</style>
+
+<div class="digital-clock-container">
+    <!-- Dijital Saatin Görüneceği Yer -->
+    <div id="clock" class="digital-clock"></div>
+</div>
+
+<div class="centered-content">
+    <h1>GÖREV YÖNETİM SİSTEMİ</h1>
+    <p class="welcome-message">Hoş geldiniz!</p>
+    <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
+    <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
+</div>
+
+<script>
+    function updateClock() {
+        var now = new Date();
+        var hours = now.getHours().toString().padStart(2, '0');
+        var minutes = now.getMinutes().toString().padStart(2, '0');
+        var seconds = now.getSeconds().toString().padStart(2, '0');
+        var timeString = hours + ':' + minutes + ':' + seconds;
+        document.getElementById('clock').textContent = timeString;
+    }
+
+    // Sayfa yüklendiğinde ve periyodik olarak saati güncelle
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>

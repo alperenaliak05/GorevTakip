@@ -8,7 +8,7 @@ using TaskAppWeb.Data;
 using TaskAppWeb.Services.IServices;
 using TaskAppWeb.Services;
 using TaskAppWeb.Repositories.IRepositories;
-
+using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

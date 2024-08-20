@@ -15,5 +15,6 @@ namespace TaskAppWeb.Models
         public Users AssignedToUser { get; set; }
         public int AssignedByUserId { get; set; }
         public Users AssignedByUser { get; set; }
+
     }
 }

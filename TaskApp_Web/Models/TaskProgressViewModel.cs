@@ -7,5 +7,6 @@
         public int CompletedTasks { get; set; }
         public int RejectedTasks { get; set; }
         public int PendingTasks { get; set; }
+        public int OverdueTasks { get; set; }   
     }
 }
