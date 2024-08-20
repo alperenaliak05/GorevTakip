@@ -126,13 +126,21 @@ namespace TaskApp_Web.Controllers
                     DepartmentId = model.DepartmentId
                 };
 
-                await _userRepository.AddUserAsync(user);
-                return RedirectToAction("AllUsers");
+                bool isAdded = await _userRepository.AddUserAsync(user);
+                if (isAdded)
+                {
+                    return RedirectToAction("AllUsers");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Kullanıcı eklenirken bir hata oluştu.");
+                }
             }
 
             var departments = await _userRepository.GetAllDepartmentsAsync();
-            model.Departments = new SelectList(departments, "Id", "Name"); // Burada dönüşüm yapılıyor
+            model.Departments = new SelectList(departments, "Id", "Name");
             return View(model);
         }
+
     }
 }

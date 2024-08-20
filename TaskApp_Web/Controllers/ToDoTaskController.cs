@@ -197,5 +197,24 @@ namespace TaskApp_Web.Controllers
             await _taskService.DeleteTaskAsync(id);
             return RedirectToAction("TaskTracking");
         }
+        [HttpGet]
+        [Route("TaskProgress")]
+        public async Task<IActionResult> TaskProgress()
+        {
+            var users = await _taskService.GetAllUsersAsync();
+            var tasks = await _taskService.GetAllTasksAsync();
+
+            var taskProgressList = users.Select(user => new TaskProgressViewModel
+            {
+                FullName = $"{user.FirstName} {user.LastName}",
+                Department = user.Department?.Name ?? "No Department", // Adjusting for null values
+                CompletedTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Tamamlandı),
+                RejectedTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Reddedildi),
+                PendingTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Bekliyor),
+            }).ToList();
+
+            return View(taskProgressList);
+        }
+
     }
 }

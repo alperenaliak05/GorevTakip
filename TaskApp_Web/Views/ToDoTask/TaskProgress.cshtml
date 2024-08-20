@@ -1,0 +1,40 @@
+﻿@model IEnumerable<TaskApp_Web.Models.TaskProgressViewModel>
+
+<h2>Görev İlerleme</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>İsim Soyisim</th>
+            <th>Departman</th>
+            <th>Tamamlanan Görev Sayısı</th>
+            <th>Reddedilen Görev Sayısı</th>
+            <th>Bekleyen Görev Sayısı</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.FullName</td>
+                <td>@item.Department</td>
+                <td>@item.CompletedTasks</td>
+                <td>@item.RejectedTasks</td>
+                <td>@item.PendingTasks</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+@{
+    // Find the user with the most completed tasks
+    var topUser = Model.OrderByDescending(u => u.CompletedTasks).FirstOrDefault();
+}
+
+@if (topUser != null)
+{
+    <h4>En çok görev tamamlayan kullanıcı ayın çalışanı seçilecektir.</h4>
+    <p><strong>Ayın Çalışanı Adayı:</strong> @topUser.FullName (@topUser.Department) - Tamamlanan Görev Sayısı: @topUser.CompletedTasks</p>
+}

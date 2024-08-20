@@ -33,9 +33,20 @@ namespace TaskApp_Web.Repositories
 
         public async Task<bool> AddUserAsync(Users user)
         {
-            await _context.Users.AddAsync(user);
-            return await _context.SaveChangesAsync() > 0;
+            try
+            {
+                _context.Users.Add(user);
+
+                return await _context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Kullanıcı eklenirken bir hata oluştu: {ex.Message}");
+
+                return false;
+            }
         }
+
 
         public async Task<bool> UpdateUserAsync(Users user)
         {

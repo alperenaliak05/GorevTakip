@@ -35,7 +35,7 @@
                     {
                         <!-- Henüz işlem yapılmamışsa her iki buton da gösterilir -->
                         <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-success">Tamamlandı</button>
+                            <button type="submit" class="btn btn-green">Tamamlandı</button>
                         </form>
                         <form asp-action="RejectTask" asp-route-id="@task.Id" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-red">Reddedildi</button>
