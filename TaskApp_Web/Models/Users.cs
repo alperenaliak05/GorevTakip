@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TaskApp_Web.Models
+namespace TaskAppWeb.Models
 {
     public class Users
     {
@@ -12,6 +12,7 @@ namespace TaskApp_Web.Models
         public Departments Department { get; set; }
         public ICollection<ToDoTasks> Tasks { get; set; }
         public ICollection<ToDoTasks> AssignedTasks { get; set; }
-      
+        public ICollection<UserToDoList> ToDoLists { get; set; }
+
     }
 }

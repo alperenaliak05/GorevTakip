@@ -1,7 +1,7 @@
-﻿using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
+﻿using TaskAppWeb.Models;
+using TaskAppWeb.Models.DTO;
 
-namespace TaskApp_Web.Repositories
+namespace TaskAppWeb.Repositories
 {
     public interface IToDoTaskRepository
     {

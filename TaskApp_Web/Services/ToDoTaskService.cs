@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Repositories;
-using TaskApp_Web.Services.IServices;
+using TaskAppWeb.Models;
+using TaskAppWeb.Models.DTO;
+using TaskAppWeb.Repositories;
+using TaskAppWeb.Services.IServices;
 
-namespace TaskApp_Web.Services
+namespace TaskAppWeb.Services
 {
     public class ToDoTaskService : IToDoTaskService
     {

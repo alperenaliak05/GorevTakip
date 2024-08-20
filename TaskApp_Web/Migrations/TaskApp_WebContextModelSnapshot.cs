@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskApp_Web.Data;
+using TaskAppWeb.Data;
 
 #nullable disable
 
@@ -22,7 +22,7 @@ namespace TaskAppWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskApp_Web.Models.Departments", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.Departments", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -39,13 +39,13 @@ namespace TaskAppWeb.Migrations
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.ToDoTasks", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.ToDoTasks", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int?>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<int>("AssignedByUserId")
                         .HasColumnType("int");
@@ -60,9 +60,8 @@ namespace TaskAppWeb.Migrations
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -74,10 +73,38 @@ namespace TaskAppWeb.Migrations
 
                     b.HasIndex("AssignedToUserId");
 
-                    b.ToTable("ToDoTasks");
+                    b.ToTable("Tasks");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.Users", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.UserToDoList", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Task")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserToDoLists");
+                });
+
+            modelBuilder.Entity("TaskAppWeb.Models.Users", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,19 +116,12 @@ namespace TaskAppWeb.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfilePictureUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -111,15 +131,15 @@ namespace TaskAppWeb.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.ToDoTasks", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.ToDoTasks", b =>
                 {
-                    b.HasOne("TaskApp_Web.Models.Users", "AssignedByUser")
+                    b.HasOne("TaskAppWeb.Models.Users", "AssignedByUser")
                         .WithMany("AssignedTasks")
                         .HasForeignKey("AssignedByUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("TaskApp_Web.Models.Users", "AssignedToUser")
+                    b.HasOne("TaskAppWeb.Models.Users", "AssignedToUser")
                         .WithMany("Tasks")
                         .HasForeignKey("AssignedToUserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -130,9 +150,20 @@ namespace TaskAppWeb.Migrations
                     b.Navigation("AssignedToUser");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.Users", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.UserToDoList", b =>
                 {
-                    b.HasOne("TaskApp_Web.Models.Departments", "Department")
+                    b.HasOne("TaskAppWeb.Models.Users", "User")
+                        .WithMany("ToDoLists")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TaskAppWeb.Models.Users", b =>
+                {
+                    b.HasOne("TaskAppWeb.Models.Departments", "Department")
                         .WithMany("Users")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -141,16 +172,18 @@ namespace TaskAppWeb.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.Departments", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.Departments", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.Users", b =>
+            modelBuilder.Entity("TaskAppWeb.Models.Users", b =>
                 {
                     b.Navigation("AssignedTasks");
 
                     b.Navigation("Tasks");
+
+                    b.Navigation("ToDoLists");
                 });
 #pragma warning restore 612, 618
         }

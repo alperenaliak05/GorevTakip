@@ -1,7 +1,7 @@
 ﻿using Models;
 using System;
 
-namespace TaskApp_Web.Models
+namespace TaskAppWeb.Models
 {
     public class ToDoTasks
     {

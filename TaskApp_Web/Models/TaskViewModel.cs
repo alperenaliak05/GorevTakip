@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 
-namespace TaskApp_Web.Models
+namespace TaskAppWeb.Models
 {
     public class TaskViewModel
     {

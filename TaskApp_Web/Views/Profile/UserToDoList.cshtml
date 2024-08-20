@@ -1,0 +1,30 @@
+﻿@using TaskAppWeb.Models
+@model IEnumerable<UserToDoList>
+
+<h2>Yapılacaklar Listesi</h2>
+
+<form asp-action="AddToDoList" method="post">
+    <input type="text" name="Task" placeholder="Yeni görev ekle" required />
+    <button type="submit" class="btn btn-primary">Ekle</button>
+</form>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            @item.Task
+            @if (!item.IsCompleted)
+            {
+                <form asp-action="UpdateToDoList" method="post" style="display:inline;">
+                    <input type="hidden" name="Id" value="@item.Id" />
+                    <input type="hidden" name="IsCompleted" value="true" />
+                    <button type="submit" class="btn btn-success btn-sm">Tamamlandı</button>
+                </form>
+            }
+            <form asp-action="DeleteToDoList" method="post" style="display:inline;">
+                <input type="hidden" name="id" value="@item.Id" />
+                <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+            </form>
+        </li>
+    }
+</ul>

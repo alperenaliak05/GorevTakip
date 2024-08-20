@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
+using TaskAppWeb.Models;
+using TaskAppWeb.Models.DTO;
 using System.Security.Claims;
-using TaskApp_Web.Services.IServices;
+using TaskAppWeb.Services.IServices;
 using Models;
-using TaskStatus = TaskApp_Web.Models.TaskStatus;
+using TaskStatus = TaskAppWeb.Models.TaskStatus;
 
-namespace TaskApp_Web.Controllers
+namespace TaskAppWeb.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

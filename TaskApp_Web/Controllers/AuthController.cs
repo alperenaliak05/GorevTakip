@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Services.IServices;
+using TaskAppWeb.Models.DTO;
+using TaskAppWeb.Services.IServices;
 
-namespace TaskApp_Web.Controllers
+namespace TaskAppWeb.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

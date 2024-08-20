@@ -1,7 +1,7 @@
 ﻿using Models;
-using TaskApp_Web.Models;
+using TaskAppWeb.Models;
 
-namespace TaskApp_Web.Repositories
+namespace TaskAppWeb.Repositories
 {
     public interface IDepartmentRepository : IRepository<Departments>
     {

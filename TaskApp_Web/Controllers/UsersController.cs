@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using TaskApp_Web.Models;
-using TaskApp_Web.Repositories;
+using TaskAppWeb.Models;
+using TaskAppWeb.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering; 
 
-namespace TaskApp_Web.Controllers
+namespace TaskAppWeb.Controllers
 {
     [Authorize]
     public class UsersController : Controller

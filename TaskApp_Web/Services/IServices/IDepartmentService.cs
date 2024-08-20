@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskApp_Web.Models;
+using TaskAppWeb.Models;
 
-namespace TaskApp_Web.Services.IServices
+namespace TaskAppWeb.Services.IServices
 {
     public interface IDepartmentService
     {

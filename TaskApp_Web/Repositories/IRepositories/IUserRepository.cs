@@ -1,9 +1,9 @@
 ﻿using Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskApp_Web.Models;
+using TaskAppWeb.Models;
 
-namespace TaskApp_Web.Repositories
+namespace TaskAppWeb.Repositories
 {
     public interface IUserRepository
     {

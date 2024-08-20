@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Services.IServices;
+using TaskAppWeb.Models.DTO;
+using TaskAppWeb.Services.IServices;
 
-namespace TaskApp_Web.Controllers
+namespace TaskAppWeb.Controllers
 {
     public class AccountController : Controller
     {

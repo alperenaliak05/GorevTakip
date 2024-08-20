@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskApp_Web.Data;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
+using TaskAppWeb.Data;
+using TaskAppWeb.Models;
+using TaskAppWeb.Models.DTO;
 
-namespace TaskApp_Web.Repositories
+namespace TaskAppWeb.Repositories
 {
     public class ToDoTaskRepository : IToDoTaskRepository
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TaskApp_Web.Models;
+using TaskAppWeb.Models;
 
-namespace TaskApp_Web.Data
+namespace TaskAppWeb.Data
 {
     public class TaskApp_WebContext : DbContext
     {
@@ -13,6 +13,7 @@ namespace TaskApp_Web.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<ToDoTasks> Tasks { get; set; }
+        public DbSet<UserToDoList> UserToDoLists { get; set; } // Yapılacaklar listesi için eklenen DbSet
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,13 @@ namespace TaskApp_Web.Data
             modelBuilder.Entity<ToDoTasks>()
                .Property(t => t.Status)
                .HasConversion<int>();
+
+            // UserToDoList konfigürasyonu
+            modelBuilder.Entity<UserToDoList>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.ToDoLists)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Kullanıcı silindiğinde yapılacaklar listesi de silinir
         }
     }
 }

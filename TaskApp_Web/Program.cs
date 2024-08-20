@@ -3,10 +3,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using TaskApp_Web.Repositories;
-using TaskApp_Web.Data;
-using TaskApp_Web.Services.IServices;
-using TaskApp_Web.Services;
+using TaskAppWeb.Repositories;
+using TaskAppWeb.Data;
+using TaskAppWeb.Services.IServices;
+using TaskAppWeb.Services;
+using TaskAppWeb.Repositories.IRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -62,6 +63,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IToDoTaskService, ToDoTaskService>();
 builder.Services.AddScoped<IUsersService, UsersService>();
 builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
+builder.Services.AddScoped<IUserToDoListRepository, UserToDoListRepository>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

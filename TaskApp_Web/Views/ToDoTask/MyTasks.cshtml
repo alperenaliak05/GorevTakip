@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskApp_Web.Models.DTO.TaskDTO>
+﻿@model IEnumerable<TaskAppWeb.Models.DTO.TaskDTO>
 
 <h2>Görevlerim</h2>
 
@@ -21,12 +21,12 @@
                 <td>@task.AssignedByUserFirstName @task.AssignedByUserLastName</td>
                 <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
+                    @if (task.Status == TaskAppWeb.Models.TaskStatus.Tamamlandı)
                     {
                         <!-- Tamamlandı durumu -->
                         <button class="btn btn-success" disabled>Tamamlandı</button>
                     }
-                    else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
+                    else if (task.Status == TaskAppWeb.Models.TaskStatus.Reddedildi)
                     {
                         <!-- Reddedildi durumu -->
                         <button class="btn btn-danger" disabled>Reddedildi</button>

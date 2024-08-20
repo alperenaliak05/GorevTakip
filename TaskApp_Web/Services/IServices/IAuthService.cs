@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using TaskApp_Web.Models.DTO;
+using TaskAppWeb.Models.DTO;
 
-namespace TaskApp_Web.Services.IServices
+namespace TaskAppWeb.Services.IServices
 {
     public interface IAuthService
     {

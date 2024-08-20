@@ -1,4 +1,4 @@
-﻿namespace TaskApp_Web.Models
+﻿namespace TaskAppWeb.Models
 {
     public enum TaskStatus
     {
