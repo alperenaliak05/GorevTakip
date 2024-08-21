@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using TaskApp_Web.Models;
-using TaskApp_Web.Services;
+using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Services.IServices;
+using TaskStatus = TaskApp_Web.Models.TaskStatus;
 
 namespace TaskApp_Web.Controllers
 {
@@ -25,51 +26,77 @@ namespace TaskApp_Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            // Tamamlanan görevleri çekiyoruz
+            var completedTasks = await _taskService.GetTasksByStatusAsync(TaskStatus.Tamamlandı);
 
-            if (userIdClaim == null)
+            // Görevler raporlarıyla birlikte View'a gönderiliyor
+            var taskReports = completedTasks.Select(task => new TaskReportDTO
             {
-                return RedirectToAction("Login", "Account");
-            }
+                TaskId = task.Id,
+                TaskTitle = task.Title,
+                TaskDescription = task.Description,
+                AssignedByUserFirstName = task.AssignedByUser?.FirstName, 
+                AssignedByUserLastName = task.AssignedByUser?.LastName,
+                
+                DueDate = task.DueDate,
+                TaskStatus = task.Status
+            }).ToList();
 
-            var userId = int.Parse(userIdClaim.Value);
-            var user = await _userService.GetUserByIdAsync(userId);
-            var userDepartment = user.Department.Name;
-
-            if (userDepartment == "Analist")
-            {
-                var allReports = await _taskReportService.GetAllTaskReportsAsync();
-                return View(allReports);
-            }
-            else
-            {
-                var userTasks = await _taskService.GetTasksByUserIdAsync(userId);
-                var taskIds = userTasks.Select(t => t.Id.Value).ToList();
-                var userReports = await _taskReportService.GetTaskReportsByUserTasksAsync(taskIds);
-                return View(userReports);
-            }
+            return View(taskReports);
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddReport()
+        public async Task<IActionResult> Details(int taskId)
         {
-            ViewBag.Tasks = new SelectList(await _taskService.GetAllTasksAsync(), "Id", "Title");
-            return View();
+            var task = await _taskService.GetTaskByIdAsync(taskId);
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            var assignedByUserId = task.AssignedByUserId;
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            bool canAddReport = (currentUserId == assignedByUserId);
+
+            var model = new TaskReportDetailsViewModel
+            {
+                TaskId = task.Id.Value,
+                TaskTitle = task.Title,
+                TaskDescription = task.Description,
+                DueDate = task.DueDate,
+                TaskStatus = task.Status,
+                CanAddReport = canAddReport
+            };
+
+            return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddReport(TaskReport taskReport)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddReport(TaskReportDetailsViewModel model)
         {
             if (ModelState.IsValid)
             {
-                taskReport.CreatedAt = DateTime.Now;
-                taskReport.CreatedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                var task = await _taskService.GetTaskByIdAsync(model.TaskId);
 
-                await _taskReportService.AddTaskReportAsync(taskReport);
+                if (task == null || task.AssignedByUserId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                {
+                    return Unauthorized();
+                }
+
+                var report = new TaskReport
+                {
+                    TaskId = model.TaskId,
+                    Report = model.ReportContent,
+                    CreatedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                    CreatedAt = DateTime.Now
+                };
+
+                await _taskReportService.AddTaskReportAsync(report);
                 return RedirectToAction("Index");
             }
-            ViewBag.Tasks = new SelectList(await _taskService.GetAllTasksAsync(), "Id", "Title");
-            return View(taskReport);
+
+            return View("Details", model);
         }
 
         [HttpGet]
@@ -83,6 +110,7 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(TaskReport taskReport)
         {
             if (ModelState.IsValid)
@@ -92,11 +120,13 @@ namespace TaskApp_Web.Controllers
                 await _taskReportService.UpdateTaskReportAsync(taskReport);
                 return RedirectToAction("Index");
             }
+
             ViewBag.Tasks = new SelectList(await _taskService.GetAllTasksAsync(), "Id", "Title", taskReport.TaskId);
             return View(taskReport);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
             await _taskReportService.DeleteTaskReportAsync(id);

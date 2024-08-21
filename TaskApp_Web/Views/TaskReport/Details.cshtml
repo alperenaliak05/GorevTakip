@@ -1,0 +1,24 @@
+﻿@model TaskApp_Web.Models.DTO.TaskReportDetailsViewModel
+
+<h2>Görev Detayları</h2>
+
+<p><strong>Görev:</strong> @Model.TaskTitle</p>
+<p><strong>Açıklama:</strong> @Model.TaskDescription</p>
+<p><strong>Bitiş Tarihi:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
+<p><strong>Durum:</strong> @Model.TaskStatus</p>
+
+@if (Model.CanAddReport)
+{
+    <form asp-action="AddReport" method="post">
+        <input type="hidden" asp-for="TaskId" />
+        <div class="form-group">
+            <label for="Report">Rapor</label>
+            <textarea asp-for="ReportContent" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Raporu Ekle</button>
+    </form>
+}
+else
+{
+    <p>Bu görevi sadece görevi atan kullanıcı raporlayabilir.</p>
+}

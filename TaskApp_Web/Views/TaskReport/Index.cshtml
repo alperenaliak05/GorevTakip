@@ -1,15 +1,14 @@
-﻿@model IEnumerable<TaskApp_Web.Models.TaskReport>
+﻿@model IEnumerable<TaskApp_Web.Models.DTO.TaskReportDTO>
 
 <h2>Görev Raporları</h2>
 
 <table class="table">
     <thead>
         <tr>
-            <th>Görev</th>
-            <th>Rapor</th>
-            <th>Oluşturan</th>
-            <th>Oluşturulma Tarihi</th>
-            <th>Güncellenme Tarihi</th>
+            <th>Görev Başlığı</th>
+            <th>Açıklama</th>
+            <th>Görevi Atayan Kişi</th>
+            <th>Bitiş Tarihi</th>
             <th>İşlemler</th>
         </tr>
     </thead>
@@ -17,16 +16,12 @@
         @foreach (var report in Model)
         {
             <tr>
-                <td>@report.Task.Title</td>
-                <td>@report.Report</td>
-                <td>@report.CreatedByUser.FirstName @report.CreatedByUser.LastName</td>
-                <td>@report.CreatedAt.ToString("yyyy-MM-dd")</td>
-                <td>@report.UpdatedAt?.ToString("yyyy-MM-dd")</td>
+                <td>@report.TaskTitle</td>
+                <td>@report.TaskDescription</td>
+                <td>@report.AssignedByUserFirstName @report.AssignedByUserLastName</td>
+                <td>@report.DueDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@report.Id" class="btn btn-primary">Düzenle</a>
-                    <form asp-action="Delete" asp-route-id="@report.Id" method="post" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Sil</button>
-                    </form>
+                    <a asp-action="Details" asp-route-id="@report.TaskId" class="btn btn-info">Detay</a>
                 </td>
             </tr>
         }

@@ -8,37 +8,48 @@
             <th>Başlık</th>
             <th>Açıklama</th>
             <th>Görevi Atayan Kişi</th>
-            <th>Bitiş Tarihi</th>
+            <th>Bitiş Süresi</th>
             <th>İşlemler</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var task in Model)
         {
+            var timeRemaining = task.DueDate - DateTime.Now;  // Kalan süreyi server tarafında hesapla ve başlangıç olarak al
+            var remainingSeconds = (int)timeRemaining.TotalSeconds;
+
             <tr>
                 <td>@task.Title</td>
                 <td>@task.Description</td>
                 <td>@task.AssignedByUserFirstName @task.AssignedByUserLastName</td>
-                <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <span id="countdown-@task.Id" data-seconds="@remainingSeconds">
+                        <!-- İlk hesaplanan süreyi gösteriyoruz -->
+                        @if (remainingSeconds > 0)
+                        {
+                            @($"{timeRemaining.Days} gün {timeRemaining.Hours} saat {timeRemaining.Minutes} dakika {timeRemaining.Seconds} saniye kaldı")
+                        }
+                        else
+                        {
+                            <span class="text-danger">Süre doldu</span>
+                        }
+                    </span>
+                </td>
                 <td>
                     @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
                     {
-                        <!-- Tamamlandı durumu -->
                         <button class="btn btn-green" disabled>Tamamlandı</button>
                     }
                     else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
                     {
-                        <!-- Reddedildi durumu -->
                         <button class="btn btn-red" disabled>Reddedildi</button>
                     }
                     else if (task.Status == TaskApp_Web.Models.TaskStatus.SuresiGecti)
                     {
-                        <!-- Süresi Geçti durumu -->
                         <button class="btn btn-warning" disabled>Süresi Geçti</button>
                     }
                     else
                     {
-                        <!-- Henüz işlem yapılmamışsa her iki buton da gösterilir -->
                         <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
                             <button type="submit" class="btn btn-green">Tamamlandı</button>
                         </form>
@@ -51,3 +62,38 @@
         }
     </tbody>
 </table>
+
+<script>
+    // Kalan süreyi her saniye güncelleyen fonksiyon
+    function startCountdown(id, seconds) {
+        const countdownElement = document.getElementById(id);
+
+        function updateCountdown() {
+            if (seconds <= 0) {
+                countdownElement.innerHTML = '<span class="text-danger">Süre doldu</span>';
+                return;
+            }
+
+            const days = Math.floor(seconds / (24 * 3600));
+            const hours = Math.floor((seconds % (24 * 3600)) / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const sec = seconds % 60;
+
+            countdownElement.innerHTML = `${days} gün ${hours} saat ${minutes} dakika ${sec} saniye kaldı`;
+
+            seconds--;
+        }
+
+        updateCountdown(); // İlk güncelleme hemen yapılır
+        setInterval(updateCountdown, 1000); // Her saniyede bir güncelle
+    }
+
+    // Her bir görev için geri sayımı başlat
+    document.addEventListener("DOMContentLoaded", function() {
+        const countdownElements = document.querySelectorAll("[id^='countdown-']");
+        countdownElements.forEach(element => {
+            const seconds = parseInt(element.getAttribute("data-seconds"), 10);
+            startCountdown(element.id, seconds);
+        });
+    });
+</script>

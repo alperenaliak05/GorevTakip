@@ -13,9 +13,9 @@ namespace TaskApp_Web.Models
         public TaskStatus Status { get; set; } 
         public string? StatusDescription => ((TaskStatus)Status).ToString();
         public int AssignedToUserId { get; set; }
-        public Users AssignedToUser { get; set; }
+        public Users? AssignedToUser { get; set; }
         public int AssignedByUserId { get; set; }
-        public Users AssignedByUser { get; set; }
+        public Users? AssignedByUser { get; set; }
         public ICollection<TaskReport> TaskReports { get; set; }
 
     }

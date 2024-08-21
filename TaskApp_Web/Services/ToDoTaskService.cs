@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Repositories;
+using TaskApp_Web.Repositories.IRepositories;
 using TaskApp_Web.Services.IServices;
 
 namespace TaskApp_Web.Services
@@ -53,12 +54,15 @@ namespace TaskApp_Web.Services
             return await _toDoTaskRepository.DeleteTaskAsync(id);
         }
 
-        // Yeni eklenen metot
+        // Yeni eklenen metot: Belirli bir duruma göre görevleri getirir
+        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(Models.TaskStatus status)
+        {
+            return await _toDoTaskRepository.GetTasksByStatusAsync(status);
+        }
+
         public async Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId)
         {
             return await _toDoTaskRepository.GetTasksAssignedByUserAsync(userId);
         }
-
-       
     }
 }

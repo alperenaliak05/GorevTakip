@@ -4,7 +4,7 @@ namespace TaskApp_Web.Models.DTO
 {
     public class TaskTrackingDTO
     {
-        public int TaskId { get; set; }
+        public int? TaskId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string AssignedToUserName { get; set; } // Görevi atanan kullanıcının adı

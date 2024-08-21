@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TaskApp_Web.Data;
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
+using TaskApp_Web.Repositories.IRepositories;
 
 namespace TaskApp_Web.Repositories
 {
@@ -14,11 +18,36 @@ namespace TaskApp_Web.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
+        {
+            return await _context.Tasks.ToListAsync();
+        }
+
+        public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
+        {
+            return await _context.Tasks
+                .Where(t => t.AssignedToUserId == userId)
+                .Select(t => new TaskDTO
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    Description = t.Description,
+                    AssignedToUserId = t.AssignedToUserId,
+                    AssignedByUserId = t.AssignedByUserId,
+                    AssignedByUserFirstName = t.AssignedByUser.FirstName,
+                    AssignedByUserLastName = t.AssignedByUser.LastName,
+                    DueDate = t.DueDate,
+                    Status = t.Status
+                })
+                .ToListAsync();
+        }
+
+
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedToUser)
                 .Include(t => t.AssignedByUser)
+                .Include(t => t.AssignedToUser)  
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -36,7 +65,7 @@ namespace TaskApp_Web.Repositories
 
         public async Task<bool> DeleteTaskAsync(int id)
         {
-            var task = await GetTaskByIdAsync(id);
+            var task = await _context.Tasks.FindAsync(id);
             if (task != null)
             {
                 _context.Tasks.Remove(task);
@@ -45,40 +74,20 @@ namespace TaskApp_Web.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
+        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(Models.TaskStatus status)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedToUser)
-                .Include(t => t.AssignedByUser)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
-        {
-            return await _context.Tasks
-                .Include(t => t.AssignedByUser)
-                .Where(t => t.AssignedToUserId == userId)
-                .Select(t => new TaskDTO
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    Description = t.Description,
-                    AssignedByUserFirstName = t.AssignedByUser.FirstName,
-                    AssignedByUserLastName = t.AssignedByUser.LastName,
-                    DueDate = t.DueDate,
-                    Status = t.Status
-                })
+                .Where(t => t.Status == status)
                 .ToListAsync();
         }
 
         public async Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedToUser)
                 .Where(t => t.AssignedByUserId == userId)
                 .Select(t => new TaskTrackingDTO
                 {
-                    TaskId = (int)t.Id,
+                    TaskId = t.Id,
                     Title = t.Title,
                     Description = t.Description,
                     AssignedToUserName = t.AssignedToUser.FirstName + " " + t.AssignedToUser.LastName,
@@ -87,5 +96,6 @@ namespace TaskApp_Web.Repositories
                 })
                 .ToListAsync();
         }
+
     }
 }
