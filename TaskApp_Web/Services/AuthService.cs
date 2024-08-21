@@ -7,9 +7,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TaskAppWeb.Models.DTO;
-using TaskAppWeb.Repositories;
-using TaskAppWeb.Services.IServices;
+using TaskApp_Web.Models.DTO;
+using TaskApp_Web.Repositories;
+using TaskApp_Web.Services.IServices;
 
 public class AuthService : IAuthService
 {

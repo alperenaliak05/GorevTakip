@@ -1,6 +1,6 @@
-﻿using TaskAppWeb.Models;
+﻿using TaskApp_Web.Models;
 
-namespace TaskAppWeb.Repositories.IRepositories
+namespace TaskApp_Web.Repositories.IRepositories
 {
     public interface IUserToDoListRepository
     {

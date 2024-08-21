@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskAppWeb.Models;
-using TaskAppWeb.Models.DTO;
+using TaskApp_Web.Models;
+using TaskApp_Web.Models.DTO;
 
-namespace TaskAppWeb.Services.IServices
+namespace TaskApp_Web.Services.IServices
 {
     public interface IToDoTaskService
     {

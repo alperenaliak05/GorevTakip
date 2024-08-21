@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskAppWeb.Models;
-using TaskAppWeb.Data;
+using TaskApp_Web.Models;
+using TaskApp_Web.Data;
 using Models;
 
-namespace TaskAppWeb.Repositories
+namespace TaskApp_Web.Repositories
 {
     public class UserRepository : IUserRepository
     {

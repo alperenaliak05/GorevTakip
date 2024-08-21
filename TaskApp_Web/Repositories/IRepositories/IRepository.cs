@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace TaskAppWeb.Repositories
+namespace TaskApp_Web.Repositories
 {
     public interface IRepository<T> where T : class
     {

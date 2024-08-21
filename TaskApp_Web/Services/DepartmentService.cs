@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TaskAppWeb.Models;
-using TaskAppWeb.Repositories;
-using TaskAppWeb.Services.IServices;
+using TaskApp_Web.Models;
+using TaskApp_Web.Repositories;
+using TaskApp_Web.Services.IServices;
 
-namespace TaskAppWeb.Services
+namespace TaskApp_Web.Services
 {
     public class DepartmentsService : IDepartmentService
     {

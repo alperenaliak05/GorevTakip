@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using TaskAppWeb.Models;
-using TaskAppWeb.Repositories.IRepositories;
+using TaskApp_Web.Models;
+using TaskApp_Web.Repositories.IRepositories;
 
-namespace TaskAppWeb.Controllers
+namespace TaskApp_Web.Controllers
 {
     [Authorize]
     public class ProfileController : Controller

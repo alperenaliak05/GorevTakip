@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskAppWeb.Data;
+using TaskApp_Web.Data;
 
 #nullable disable
 
-namespace TaskAppWeb.Migrations
+namespace TaskApp_Web.Migrations
 {
     [DbContext(typeof(TaskApp_WebContext))]
     partial class TaskAppWebContextModelSnapshot : ModelSnapshot

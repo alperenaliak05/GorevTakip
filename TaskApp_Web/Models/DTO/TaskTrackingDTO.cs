@@ -1,6 +1,6 @@
 ﻿using Models;
 
-namespace TaskAppWeb.Models.DTO
+namespace TaskApp_Web.Models.DTO
 {
     public class TaskTrackingDTO
     {

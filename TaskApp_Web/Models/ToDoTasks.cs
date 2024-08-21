@@ -1,7 +1,8 @@
 ﻿using Models;
 using System;
+using TaskApp_Web.Models;
 
-namespace TaskAppWeb.Models
+namespace TaskApp_Web.Models
 {
     public class ToDoTasks
     {
@@ -15,6 +16,7 @@ namespace TaskAppWeb.Models
         public Users AssignedToUser { get; set; }
         public int AssignedByUserId { get; set; }
         public Users AssignedByUser { get; set; }
+        public ICollection<TaskReport> TaskReports { get; set; }
 
     }
 }

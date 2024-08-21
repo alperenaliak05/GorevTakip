@@ -5,15 +5,15 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TaskAppWeb.Data;
+using TaskApp_Web.Data;
 
 #nullable disable
 
-namespace TaskAppWeb.Migrations
+namespace TaskApp_Web.Migrations
 {
     [DbContext(typeof(TaskApp_WebContext))]
-    [Migration("20240820083057_RecreateIdentityColumn")]
-    partial class RecreateIdentityColumn
+    [Migration("20240821075325_reporttable")]
+    partial class reporttable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,6 +124,9 @@ namespace TaskAppWeb.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -132,6 +135,39 @@ namespace TaskAppWeb.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("TaskApp_Web.Models.TaskReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("CreatedByUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Report")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TaskId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex("TaskId");
+
+                    b.ToTable("TaskReports");
                 });
 
             modelBuilder.Entity("TaskAppWeb.Models.ToDoTasks", b =>
@@ -175,14 +211,40 @@ namespace TaskAppWeb.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("TaskApp_Web.Models.TaskReport", b =>
+                {
+                    b.HasOne("TaskAppWeb.Models.Users", "CreatedByUser")
+                        .WithMany("TaskReports")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TaskAppWeb.Models.ToDoTasks", "Task")
+                        .WithMany("TaskReports")
+                        .HasForeignKey("TaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByUser");
+
+                    b.Navigation("Task");
+                });
+
             modelBuilder.Entity("TaskAppWeb.Models.Departments", b =>
                 {
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("TaskAppWeb.Models.ToDoTasks", b =>
+                {
+                    b.Navigation("TaskReports");
+                });
+
             modelBuilder.Entity("TaskAppWeb.Models.Users", b =>
                 {
                     b.Navigation("AssignedTasks");
+
+                    b.Navigation("TaskReports");
 
                     b.Navigation("Tasks");
 

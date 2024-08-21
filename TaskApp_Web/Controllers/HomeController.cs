@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using TaskAppWeb.Models;
+using TaskApp_Web.Models;
 using System.Diagnostics;
-using TaskAppWeb.Models.DTO;
+using TaskApp_Web.Models.DTO;
 
-namespace TaskAppWeb.Controllers
+namespace TaskApp_Web.Controllers
 {
     public class HomeController : Controller
     {

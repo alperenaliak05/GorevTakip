@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel.DataAnnotations;
 
-namespace TaskAppWeb.Models
+namespace TaskApp_Web.Models
 {
     public class CreateUserViewModel
     {

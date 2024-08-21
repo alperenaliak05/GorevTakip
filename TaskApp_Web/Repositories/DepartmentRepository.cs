@@ -3,10 +3,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using TaskAppWeb.Data;
-using TaskAppWeb.Models;
+using TaskApp_Web.Data;
+using TaskApp_Web.Models;
 
-namespace TaskAppWeb.Repositories
+namespace TaskApp_Web.Repositories
 {
     public class DepartmentRepository : Repository<Departments>, IDepartmentRepository
     {
