@@ -27,22 +27,18 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Users" asp-action="AllUsers">Tüm Kullanıcılar</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ToDoTask" asp-action="MyTasks">Görevlerim</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTasks" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Görevler
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownTasks">
+                                    <li><a class="dropdown-item" asp-controller="ToDoTask" asp-action="MyTasks">Görevlerim</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ToDoTask" asp-action="CreateTask">Görevlendir</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ToDoTask" asp-action="TaskTracking">Görev Takip</a></li>
+                                    <li><a class="dropdown-item" asp-controller="ToDoTask" asp-action="TaskProgress">Görev İlerleme</a></li>
+                                    <li><a class="dropdown-item" asp-controller="TaskReport" asp-action="Index">Görev Raporları</a></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ToDoTask" asp-action="CreateTask">Görevlendir</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ToDoTask" asp-action="TaskTracking">Görev Takip</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ToDoTask" asp-action="TaskProgress">Görev İlerleme</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="TaskReport" asp-action="Index">Görev Raporları</a>
-                            </li>
-
                         }
                     </ul>
                     <ul class="navbar-nav ms-auto">

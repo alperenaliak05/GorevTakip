@@ -27,6 +27,7 @@ namespace TaskApp_Web.Repositories
         {
             return await _context.Tasks
                 .Where(t => t.AssignedToUserId == userId)
+                .Include(t => t.AssignedByUser)
                 .Select(t => new TaskDTO
                 {
                     Id = t.Id,

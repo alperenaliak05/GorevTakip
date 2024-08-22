@@ -7,7 +7,6 @@
         <tr>
             <th>Görev Başlığı</th>
             <th>Açıklama</th>
-            <th>Görevi Atayan Kişi</th>
             <th>Bitiş Tarihi</th>
             <th>İşlemler</th>
         </tr>
@@ -18,10 +17,9 @@
             <tr>
                 <td>@report.TaskTitle</td>
                 <td>@report.TaskDescription</td>
-                <td>@report.AssignedByUserFirstName @report.AssignedByUserLastName</td>
                 <td>@report.DueDate.ToString("yyyy-MM-dd")</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@report.TaskId" class="btn btn-info">Detay</a>
+                    <a asp-action="Details" asp-route-taskId="@report.TaskId" class="btn btn-info">Detay</a>
                 </td>
             </tr>
         }

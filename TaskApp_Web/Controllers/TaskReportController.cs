@@ -54,10 +54,7 @@ namespace TaskApp_Web.Controllers
                 return NotFound();
             }
 
-            var assignedByUserId = task.AssignedByUserId;
-            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            bool canAddReport = (currentUserId == assignedByUserId);
-
+            // Geri kalan işlemler...
             var model = new TaskReportDetailsViewModel
             {
                 TaskId = task.Id.Value,
@@ -65,11 +62,12 @@ namespace TaskApp_Web.Controllers
                 TaskDescription = task.Description,
                 DueDate = task.DueDate,
                 TaskStatus = task.Status,
-                CanAddReport = canAddReport
+                CanAddReport = (task.AssignedByUserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             };
 
             return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

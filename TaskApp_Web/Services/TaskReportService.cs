@@ -1,67 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using TaskApp_Web.Data;
 using TaskApp_Web.Models;
+using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Services.IServices;
+using TaskApp_Web.Repositories.IRepositories;
 
 namespace TaskApp_Web.Services
 {
     public class TaskReportService : ITaskReportService
     {
-        private readonly TaskApp_WebContext _context;
+        private readonly ITaskReportRepository _taskReportRepository;
 
-        public TaskReportService(TaskApp_WebContext context)
+        public TaskReportService(ITaskReportRepository taskReportRepository)
         {
-            _context = context;
+            _taskReportRepository = taskReportRepository;
         }
 
-        public async Task<IEnumerable<TaskReport>> GetAllTaskReportsAsync()
+        public async Task<IEnumerable<TaskReportDTO>> GetAllTaskReportsAsync()
         {
-            return await _context.TaskReports
-                .Include(tr => tr.Task)
-                .Include(tr => tr.CreatedByUser)
-                .ToListAsync();
+            return await _taskReportRepository.GetTaskReportsAsync();
         }
 
-        public async Task<IEnumerable<TaskReport>> GetTaskReportsByUserTasksAsync(List<int> taskIds)
+        public async Task<TaskReportDTO> GetTaskReportByIdAsync(int id)
         {
-            return await _context.TaskReports
-                .Where(tr => taskIds.Contains(tr.TaskId))
-                .Include(tr => tr.Task)
-                .Include(tr => tr.CreatedByUser)
-                .ToListAsync();
-        }
-
-        public async Task<TaskReport> GetTaskReportByIdAsync(int id)
-        {
-            return await _context.TaskReports
-                .Include(tr => tr.Task)
-                .Include(tr => tr.CreatedByUser)
-                .FirstOrDefaultAsync(tr => tr.Id == id);
+            var report = await _taskReportRepository.GetTaskReportsAsync();
+            return report.FirstOrDefault(r => r.TaskId == id);
         }
 
         public async Task<bool> AddTaskReportAsync(TaskReport taskReport)
         {
-            await _context.TaskReports.AddAsync(taskReport);
-            return await _context.SaveChangesAsync() > 0;
+            return await _taskReportRepository.AddTaskReportAsync(taskReport);
         }
 
         public async Task<bool> UpdateTaskReportAsync(TaskReport taskReport)
         {
-            _context.TaskReports.Update(taskReport);
-            return await _context.SaveChangesAsync() > 0;
+            return await _taskReportRepository.UpdateTaskReportAsync(taskReport);
         }
 
         public async Task<bool> DeleteTaskReportAsync(int id)
         {
-            var taskReport = await _context.TaskReports.FindAsync(id);
-
-            if (taskReport == null)
-            {
-                return false;
-            }
-
-            _context.TaskReports.Remove(taskReport);
-            return await _context.SaveChangesAsync() > 0;
+            return await _taskReportRepository.DeleteTaskReportAsync(id);
         }
     }
 }

@@ -2,6 +2,8 @@
 using TaskApp_Web.Models;
 using TaskApp_Web.Repositories.IRepositories;
 using TaskApp_Web.Data;
+using TaskApp_Web.Models.DTO;
+using Models;
 
 namespace TaskApp_Web.Repositories
 {
@@ -14,11 +16,22 @@ namespace TaskApp_Web.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<TaskReport>> GetTaskReportsByTaskIdAsync(int taskId)
+        public async Task<IEnumerable<TaskReportDTO>> GetTaskReportsAsync()
         {
             return await _context.TaskReports
-                .Where(r => r.TaskId == taskId)
-                .Include(r => r.CreatedByUser)
+                
+                .Include(tr => tr.Task)
+                .ThenInclude(tr => tr.AssignedByUser) // AssignedByUser'ı Include ediyoruz
+                .Select(tr => new TaskReportDTO
+                {
+                    TaskId = tr.TaskId,
+                    TaskTitle = tr.Task.Title,
+                    TaskDescription = tr.Task.Description,
+                    AssignedByUserFirstName = tr.Task.AssignedByUser.FirstName,
+                    AssignedByUserLastName = tr.Task.AssignedByUser.LastName,
+                    DueDate = tr.Task.DueDate,
+                    TaskStatus = tr.Task.Status
+                })
                 .ToListAsync();
         }
 

@@ -42,12 +42,11 @@ namespace TaskApp_Web.Data
                .Property(t => t.Status)
                .HasConversion<int>();
 
-            // UserToDoList konfigürasyonu
             modelBuilder.Entity<UserToDoList>()
                 .HasOne(t => t.User)
                 .WithMany(u => u.ToDoLists)
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade); // Kullanıcı silindiğinde yapılacaklar listesi de silinir
+                .OnDelete(DeleteBehavior.Cascade); 
 
             modelBuilder.Entity<TaskReport>()
                .HasOne(tr => tr.Task)
