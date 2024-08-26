@@ -13,6 +13,9 @@
         margin-bottom: 20px;
         background-color: #f0f0f0;
         border-bottom: 1px solid #ccc;
+        opacity: 0; /* Başlangıçta görünmez */
+        transform: translateY(-20px); /* Yukarıdan gelecek */
+        transition: all 1s ease;
     }
 
     .digital-clock {
@@ -29,6 +32,9 @@
         height: 100vh; /* Tüm yüksekliği kullan */
         padding-top: 50px; /* Üstten boşluk bırakma */
         text-align: center;
+        opacity: 0; /* Başlangıçta görünmez */
+        transform: translateY(20px); /* Aşağıdan gelecek */
+        transition: all 1s ease;
     }
 
     /* Hoş geldiniz yazısını büyütme */
@@ -37,23 +43,32 @@
         color: #8B4513; /* Hoş geldiniz yazısını kahverengi yap */
         font-weight: bold;
         margin-top: 10px; /* Başlıkla arasını açma */
+        opacity: 0; /* Başlangıçta görünmez */
+        transform: scale(0.9); /* Küçük başlayıp büyüyecek */
+        transition: all 1s ease;
     }
 
     /* Genel yazı stilini güzelleştirme */
     .centered-content p {
         font-size: 1.5em;
         color: #333;
+        transition: color 0.5s ease; /* Renk değişimi için geçiş */
     }
+
+        /* Hover efekti için renk değişimi */
+        .centered-content p:hover {
+            color: #555;
+        }
 </style>
 
-<div class="digital-clock-container">
+<div class="digital-clock-container" id="clock-container">
     <!-- Dijital Saatin Görüneceği Yer -->
     <div id="clock" class="digital-clock"></div>
 </div>
 
-<div class="centered-content">
-    <h1>GÖREV YÖNETİM SİSTEMİ</h1>
-    <p class="welcome-message">Hoş geldiniz!</p>
+<div class="centered-content" id="content">
+    <h1 id="main-title">GÖREV YÖNETİM SİSTEMİ</h1>
+    <p class="welcome-message" id="welcome">Hoş geldiniz!</p>
     <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
     <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
 </div>
@@ -67,6 +82,24 @@
         var timeString = hours + ':' + minutes + ':' + seconds;
         document.getElementById('clock').textContent = timeString;
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Animasyonları başlat
+        setTimeout(() => {
+            document.getElementById('clock-container').style.opacity = 1;
+            document.getElementById('clock-container').style.transform = 'translateY(0)';
+        }, 200);
+
+        setTimeout(() => {
+            document.getElementById('content').style.opacity = 1;
+            document.getElementById('content').style.transform = 'translateY(0)';
+        }, 400);
+
+        setTimeout(() => {
+            document.getElementById('welcome').style.opacity = 1;
+            document.getElementById('welcome').style.transform = 'scale(1)';
+        }, 600);
+    });
 
     // Sayfa yüklendiğinde ve periyodik olarak saati güncelle
     setInterval(updateClock, 1000);

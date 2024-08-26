@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskApp_Web.Models;
-using TaskApp_Web.Models;
 
 namespace TaskApp_Web.Data
 {
@@ -14,7 +13,7 @@ namespace TaskApp_Web.Data
         public DbSet<Users> Users { get; set; }
         public DbSet<Departments> Departments { get; set; }
         public DbSet<ToDoTasks> Tasks { get; set; }
-        public DbSet<UserToDoList> UserToDoLists { get; set; } // Yapılacaklar listesi için eklenen DbSet
+        public DbSet<UserToDoList> UserToDoLists { get; set; }
         public DbSet<TaskReport> TaskReports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -46,7 +45,7 @@ namespace TaskApp_Web.Data
                 .HasOne(t => t.User)
                 .WithMany(u => u.ToDoLists)
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<TaskReport>()
                .HasOne(tr => tr.Task)
@@ -58,6 +57,8 @@ namespace TaskApp_Web.Data
                 .WithMany(u => u.TaskReports)
                 .HasForeignKey(tr => tr.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+
         }
     }
 }

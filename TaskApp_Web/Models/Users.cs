@@ -12,9 +12,13 @@ namespace TaskApp_Web.Models
         public int DepartmentId { get; set; }
         public Departments Department { get; set; }
         public string? Gender { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? WorkingHours { get; set; }
+        public string? ProfilePicture { get; set; }
         public ICollection<ToDoTasks> Tasks { get; set; }
         public ICollection<ToDoTasks> AssignedTasks { get; set; }
         public ICollection<UserToDoList> ToDoLists { get; set; }
         public ICollection<TaskReport> TaskReports { get; set; }
+        
     }
 }

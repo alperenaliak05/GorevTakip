@@ -8,6 +8,43 @@
     <title>@ViewData["Title"] - TKGörevYönetim</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        /* Dark Mode Stil Tanımları */
+        .dark-mode {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+
+            .dark-mode .navbar, .dark-mode .footer {
+                background-color: #222;
+            }
+
+                .dark-mode .navbar .nav-link, .dark-mode .footer {
+                    color: #ddd;
+                }
+
+        /* Geçişler için Animasyon Tanımları */
+        .nav-link, .logout-button, .navbar-brand {
+            transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
+        }
+
+            .nav-link:hover, .navbar-brand:hover {
+                color: #007bff;
+                transform: scale(1.1);
+            }
+
+            .logout-button:hover {
+                background-color: #dc3545;
+                color: #fff;
+                transform: scale(1.1);
+            }
+
+        /* Sayfa Yüklenirken Animasyon */
+        body {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -54,6 +91,10 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
+                                <!-- Dark mode toggle emoji -->
+                                <a class="nav-link" href="#" id="darkModeToggle">🌙</a>
+                            </li>
+                            <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post">
                                     <button type="submit" class="btn logout-button">Çıkış Yap</button>
                                 </form>
@@ -83,5 +124,41 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Sayfa yüklendiğinde dark mode kontrolü ve sayfa animasyonu
+        document.addEventListener('DOMContentLoaded', function () {
+            // Sayfa fade-in efekti
+            document.body.style.opacity = 1;
+
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const isDarkMode = localStorage.getItem('darkMode');
+
+            if (isDarkMode === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+
+            darkModeToggle.addEventListener('click', function () {
+                if (document.body.classList.contains('dark-mode')) {
+                    document.body.classList.remove('dark-mode');
+                    localStorage.setItem('darkMode', 'disabled');
+                } else {
+                    document.body.classList.add('dark-mode');
+                    localStorage.setItem('darkMode', 'enabled');
+                }
+            });
+
+            // Navbar ve diğer tuşlar için hover animasyonu
+            const navLinks = document.querySelectorAll('.nav-link, .logout-button, .navbar-brand');
+            navLinks.forEach(link => {
+                link.addEventListener('mouseenter', function () {
+                    link.style.transform = 'scale(1.1)';
+                });
+
+                link.addEventListener('mouseleave', function () {
+                    link.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
 </body>
 </html>

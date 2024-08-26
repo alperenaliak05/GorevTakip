@@ -50,9 +50,26 @@ namespace TaskApp_Web.Repositories
 
         public async Task<bool> UpdateUserAsync(Users user)
         {
-            _context.Users.Update(user);
-            return await _context.SaveChangesAsync() > 0;
+            var existingUser = await _context.Users.FindAsync(user.Id);
+
+            if (existingUser != null)
+            {
+                existingUser.ProfilePicture = user.ProfilePicture ?? existingUser.ProfilePicture;
+
+                existingUser.FirstName = user.FirstName ?? existingUser.FirstName;
+                existingUser.LastName = user.LastName ?? existingUser.LastName;
+                existingUser.Email = user.Email ?? existingUser.Email;
+                existingUser.PhoneNumber = user.PhoneNumber ?? existingUser.PhoneNumber;
+                existingUser.WorkingHours = user.WorkingHours ?? existingUser.WorkingHours;
+
+                _context.Users.Update(existingUser);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
+
 
         public async Task<bool> DeleteUserAsync(int id)
         {

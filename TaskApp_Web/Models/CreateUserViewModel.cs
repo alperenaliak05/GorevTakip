@@ -18,5 +18,14 @@ namespace TaskApp_Web.Models
         [Required(ErrorMessage = "Departman seçimi gereklidir.")]
         public int DepartmentId { get; set; }
         public SelectList? Departments { get; set; }
+
+        [Required(ErrorMessage = "Cinsiyet seçimi gereklidir.")]
+        public string Gender { get; set; }
+
+        [Phone(ErrorMessage = "Geçersiz Telefon Numarası")]
+        public string PhoneNumber { get; set; } // Yeni eklenen alan
+
+        [Required(ErrorMessage = "Çalışma saatleri gereklidir.")]
+        public string WorkingHours { get; set; } // Yeni eklenen alan
     }
 }

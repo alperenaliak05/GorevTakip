@@ -1,7 +1,7 @@
 ﻿@model TaskApp_Web.Models.UserProfileViewModel
 
 <div class="profile-container">
-    <div class="profile-picture" style="background-image: url('https://iagq.tmgrup.com.tr/original/17-06/22/user_male_circle_filled1600.png'); border-radius: 50%; width: 150px; height: 150px; background-size: cover; margin: 0 auto;">
+    <div class="profile-picture" style="background-image: url('@Model.ProfilePicture'); border-radius: 50%; width: 150px; height: 150px; background-size: cover; margin: 0 auto;">
     </div>
 
     <div class="profile-details">
@@ -10,5 +10,8 @@
         <p><strong>Soyad:</strong> @Model.LastName</p>
         <p><strong>Email:</strong> @Model.Email</p>
         <p><strong>Departman:</strong> @Model.DepartmentName</p>
+        <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
+        <p><strong>Çalışma Saatleri:</strong> @Model.WorkingHours</p>
     </div>
+
 </div>

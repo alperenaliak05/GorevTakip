@@ -20,6 +20,7 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpGet]
+        [Route("CreateTask")]
         public async Task<IActionResult> CreateTask()
         {
             var users = await _taskService.GetAllUsersAsync();
@@ -40,6 +41,7 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
+        [Route("CreateTask")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateTask([FromForm] TaskViewModel model)
         {
@@ -101,8 +103,8 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
+        [Route("CompleteTask/{id}")]
         [ValidateAntiForgeryToken]
-        [Route("Tasks/CompleteTask/{id}")]
         public async Task<IActionResult> CompleteTask(int id)
         {
             var task = await _taskService.GetTaskByIdAsync(id);
@@ -116,8 +118,8 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
+        [Route("RejectTask/{id}")]
         [ValidateAntiForgeryToken]
-        [Route("Tasks/RejectTask/{id}")]
         public async Task<IActionResult> RejectTask(int id)
         {
             var task = await _taskService.GetTaskByIdAsync(id);
@@ -165,8 +167,8 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("EditTask/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditTask(int id, [FromForm] TaskViewModel model)
         {
             if (ModelState.IsValid)
@@ -187,8 +189,8 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Route("DeleteTask/{id}")]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteTask(int id)
         {
             var task = await _taskService.GetTaskByIdAsync(id);
@@ -197,6 +199,7 @@ namespace TaskApp_Web.Controllers
             await _taskService.DeleteTaskAsync(id);
             return RedirectToAction("TaskTracking");
         }
+
         [HttpGet]
         [Route("TaskProgress")]
         public async Task<IActionResult> TaskProgress()
@@ -216,5 +219,28 @@ namespace TaskApp_Web.Controllers
             return View(taskProgressList);
         }
 
+        [HttpGet]
+        [Route("CalendarView")]
+        public async Task<IActionResult> CalendarView()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var userId = int.Parse(userIdClaim.Value);
+
+            var tasks = await _taskService.GetTasksByUserIdAsync(userId);
+            var taskEvents = tasks.Select(task => new TaskCalendarEvent
+            {
+                Title = task.Title,
+                StartDate = task.DueDate.ToString("yyyy-MM-dd"),
+                EndDate = task.DueDate.ToString("yyyy-MM-dd")
+            }).ToList();
+
+            return View(taskEvents);
+        }
     }
 }

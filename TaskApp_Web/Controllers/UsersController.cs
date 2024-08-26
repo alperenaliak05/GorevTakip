@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 using TaskApp_Web.Models;
 using TaskApp_Web.Repositories;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Rendering; 
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TaskApp_Web.Controllers
 {
@@ -22,7 +24,14 @@ namespace TaskApp_Web.Controllers
             var users = await _userRepository.GetAllUsersAsync();
             var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
 
-            ViewBag.UserDepartment = currentUser.Department?.Name;
+            if (currentUser != null)
+            {
+                ViewBag.UserDepartment = currentUser.Department?.Name;
+            }
+            else
+            {
+                ViewBag.UserDepartment = "Bilinmiyor";
+            }
 
             return View(users);
         }
@@ -46,6 +55,9 @@ namespace TaskApp_Web.Controllers
                     LastName = user.LastName,
                     Email = user.Email,
                     DepartmentName = user.Department?.Name,
+                    PhoneNumber = user.PhoneNumber,
+                    WorkingHours = user.WorkingHours,
+                    ProfilePicture = user.ProfilePicture // Profil resmi eklendi
                 };
 
                 return View(model);
@@ -65,6 +77,9 @@ namespace TaskApp_Web.Controllers
                     LastName = user.LastName,
                     Email = user.Email,
                     DepartmentName = user.Department?.Name,
+                    PhoneNumber = user.PhoneNumber,
+                    WorkingHours = user.WorkingHours,
+                    ProfilePicture = user.ProfilePicture // Profil resmi eklendi
                 };
 
                 return View(model);
@@ -72,7 +87,7 @@ namespace TaskApp_Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UpdateProfile(UserProfileViewModel model)
+        public async Task<IActionResult> UpdateProfile(UserProfileViewModel model, IFormFile profilePicture)
         {
             if (ModelState.IsValid)
             {
@@ -86,6 +101,18 @@ namespace TaskApp_Web.Controllers
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.Email = model.Email;
+                user.PhoneNumber = model.PhoneNumber;
+                user.WorkingHours = model.WorkingHours;
+
+                if (profilePicture != null && profilePicture.Length > 0)
+                {
+                    var filePath = Path.Combine("wwwroot/uploads", profilePicture.FileName);
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await profilePicture.CopyToAsync(stream);
+                    }
+                    user.ProfilePicture = "/uploads/" + profilePicture.FileName;
+                }
 
                 await _userRepository.UpdateUserAsync(user);
 
@@ -107,23 +134,41 @@ namespace TaskApp_Web.Controllers
             var departments = await _userRepository.GetAllDepartmentsAsync();
             var model = new CreateUserViewModel
             {
-                Departments = new SelectList(departments, "Id", "Name") // Burada dönüşüm yapılıyor
+                Departments = new SelectList(departments, "Id", "Name")
             };
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(CreateUserViewModel model)
+        public async Task<IActionResult> CreateUser(CreateUserViewModel model, IFormFile profilePicture)
         {
             if (ModelState.IsValid)
             {
+                string profilePicturePath = null;
+
+                if (profilePicture != null && profilePicture.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine("wwwroot/uploads");
+                    Directory.CreateDirectory(uploadsFolder);
+                    profilePicturePath = Path.Combine(uploadsFolder, profilePicture.FileName);
+                    using (var fileStream = new FileStream(profilePicturePath, FileMode.Create))
+                    {
+                        await profilePicture.CopyToAsync(fileStream);
+                    }
+                    profilePicturePath = "/uploads/" + profilePicture.FileName;
+                }
+
                 var user = new Users
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     Email = model.Email,
-                    DepartmentId = model.DepartmentId
+                    DepartmentId = model.DepartmentId,
+                    PhoneNumber = model.PhoneNumber,
+                    WorkingHours = model.WorkingHours,
+                    Gender = model.Gender,
+                    ProfilePicture = profilePicturePath // Profil resmi ekleniyor
                 };
 
                 bool isAdded = await _userRepository.AddUserAsync(user);

@@ -6,7 +6,7 @@
 
 <h1>Yeni Kullanıcı Ekle</h1>
 
-<form asp-action="CreateUser" method="post">
+<form asp-action="CreateUser" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="FirstName" class="control-label">Ad</label>
@@ -24,9 +24,33 @@
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
     <div class="form-group">
+        <label asp-for="PhoneNumber" class="control-label">Telefon Numarası</label>
+        <input asp-for="PhoneNumber" class="form-control" placeholder="Kullanıcı Telefon Numarasını giriniz" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="WorkingHours" class="control-label">Çalışma Saatleri</label>
+        <input asp-for="WorkingHours" class="form-control" placeholder="Çalışma Saatlerini giriniz" />
+        <span asp-validation-for="WorkingHours" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Gender" class="control-label">Cinsiyet</label>
+        <select asp-for="Gender" class="form-control">
+            <option value="">Seçiniz</option>
+            <option value="Erkek">Erkek</option>
+            <option value="Kadın">Kadın</option>
+            <option value="Diğer">Diğer</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="DepartmentId" class="control-label">Departman</label>
         <select asp-for="DepartmentId" class="form-control" asp-items="Model.Departments"></select>
         <span asp-validation-for="DepartmentId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ProfilePicture" class="control-label">Profil Resmi</label>
+        <input type="file" name="ProfilePicture" class="form-control" />
     </div>
     <button type="submit" class="btn btn-primary">Kaydet</button>
 </form>
