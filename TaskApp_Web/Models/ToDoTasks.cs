@@ -10,13 +10,17 @@ namespace TaskApp_Web.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
-        public TaskStatus Status { get; set; } 
-        public string? StatusDescription => ((TaskStatus)Status).ToString();
-        public int AssignedToUserId { get; set; }
-        public Users AssignedToUser { get; set; }
+        public TaskStatus Status { get; set; }
+        public int? AssignedToUserId { get; set; }
+        public int? AssignedToDepartmentId { get; set; }
+        public Users? AssignedToUser { get; set; }
         public int AssignedByUserId { get; set; }
         public Users AssignedByUser { get; set; }
         public ICollection<TaskReport> TaskReports { get; set; }
-
+        public string? Process { get; set; }
+        public TaskPriority? Priority { get; set; }
+        public string? AssignedByUserFirstName => AssignedByUser?.FirstName;
+        public string? AssignedByUserLastName => AssignedByUser?.LastName;
     }
+
 }

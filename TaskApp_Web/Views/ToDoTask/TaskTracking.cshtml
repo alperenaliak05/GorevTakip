@@ -2,36 +2,142 @@
 
 <h2>Görev Takibi</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Başlık</th>
-            <th>Açıklama</th>
-            <th>Atanan Kişi</th>
-            <th>Bitiş Tarihi</th>
-            <th>Durum</th>
-            <th>Düzenle</th>
-            <th>Sil</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in Model)
-        {
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
             <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.AssignedToUserName</td>
-                <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
-                <td>@task.Status.ToString()</td>
-                <td>
-                    <a asp-action="EditTask" asp-route-id="@task.TaskId" class="btn btn-warning">Düzenle</a>
-                </td>
-                <td>
-                    <form asp-action="DeleteTask" asp-route-id="@task.TaskId" method="post" onsubmit="return confirm('Bu görevi silmek istediğinize emin misiniz?');">
-                        <button type="submit" class="btn btn-danger">Sil</button>
-                    </form>
-                </td>
+                <th>Başlık</th>
+                <th>Açıklama</th>
+                <th>Atanan Kişi</th>
+                <th>Bitiş Tarihi</th>
+                <th>Durum</th>
+                <th>Düzenle</th>
+                <th>Sil</th>
             </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model)
+            {
+                <tr>
+                    <td>@task.Title</td>
+                    <td>@task.Description</td>
+                    <td>@task.AssignedToUserName</td>
+                    <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
+                    <td>@task.Status.ToString()</td>
+                    <td>
+                        <a asp-action="EditTask" asp-route-id="@task.TaskId" class="btn btn-warning edit-btn">Düzenle</a>
+                    </td>
+                    <td>
+                        <form asp-action="DeleteTask" asp-route-id="@task.TaskId" method="post" onsubmit="return confirm('Bu görevi silmek istediğinize emin misiniz?');">
+                            <button type="submit" class="btn btn-danger delete-btn">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Düzenle ve Sil butonlarına hover animasyonu ekleyin
+        document.querySelectorAll('.edit-btn, .delete-btn').forEach(button => {
+            button.addEventListener('mouseover', function () {
+                this.classList.add('btn-animate');
+            });
+            button.addEventListener('mouseout', function () {
+                this.classList.remove('btn-animate');
+            });
+        });
+
+        // Satırları üzerine gelindiğinde renklendirin
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('mouseover', function () {
+                this.classList.add('row-hover');
+            });
+            row.addEventListener('mouseout', function () {
+                this.classList.remove('row-hover');
+            });
+        });
+    });
+</script>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    .table-responsive {
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .table-responsive:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-    </tbody>
-</table>
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-warning, .btn-danger {
+        transition: all 0.3s ease;
+    }
+
+        .btn-warning:hover {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+    .btn-animate {
+        transform: scale(1.05);
+        transition: transform 0.2s;
+    }
+
+    .row-hover {
+        background-color: #e9ecef !important;
+        transition: background-color 0.3s ease;
+    }
+</style>

@@ -11,14 +11,106 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.0/main.min.js"></script>
 
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    #calendar {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        #calendar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .fc-header-toolbar {
+        margin-bottom: 20px;
+        background-color: #343a40;
+        color: #fff;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+    .fc-button {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+        transition: background-color 0.3s ease;
+    }
+
+        .fc-button:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+    .fc-button-primary:not(:disabled).fc-button-active {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .fc-button-primary:not(:disabled):focus, .fc-button-primary:not(:disabled):hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .fc-daygrid-day:hover {
+        background-color: #e9ecef;
+        transition: background-color 0.3s ease;
+    }
+
+    .fc-daygrid-event {
+        border-radius: 5px;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .fc-daygrid-event:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+</style>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            events: @Html.Raw(Json.Serialize(Model)) // Model verilerini JavaScript'e geçiriyoruz
-            });
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: @Html.Raw(Json.Serialize(Model)), // Model verilerini JavaScript'e geçiriyoruz
+            eventMouseEnter: function (info) {
+                info.el.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                info.el.style.transform = 'scale(1.05)';
+                info.el.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            },
+            eventMouseLeave: function (info) {
+                info.el.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+                info.el.style.transform = 'scale(1)';
+                info.el.style.boxShadow = 'none';
+            }
+        });
 
         calendar.render();
     });

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskApp_Web.Data;
 
@@ -11,9 +12,11 @@ using TaskApp_Web.Data;
 namespace TaskAppWeb.Migrations
 {
     [DbContext(typeof(TaskApp_WebContext))]
-    partial class TaskAppWebContextModelSnapshot : ModelSnapshot
+    [Migration("20240827064316_departmentsid")]
+    partial class departmentsid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,6 +90,7 @@ namespace TaskAppWeb.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AssignedToUserId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -95,12 +99,6 @@ namespace TaskAppWeb.Migrations
 
                     b.Property<DateTime>("DueDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int?>("Priority")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Process")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -215,7 +213,8 @@ namespace TaskAppWeb.Migrations
                     b.HasOne("TaskApp_Web.Models.Users", "AssignedToUser")
                         .WithMany("Tasks")
                         .HasForeignKey("AssignedToUserId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("AssignedByUser");
 

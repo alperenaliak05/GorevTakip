@@ -9,68 +9,85 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 10px;
-        margin-bottom: 20px;
-        background-color: #f0f0f0;
-        border-bottom: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 30px;
+        background-color: #343a40; /* Arka plan rengi koyu gri */
+        border-bottom: 2px solid #222;
         opacity: 0; /* Başlangıçta görünmez */
         transform: translateY(-20px); /* Yukarıdan gelecek */
         transition: all 1s ease;
     }
 
     .digital-clock {
-        font-size: 2em;
-        color: #333;
+        font-size: 3em;
+        color: #fff; /* Saat rengini beyaz yap */
+        font-weight: bold;
     }
 
     /* İçerikleri yukarı çekme ve ortalama */
     .centered-content {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start; /* Üst tarafa hizalama */
+        justify-content: flex-start;
         align-items: center;
-        height: 100vh; /* Tüm yüksekliği kullan */
-        padding-top: 50px; /* Üstten boşluk bırakma */
+        height: 100vh;
+        padding-top: 60px;
         text-align: center;
         opacity: 0; /* Başlangıçta görünmez */
         transform: translateY(20px); /* Aşağıdan gelecek */
         transition: all 1s ease;
     }
 
-    /* Hoş geldiniz yazısını büyütme */
     .welcome-message {
-        font-size: 8em; /* Yazı boyutunu büyüt */
-        color: #8B4513; /* Hoş geldiniz yazısını kahverengi yap */
+        font-size: 5em;
+        color: #8B4513; 
         font-weight: bold;
-        margin-top: 10px; /* Başlıkla arasını açma */
-        opacity: 0; /* Başlangıçta görünmez */
-        transform: scale(0.9); /* Küçük başlayıp büyüyecek */
+        margin-top: 20px; 
+        opacity: 0; 
+        transform: scale(0.9); 
         transition: all 1s ease;
+        animation: glow 2s infinite alternate; 
     }
 
     /* Genel yazı stilini güzelleştirme */
     .centered-content p {
-        font-size: 1.5em;
+        font-size: 1.8em;
         color: #333;
-        transition: color 0.5s ease; /* Renk değişimi için geçiş */
+        margin: 10px 0;
+        transition: color 0.5s ease; 
     }
 
-        /* Hover efekti için renk değişimi */
-        .centered-content p:hover {
-            color: #555;
+    .centered-content p:hover {
+        color: #555;
+    }
+
+    @@keyframes glow {
+        from {
+            text-shadow: 0 0 10px #8B4513, 0 0 20px #8B4513, 0 0 30px #8B4513;
         }
+        to {
+            text-shadow: 0 0 20px #FF6347, 0 0 30px #FF6347, 0 0 40px #FF6347, 0 0 50px #FF6347;
+        }
+    }
+
+    .animated-content {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 1s ease;
+    }
 </style>
 
 <div class="digital-clock-container" id="clock-container">
-    <!-- Dijital Saatin Görüneceği Yer -->
     <div id="clock" class="digital-clock"></div>
 </div>
 
 <div class="centered-content" id="content">
     <h1 id="main-title">GÖREV YÖNETİM SİSTEMİ</h1>
     <p class="welcome-message" id="welcome">Hoş geldiniz!</p>
-    <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
-    <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
+    <div class="animated-content">
+        <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
+        <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
+    </div>
 </div>
 
 <script>
@@ -84,7 +101,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Animasyonları başlat
+      
         setTimeout(() => {
             document.getElementById('clock-container').style.opacity = 1;
             document.getElementById('clock-container').style.transform = 'translateY(0)';
@@ -99,9 +116,14 @@
             document.getElementById('welcome').style.opacity = 1;
             document.getElementById('welcome').style.transform = 'scale(1)';
         }, 600);
-    });
 
-    // Sayfa yüklendiğinde ve periyodik olarak saati güncelle
+        setTimeout(() => {
+            document.querySelectorAll('.animated-content').forEach((el) => {
+                el.style.opacity = 1;
+                el.style.transform = 'translateY(0)';
+            });
+        }, 800);
+    });
     setInterval(updateClock, 1000);
     updateClock();
 </script>

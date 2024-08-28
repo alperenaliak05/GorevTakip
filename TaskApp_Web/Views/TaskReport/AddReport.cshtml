@@ -2,16 +2,133 @@
 
 <h2>Yeni Görev Raporu Ekle</h2>
 
-<form asp-action="AddReport" method="post">
+<form asp-action="AddReport" method="post" class="report-form">
+    @Html.AntiForgeryToken()
     <div class="form-group">
         <label for="TaskId">Görev</label>
-        <select asp-for="TaskId" class="form-control" asp-items="ViewBag.Tasks">
+        <select asp-for="TaskId" class="form-control">
             <option value="">Bir Görev Seçin</option>
+            @foreach (var item in ViewBag.Tasks as SelectList)
+            {
+                <option value="@item.Value">@item.Text</option>
+            }
         </select>
+        <span asp-validation-for="TaskId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label for="Report">Rapor</label>
-        <textarea asp-for="Report" class="form-control"></textarea>
+        <textarea asp-for="Report" class="form-control" placeholder="Görev raporunu buraya yazınız..."></textarea>
+        <span asp-validation-for="Report" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-success">Kaydet</button>
+    <button type="submit" class="btn btn-success submit-btn">Kaydet</button>
 </form>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+        margin: 0;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    .report-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .report-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #28a745;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .submit-btn:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+    .text-danger {
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form elemanları odaklanma ve geçiş animasyonları
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function () {
+                this.parentNode.classList.add('focused');
+            });
+            input.addEventListener('blur', function () {
+                if (!this.value) {
+                    this.parentNode.classList.remove('focused');
+                }
+            });
+        });
+
+        // Kaydet butonuna tıklama animasyonu
+        document.querySelector('.submit-btn').addEventListener('click', function () {
+            this.classList.add('button-animate');
+            setTimeout(() => this.classList.remove('button-animate'), 300);
+        });
+    });
+</script>

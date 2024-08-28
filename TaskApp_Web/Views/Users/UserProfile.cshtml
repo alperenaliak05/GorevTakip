@@ -1,7 +1,7 @@
 ﻿@model TaskApp_Web.Models.UserProfileViewModel
 
 <div class="profile-container">
-    <div class="profile-picture" style="background-image: url('@Model.ProfilePicture'); border-radius: 50%; width: 150px; height: 150px; background-size: cover; margin: 0 auto;">
+    <div class="profile-picture" style="background-image: url('@Model.ProfilePicture');">
     </div>
 
     <div class="profile-details">
@@ -13,5 +13,95 @@
         <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
         <p><strong>Çalışma Saatleri:</strong> @Model.WorkingHours</p>
     </div>
-
 </div>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+        margin: 0;
+    }
+
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: #fff;
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .profile-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .profile-picture {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        background-size: cover;
+        background-position: center;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+        .profile-picture:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .profile-details {
+        text-align: center;
+    }
+
+        .profile-details h2 {
+            font-size: 28px;
+            color: #333;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .profile-details p {
+            font-size: 18px;
+            margin: 10px 0;
+            transition: color 0.3s ease;
+        }
+
+            .profile-details p:hover {
+                color: #007bff;
+            }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Profile container hover animasyonları
+        document.querySelector('.profile-container').addEventListener('mouseover', function () {
+            this.style.transform = 'translateY(-5px)';
+            this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+        });
+
+        document.querySelector('.profile-container').addEventListener('mouseout', function () {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        });
+
+        // Profile picture hover animasyonu
+        document.querySelector('.profile-picture').addEventListener('mouseover', function () {
+            this.style.transform = 'scale(1.1)';
+            this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+        });
+
+        document.querySelector('.profile-picture').addEventListener('mouseout', function () {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+        });
+    });
+</script>

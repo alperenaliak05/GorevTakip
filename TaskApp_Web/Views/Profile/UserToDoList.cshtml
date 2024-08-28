@@ -12,25 +12,29 @@
         @foreach (var item in Model)
         {
             <li class="todo-item">
-                <input type="checkbox" id="task_@item.Id" class="todo-checkbox"
-                @if (item.IsCompleted)
-                {
-                    <text>checked disabled</text>
-                }
-                onclick="this.form.submit();" />
-                <label for="task_@item.Id" class="todo-label">@item.Task</label>
+                <div class="todo-item-content">
+                    <input type="checkbox" id="task_@item.Id" class="todo-checkbox"
+                    @if (item.IsCompleted)
+                    {
+                        <text>checked disabled</text>
+                    }
+                    onclick="this.form.submit();" />
+                    <label for="task_@item.Id" class="todo-label">@item.Task</label>
+                </div>
 
-                @if (!item.IsCompleted)
-                {
-                    <form asp-action="UpdateToDoList" method="post" style="display:inline;">
-                        <input type="hidden" name="Id" value="@item.Id" />
-                        <input type="hidden" name="IsCompleted" value="true" />
+                <div class="todo-item-actions">
+                    @if (!item.IsCompleted)
+                    {
+                        <form asp-action="UpdateToDoList" method="post" style="display:inline;">
+                            <input type="hidden" name="Id" value="@item.Id" />
+                            <input type="hidden" name="IsCompleted" value="true" />
+                        </form>
+                    }
+                    <form asp-action="DeleteToDoList" method="post" class="delete-form">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm delete-btn">❌</button>
                     </form>
-                }
-                <form asp-action="DeleteToDoList" method="post" class="delete-form">
-                    <input type="hidden" name="id" value="@item.Id" />
-                    <button type="submit" class="btn btn-danger btn-sm delete-btn">❌</button>
-                </form>
+                </div>
             </li>
         }
     </ul>
@@ -41,40 +45,62 @@
     .todo-title {
         text-align: center;
         margin-bottom: 20px;
-        font-size: 2em;
+        font-size: 2.5em;
         letter-spacing: 2px;
+        color: #333;
+        transition: color 0.3s ease;
     }
 
     /* Görev Ekleme Kutusu */
     .todo-container {
         max-width: 600px;
         margin: 0 auto;
-        padding: 20px;
-        border-radius: 8px;
-        background-color: #f9f9f9;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        border-radius: 10px;
+        background-color: #f0f0f0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+        .todo-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
 
     .todo-form {
         display: flex;
         justify-content: center;
         gap: 10px;
         margin-bottom: 20px;
+        position: relative;
     }
 
     .todo-input {
         flex-grow: 1;
-        padding: 10px;
-        font-size: 1em;
+        padding: 12px;
+        font-size: 1.2em;
         border-radius: 5px;
         border: 1px solid #ccc;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
+        .todo-input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
 
     .todo-add-btn {
         padding: 10px 20px;
-        font-size: 1em;
+        font-size: 1.2em;
         border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
+
+        .todo-add-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
 
     /* Tik Kutusu ve Liste */
     .todo-list {
@@ -84,26 +110,49 @@
 
     .todo-item {
         display: flex;
-        align-items: center;
         justify-content: space-between;
+        align-items: center;
         margin-bottom: 10px;
-        padding: 10px;
+        padding: 15px;
         background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+        .todo-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+    .todo-item-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
     }
 
     .todo-checkbox {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         margin-right: 15px;
         cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
+        .todo-checkbox:hover {
+            transform: scale(1.1);
+        }
+
     .todo-label {
-        flex-grow: 1;
         font-size: 1.2em;
+        flex-grow: 1;
+        cursor: pointer;
+        transition: color 0.3s ease;
     }
+
+        .todo-label:hover {
+            color: #007bff;
+        }
 
     /* Silme Butonu */
     .delete-form {
@@ -113,14 +162,47 @@
     .delete-btn {
         background-color: transparent;
         border: none;
-        color: #B22222; /* Koyu kırmızı */
+        color: #B22222;
         font-size: 1.5em;
         padding: 0;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: transform 0.2s, color 0.3s;
     }
 
         .delete-btn:hover {
             transform: scale(1.2);
+            color: #8B0000;
         }
 </style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Silme butonlarına hover animasyonu ekleyin
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('mouseover', function () {
+                this.classList.add('btn-animate');
+            });
+            button.addEventListener('mouseout', function () {
+                this.classList.remove('btn-animate');
+            });
+        });
+
+        // Görev ekleme butonuna hover animasyonu ekleyin
+        document.querySelector('.todo-add-btn').addEventListener('mouseover', function () {
+            this.style.transform = 'scale(1.05)';
+        });
+        document.querySelector('.todo-add-btn').addEventListener('mouseout', function () {
+            this.style.transform = 'scale(1)';
+        });
+
+        // Görev kutusuna odaklanıldığında efekt ekleyin
+        document.querySelector('.todo-input').addEventListener('focus', function () {
+            this.style.borderColor = '#007bff';
+            this.style.boxShadow = '0 0 5px rgba(0, 123, 255, 0.5)';
+        });
+        document.querySelector('.todo-input').addEventListener('blur', function () {
+            this.style.borderColor = '#ccc';
+            this.style.boxShadow = 'none';
+        });
+    });
+</script>

@@ -5,6 +5,6 @@ namespace TaskApp_Web.Repositories
 {
     public interface IDepartmentRepository : IRepository<Departments>
     {
-       
+        Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync();
     }
 }

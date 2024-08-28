@@ -1,5 +1,4 @@
-﻿using Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using TaskApp_Web.Models;
 
@@ -14,5 +13,6 @@ namespace TaskApp_Web.Repositories
         Task<bool> UpdateUserAsync(Users user);
         Task<bool> DeleteUserAsync(int id);
         Task<List<Departments>> GetAllDepartmentsAsync();
+        Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId); // Yeni metot eklendi
     }
 }

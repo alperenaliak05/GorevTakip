@@ -12,11 +12,13 @@ namespace TaskApp_Web.Services
     {
         private readonly IToDoTaskRepository _toDoTaskRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IDepartmentRepository _departmentRepository; // Yeni eklenen repository
 
-        public ToDoTaskService(IToDoTaskRepository toDoTaskRepository, IUserRepository userRepository)
+        public ToDoTaskService(IToDoTaskRepository toDoTaskRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository)
         {
             _toDoTaskRepository = toDoTaskRepository;
             _userRepository = userRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
@@ -54,7 +56,6 @@ namespace TaskApp_Web.Services
             return await _toDoTaskRepository.DeleteTaskAsync(id);
         }
 
-        // Yeni eklenen metot: Belirli bir duruma göre görevleri getirir
         public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(Models.TaskStatus status)
         {
             return await _toDoTaskRepository.GetTasksByStatusAsync(status);
@@ -63,6 +64,18 @@ namespace TaskApp_Web.Services
         public async Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId)
         {
             return await _toDoTaskRepository.GetTasksAssignedByUserAsync(userId);
+        }
+
+        // Departmanları getirir
+        public async Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync()
+        {
+            return await _departmentRepository.GetAllDepartmentsAsync();
+        }
+
+        // Yeni eklenen metot: Belirli bir departmandaki tüm kullanıcıları getirir
+        public async Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId)
+        {
+            return await _userRepository.GetUsersByDepartmentIdAsync(departmentId);
         }
     }
 }

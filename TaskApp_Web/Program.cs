@@ -65,7 +65,7 @@ builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
 builder.Services.AddScoped<IUserToDoListRepository, UserToDoListRepository>();
 builder.Services.AddScoped<ITaskReportService, TaskReportService>();
 builder.Services.AddScoped<ITaskReportRepository, TaskReportRepository>();
-
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddRazorPages();

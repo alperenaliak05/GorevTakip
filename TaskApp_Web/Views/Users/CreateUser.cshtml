@@ -6,7 +6,7 @@
 
 <h1>Yeni Kullanıcı Ekle</h1>
 
-<form asp-action="CreateUser" method="post" enctype="multipart/form-data">
+<form asp-action="CreateUser" method="post" enctype="multipart/form-data" class="user-form">
     @Html.AntiForgeryToken()
     <div class="form-group">
         <label asp-for="FirstName" class="control-label">Ad</label>
@@ -50,11 +50,117 @@
     </div>
     <div class="form-group">
         <label for="ProfilePicture" class="control-label">Profil Resmi</label>
-        <input type="file" name="ProfilePicture" class="form-control" />
+        <input type="file" name="ProfilePicture" class="form-control-file" />
     </div>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
+    <button type="submit" class="btn btn-primary submit-btn">Kaydet</button>
 </form>
 
 <div class="mt-3">
     <a asp-action="AllUsers" class="btn btn-secondary">← Geri Dön</a>
 </div>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    .user-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .user-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+    .form-control,
+    .form-control-file {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus,
+        .form-control-file:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-secondary {
+        display: block;
+        width: 150px;
+        margin: 20px auto;
+        padding: 10px;
+        font-size: 16px;
+        text-align: center;
+        color: #fff;
+        background-color: #6c757d;
+        border: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+    .text-danger {
+        font-size: 14px;
+        margin-top: 5px;
+        display: block;
+    }
+</style>

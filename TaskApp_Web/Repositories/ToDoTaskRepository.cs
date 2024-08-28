@@ -33,7 +33,7 @@ namespace TaskApp_Web.Repositories
                     Id = t.Id,
                     Title = t.Title,
                     Description = t.Description,
-                    AssignedToUserId = t.AssignedToUserId,
+                    AssignedToUserId = t.AssignedToUserId ?? 0,
                     AssignedByUserId = t.AssignedByUserId,
                     AssignedByUserFirstName = t.AssignedByUser.FirstName,
                     AssignedByUserLastName = t.AssignedByUser.LastName,

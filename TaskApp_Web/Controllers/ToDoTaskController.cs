@@ -24,6 +24,7 @@ namespace TaskApp_Web.Controllers
         public async Task<IActionResult> CreateTask()
         {
             var users = await _taskService.GetAllUsersAsync();
+            var departments = await _taskService.GetAllDepartmentsAsync();
 
             var userViewModels = users.Select(u => new UserViewModel
             {
@@ -31,10 +32,19 @@ namespace TaskApp_Web.Controllers
                 Id = u.Id
             }).ToList();
 
+            var departmentViewModels = departments.Select(d => new DepartmentViewModel
+            {
+                Name = d.Name,
+                Id = d.Id
+            }).ToList();
+
             var taskViewModel = new TaskViewModel
             {
                 Users = userViewModels,
-                Status = (int)TaskStatus.Bekliyor,
+                Departments = departmentViewModels,
+                Status = TaskStatus.Bekliyor,  // Status should be an enum, not int
+                DueDate = DateTime.Now,  // Default to current date
+                Priority = TaskPriority.Orta  // Varsayılan öncelik orta olarak ayarlandı
             };
 
             return View(taskViewModel);
@@ -47,25 +57,49 @@ namespace TaskApp_Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.AssignedToUserId == null && model.AssignedToDepartmentId == null)
+                {
+                    ModelState.AddModelError("", "Lütfen bir kullanıcı veya departman seçin.");
+                    return View(model);
+                }
+
+                if (model.AssignedToUserId != null && model.AssignedToDepartmentId != null)
+                {
+                    ModelState.AddModelError("", "Bir görev ya bir kullanıcıya ya da bir departmana atanabilir, ikisine birden atanamaz.");
+                    return View(model);
+                }
+
                 var task = new ToDoTasks
                 {
                     Title = model.Title,
                     Description = model.Description,
                     AssignedToUserId = model.AssignedToUserId,
+                    AssignedToDepartmentId = model.AssignedToDepartmentId,
                     AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                     DueDate = model.DueDate,
-                    Status = (int)TaskStatus.Bekliyor,
+                    Status = TaskStatus.Bekliyor,
+                    Priority = model.Priority,
+                    Process = null  // Process initially null
                 };
 
                 await _taskService.AddTaskAsync(task);
-                return RedirectToAction("MyTasks");
+
+                return RedirectToAction("TaskTracking");  // After creating, redirect to TaskTracking
             }
 
             var users = await _taskService.GetAllUsersAsync();
+            var departments = await _taskService.GetAllDepartmentsAsync();
+
             model.Users = users.Select(u => new UserViewModel
             {
                 FullName = u.FirstName + " " + u.LastName,
-                Email = u.Email
+                Id = u.Id
+            }).ToList();
+
+            model.Departments = departments.Select(d => new DepartmentViewModel
+            {
+                Name = d.Name,
+                Id = d.Id
             }).ToList();
 
             return View(model);
@@ -83,7 +117,6 @@ namespace TaskApp_Web.Controllers
             }
 
             var userId = int.Parse(userIdClaim.Value);
-
             var tasks = await _taskService.GetTasksByUserIdAsync(userId);
 
             var taskDTOs = tasks.Select(task => new TaskDTO
@@ -146,7 +179,6 @@ namespace TaskApp_Web.Controllers
             var tasks = await _taskService.GetTasksAssignedByUserAsync(userId);
             return View(tasks);
         }
-
         [HttpGet]
         [Route("EditTask/{id}")]
         public async Task<IActionResult> EditTask(int id)
@@ -160,7 +192,8 @@ namespace TaskApp_Web.Controllers
                 Title = task.Title,
                 Description = task.Description,
                 DueDate = task.DueDate,
-                Status = task.Status
+                Status = task.Status,
+                Priority = task.Priority // Öncelik alanını ekledik
             };
 
             return View(model);
@@ -180,6 +213,7 @@ namespace TaskApp_Web.Controllers
                 task.Description = model.Description;
                 task.DueDate = model.DueDate;
                 task.Status = model.Status;
+                task.Priority = model.Priority; // Öncelik alanını ekledik
 
                 await _taskService.UpdateTaskAsync(task);
                 return RedirectToAction("TaskTracking");
@@ -187,6 +221,7 @@ namespace TaskApp_Web.Controllers
 
             return View(model);
         }
+
 
         [HttpPost]
         [Route("DeleteTask/{id}")]
@@ -210,7 +245,7 @@ namespace TaskApp_Web.Controllers
             var taskProgressList = users.Select(user => new TaskProgressViewModel
             {
                 FullName = $"{user.FirstName} {user.LastName}",
-                Department = user.Department?.Name ?? "No Department", // Adjusting for null values
+                Department = user.Department?.Name ?? "No Department",
                 CompletedTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Tamamlandı),
                 RejectedTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Reddedildi),
                 PendingTasks = tasks.Count(t => t.AssignedToUserId == user.Id && t.Status == TaskStatus.Bekliyor),

@@ -2,23 +2,191 @@
 
 <h2>Görev Detayları</h2>
 
-<p><strong>Görev:</strong> @Model.TaskTitle</p>
-<p><strong>Açıklama:</strong> @Model.TaskDescription</p>
-<p><strong>Bitiş Tarihi:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
-<p><strong>Durum:</strong> @Model.TaskStatus</p>
+<div class="task-details">
+    <p><strong>Görev:</strong> @Model.TaskTitle</p>
+    <p><strong>Açıklama:</strong> @Model.TaskDescription</p>
+    <p><strong>Bitiş Tarihi:</strong> @Model.DueDate.ToString("yyyy-MM-dd")</p>
+    <p><strong>Durum:</strong> @Model.TaskStatus</p>
+</div>
 
 @if (Model.CanAddReport)
 {
-    <form asp-action="AddReport" method="post">
+    <form asp-action="AddReport" method="post" class="report-form">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="TaskId" />
         <div class="form-group">
             <label for="Report">Rapor</label>
-            <textarea asp-for="ReportContent" class="form-control"></textarea>
+            <textarea asp-for="ReportContent" class="form-control" placeholder="Raporunuzu buraya yazınız..."></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Raporu Ekle</button>
+        <button type="submit" class="btn btn-primary submit-btn">Raporu Ekle</button>
     </form>
 }
 else
 {
-    <p>Bu görevi sadece görevi atan kullanıcı raporlayabilir.</p>
+    <p class="text-warning">Bu görevi sadece görevi atan kullanıcı raporlayabilir.</p>
 }
+
+<!-- Geri Dön Butonu -->
+<div class="back-button-container">
+    <a href="javascript:history.back()" class="btn btn-secondary back-btn">← Geri Dön</a>
+</div>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+        margin: 0;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    .task-details {
+        max-width: 600px;
+        margin: 0 auto 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .task-details:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .task-details p {
+            font-size: 18px;
+            margin: 10px 0;
+            transition: color 0.3s ease;
+        }
+
+            .task-details p:hover {
+                color: #007bff;
+            }
+
+    .report-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .report-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+    .text-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .back-button-container {
+        max-width: 600px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    .back-btn {
+        background-color: #6c757d;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        display: inline-block;
+    }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+            transform: scale(1.05);
+        }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form elemanları odaklanma ve geçiş animasyonları
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function () {
+                this.parentNode.classList.add('focused');
+            });
+            input.addEventListener('blur', function () {
+                if (!this.value) {
+                    this.parentNode.classList.remove('focused');
+                }
+            });
+        });
+
+        // Raporu Ekle butonuna tıklama animasyonu
+        document.querySelector('.submit-btn').addEventListener('click', function () {
+            this.classList.add('button-animate');
+            setTimeout(() => this.classList.remove('button-animate'), 300);
+        });
+    });
+</script>

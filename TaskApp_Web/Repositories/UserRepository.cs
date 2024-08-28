@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TaskApp_Web.Models;
 using TaskApp_Web.Data;
-using Models;
 
 namespace TaskApp_Web.Repositories
 {
@@ -36,26 +35,21 @@ namespace TaskApp_Web.Repositories
             try
             {
                 _context.Users.Add(user);
-
                 return await _context.SaveChangesAsync() > 0;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Kullanıcı eklenirken bir hata oluştu: {ex.Message}");
-
                 return false;
             }
         }
 
-
         public async Task<bool> UpdateUserAsync(Users user)
         {
             var existingUser = await _context.Users.FindAsync(user.Id);
-
             if (existingUser != null)
             {
                 existingUser.ProfilePicture = user.ProfilePicture ?? existingUser.ProfilePicture;
-
                 existingUser.FirstName = user.FirstName ?? existingUser.FirstName;
                 existingUser.LastName = user.LastName ?? existingUser.LastName;
                 existingUser.Email = user.Email ?? existingUser.Email;
@@ -66,10 +60,8 @@ namespace TaskApp_Web.Repositories
                 await _context.SaveChangesAsync();
                 return true;
             }
-
             return false;
         }
-
 
         public async Task<bool> DeleteUserAsync(int id)
         {
@@ -82,13 +74,14 @@ namespace TaskApp_Web.Repositories
             return false;
         }
 
-  
-
         public async Task<List<Departments>> GetAllDepartmentsAsync()
         {
-            // Metodu async olarak işaretleyin ve await kullanarak asenkron işlemi gerçekleştirin.
             return await _context.Departments.ToListAsync();
         }
 
+        public async Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId) // Yeni metot
+        {
+            return await _context.Users.Where(u => u.DepartmentId == departmentId).ToListAsync();
+        }
     }
 }

@@ -15,7 +15,9 @@ namespace TaskApp_Web.Services.IServices
         Task<bool> AddTaskAsync(ToDoTasks task);
         Task<bool> UpdateTaskAsync(ToDoTasks task);
         Task<bool> DeleteTaskAsync(int id);
-        Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status);  // Bu satırı ekleyin
+        Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status);
         Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId);
+        Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync();
+        Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId);
     }
 }

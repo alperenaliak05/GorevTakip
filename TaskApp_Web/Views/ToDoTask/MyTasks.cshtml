@@ -6,66 +6,81 @@
     <a asp-action="CalendarView" class="btn btn-primary">Takvim Görünümü</a>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Başlık</th>
-            <th>Açıklama</th>
-            <th>Görevi Atayan Kişi</th>
-            <th>Bitiş Süresi</th>
-            <th>İşlemler</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in Model)
-        {
-            var timeRemaining = task.DueDate - DateTime.Now;  // Kalan süreyi server tarafında hesapla ve başlangıç olarak al
-            var remainingSeconds = (int)timeRemaining.TotalSeconds;
-
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="thead-dark">
             <tr>
-                <td>@task.Title</td>
-                <td>@task.Description</td>
-                <td>@task.AssignedByUserFirstName @task.AssignedByUserLastName</td>
-                <td>
-                    <span id="countdown-@task.Id" data-seconds="@remainingSeconds">
-                        <!-- İlk hesaplanan süreyi gösteriyoruz -->
-                        @if (remainingSeconds > 0)
+                <th>Başlık</th>
+                <th>Bitiş Süresi</th>
+                <th>Durum</th>
+                <th>Öncelik</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var task in Model)
+            {
+                var timeRemaining = task.DueDate - DateTime.Now;
+                var remainingSeconds = (int)timeRemaining.TotalSeconds;
+
+                <tr>
+                    <td>@task.Title</td>
+                    <td>
+                        <span id="countdown-@task.Id" data-seconds="@remainingSeconds">
+                            @if (remainingSeconds > 0)
+                            {
+                                @($"{timeRemaining.Days} gün {timeRemaining.Hours} saat {timeRemaining.Minutes} dakika {timeRemaining.Seconds} saniye kaldı")
+                            }
+                            else
+                            {
+                                <span class="text-danger">Süre doldu</span>
+                            }
+                        </span>
+                    </td>
+                    <td>@task.Status</td>
+                    <td>
+                        @switch (task.Priority)
                         {
-                            @($"{timeRemaining.Days} gün {timeRemaining.Hours} saat {timeRemaining.Minutes} dakika {timeRemaining.Seconds} saniye kaldı")
+                            case TaskApp_Web.Models.TaskPriority.Dusuk:
+                                @("Düşük")
+                                ; break;
+                            case TaskApp_Web.Models.TaskPriority.Orta:
+                                @("Orta")
+                                ; break;
+                            case TaskApp_Web.Models.TaskPriority.Yuksek:
+                                @("Yüksek")
+                                ; break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-info">Detay</a>
+                        @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
+                        {
+                            <button class="btn btn-disabled" disabled>Tamamlandı</button>
+                        }
+                        else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
+                        {
+                            <button class="btn btn-disabled" disabled>Reddedildi</button>
+                        }
+                        else if (task.Status == TaskApp_Web.Models.TaskStatus.SuresiGecti)
+                        {
+                            <button class="btn btn-warning" disabled>Süresi Geçti</button>
                         }
                         else
                         {
-                            <span class="text-danger">Süre doldu</span>
+                            <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-success task-button">Tamamlandı</button>
+                            </form>
+                            <form asp-action="RejectTask" asp-route-id="@task.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger task-button">Reddedildi</button>
+                            </form>
                         }
-                    </span>
-                </td>
-                <td>
-                    @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
-                    {
-                        <button class="btn btn-green" disabled>Tamamlandı</button>
-                    }
-                    else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
-                    {
-                        <button class="btn btn-red" disabled>Reddedildi</button>
-                    }
-                    else if (task.Status == TaskApp_Web.Models.TaskStatus.SuresiGecti)
-                    {
-                        <button class="btn btn-warning" disabled>Süresi Geçti</button>
-                    }
-                    else
-                    {
-                        <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-green">Tamamlandı</button>
-                        </form>
-                        <form asp-action="RejectTask" asp-route-id="@task.Id" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-red">Reddedildi</button>
-                        </form>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 <script>
     // Kalan süreyi her saniye güncelleyen fonksiyon
@@ -88,16 +103,101 @@
             seconds--;
         }
 
-        updateCountdown(); // İlk güncelleme hemen yapılır
-        setInterval(updateCountdown, 1000); // Her saniyede bir güncelle
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     }
 
     // Her bir görev için geri sayımı başlat
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const countdownElements = document.querySelectorAll("[id^='countdown-']");
         countdownElements.forEach(element => {
             const seconds = parseInt(element.getAttribute("data-seconds"), 10);
             startCountdown(element.id, seconds);
         });
     });
+
+    // Butonlara ufak bir animasyon eklemek
+    document.querySelectorAll('.task-button').forEach(button => {
+        button.addEventListener('mouseover', function () {
+            this.classList.add('btn-animate');
+        });
+        button.addEventListener('mouseout', function () {
+            this.classList.remove('btn-animate');
+        });
+    });
 </script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #e9ecef;
+    }
+
+    .btn-animate {
+        transform: scale(1.05);
+        transition: transform 0.2s;
+    }
+
+    .btn-success, .btn-danger, .btn-warning {
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+        .btn-success:hover {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: #ffc107;
+            color: black;
+        }
+
+    /* Tamamlandı ve Reddedildi butonları için stil */
+    .btn-disabled {
+        background-color: #343a40; /* Tablo başlıklarının arka plan rengi ile aynı */
+        color: white;
+        border: none;
+        cursor: not-allowed;
+    }
+
+        .btn-disabled:hover {
+            color: white; /* Hover durumunda yazı rengini koru */
+        }
+</style>

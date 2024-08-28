@@ -6,7 +6,7 @@
 
 <h1>Görev Oluştur</h1>
 
-<form asp-action="CreateTask" method="post">
+<form asp-action="CreateTask" method="post" class="task-form">
     @Html.AntiForgeryToken()
 
     <div class="form-group">
@@ -27,47 +27,167 @@
     </div>
 
     <div class="form-group">
-        <label for="DueDate">Bitiş Tarihi</label>
-        <input type="date" class="form-control" id="DueDate" asp-for="DueDate" required />
+        <label for="AssignedToDepartmentId">Görevi Atanan Departman</label>
+        <select class="form-control" id="AssignedToDepartmentId" asp-for="AssignedToDepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))">
+            <option value="">Lütfen bir departman seçin</option>
+        </select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Görevi Kaydet</button>
+    <div class="form-group">
+        <label for="Priority">Öncelik</label>
+        <select class="form-control" id="Priority" asp-for="Priority">
+            <option value="0">Düşük</option>
+            <option value="1">Orta</option>
+            <option value="2">Yüksek</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="DueDate">Bitiş Tarihi</label>
+        <input type="date" class="form-control" id="DueDate" asp-for="DueDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary submit-btn">Görevi Kaydet</button>
 </form>
 
 <script>
-    const form = document.querySelector('form[asp-action="CreateTask"]');
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const formData = {
-            Title: document.getElementById('Title').value,
-            Description: document.getElementById('Description').value,
-            AssignedToUserId: document.getElementById('AssignedToUserId').value,
-            DueDate: document.getElementById('DueDate').value,
-            AssignedByUserId: document.getElementById('AssignedToUserId').value,
-            __RequestVerificationToken: document.querySelector('input[name="__RequestVerificationToken"]').value
-        };
-
-        try {
-            const response = await fetch('/api/ToDoTask', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData)
-            });
-
-            if (response.ok) {
-                window.location.href = '/api/ToDoTask/MyTasks';
-            } else {
-                const errorData = await response.json();
-                console.error('Görev oluşturma hatası:', errorData);
-                // Hata mesajlarını kullanıcıya göstermek için gerekli işlemleri yapın
-            }
-        } catch (error) {
-            console.error('Fetch hatası:', error);
-            // Ağ hatası durumunu işle
+    // Kullanıcı veya departman seçildiğinde diğeri devre dışı kalır
+    document.getElementById('AssignedToUserId').addEventListener('change', function () {
+        if (this.value) {
+            document.getElementById('AssignedToDepartmentId').selectedIndex = 0;
+            document.getElementById('AssignedToDepartmentId').disabled = true;
+        } else {
+            document.getElementById('AssignedToDepartmentId').disabled = false;
         }
     });
+
+    document.getElementById('AssignedToDepartmentId').addEventListener('change', function () {
+        if (this.value) {
+            document.getElementById('AssignedToUserId').selectedIndex = 0;
+            document.getElementById('AssignedToUserId').disabled = true;
+        } else {
+            document.getElementById('AssignedToUserId').disabled = false;
+        }
+    });
+
+    // Form alanlarına focus ve blur animasyonları ekle
+    document.querySelectorAll('.form-control').forEach(element => {
+        element.addEventListener('focus', function () {
+            this.parentNode.classList.add('focused');
+        });
+        element.addEventListener('blur', function () {
+            if (!this.value) {
+                this.parentNode.classList.remove('focused');
+            }
+        });
+    });
+
+    // Form gönder butonuna tıklanınca animasyon ekle
+    document.querySelector('.submit-btn').addEventListener('click', function () {
+        this.classList.add('button-animate');
+        setTimeout(() => this.classList.remove('button-animate'), 300);
+    });
 </script>
+
+<style>
+    body {
+        font-family: 'Lato', Arial, sans-serif;
+        background-color: #f7f7f9;
+        color: #333;
+        padding: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #343a40;
+    }
+
+    .task-form {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .task-form:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+    .form-group {
+        margin-bottom: 20px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+        .form-group.focused label {
+            color: #007bff;
+            transform: translateY(-30px) scale(0.8);
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+        }
+
+    .submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+    .button-animate {
+        animation: button-pop 0.3s ease;
+    }
+
+    @@keyframes button-pop {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>

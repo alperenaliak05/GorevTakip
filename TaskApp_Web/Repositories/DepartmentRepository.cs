@@ -50,5 +50,15 @@ namespace TaskApp_Web.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync()
+        {
+            return await _context.Departments
+              .Select(d => new DepartmentViewModel
+              {
+                  Id = d.Id,
+                  Name = d.Name,
+              }).ToListAsync();
+        }
     }
 }
