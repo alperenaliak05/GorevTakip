@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using TaskApp_Web.Models;
+using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Repositories.IRepositories;
 using TaskApp_Web.Data;
-using TaskApp_Web.Models.DTO;
-using Models;
 
 namespace TaskApp_Web.Repositories
 {
@@ -19,9 +21,8 @@ namespace TaskApp_Web.Repositories
         public async Task<IEnumerable<TaskReportDTO>> GetTaskReportsAsync()
         {
             return await _context.TaskReports
-                
                 .Include(tr => tr.Task)
-                .ThenInclude(tr => tr.AssignedByUser) // AssignedByUser'ı Include ediyoruz
+                .Include(tr => tr.CreatedByUser)
                 .Select(tr => new TaskReportDTO
                 {
                     TaskId = tr.TaskId,
@@ -30,7 +31,32 @@ namespace TaskApp_Web.Repositories
                     AssignedByUserFirstName = tr.Task.AssignedByUser.FirstName,
                     AssignedByUserLastName = tr.Task.AssignedByUser.LastName,
                     DueDate = tr.Task.DueDate,
-                    TaskStatus = tr.Task.Status
+                    TaskStatus = tr.Task.Status,
+                    ReportContent = tr.Report,  // Rapor içeriği doğru alan adı
+                    CreatedAt = tr.CreatedAt,
+                    CreatedByUserId = tr.CreatedByUserId
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TaskReportDTO>> GetTaskReportsByUserIdAsync(int userId)
+        {
+            return await _context.TaskReports
+                .Include(tr => tr.Task)
+                .Include(tr => tr.CreatedByUser)
+                .Where(tr => tr.CreatedByUserId == userId)
+                .Select(tr => new TaskReportDTO
+                {
+                    TaskId = tr.TaskId,
+                    TaskTitle = tr.Task.Title,
+                    TaskDescription = tr.Task.Description,
+                    AssignedByUserFirstName = tr.Task.AssignedByUser.FirstName,
+                    AssignedByUserLastName = tr.Task.AssignedByUser.LastName,
+                    DueDate = tr.Task.DueDate,
+                    TaskStatus = tr.Task.Status,
+                    ReportContent = tr.Report,
+                    CreatedAt = tr.CreatedAt,
+                    CreatedByUserId = tr.CreatedByUserId
                 })
                 .ToListAsync();
         }

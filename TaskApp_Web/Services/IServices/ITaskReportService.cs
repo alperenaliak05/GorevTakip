@@ -12,5 +12,7 @@ namespace TaskApp_Web.Services.IServices
         Task<bool> AddTaskReportAsync(TaskReport taskReport);
         Task<bool> UpdateTaskReportAsync(TaskReport taskReport);
         Task<bool> DeleteTaskReportAsync(int id);
+        Task<IEnumerable<TaskReportDTO>> GetTaskReportsByUserIdAsync(int userId);
+
     }
 }

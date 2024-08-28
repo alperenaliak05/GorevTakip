@@ -22,6 +22,7 @@
         font-size: 3em;
         color: #fff; /* Saat rengini beyaz yap */
         font-weight: bold;
+        animation: pulse 2s infinite; /* Saat için pulse animasyonu */
     }
 
     /* İçerikleri yukarı çekme ve ortalama */
@@ -40,33 +41,80 @@
 
     .welcome-message {
         font-size: 5em;
-        color: #8B4513; 
+        color: #FFFFFF; /* Hoş geldiniz yazısı rengi */
         font-weight: bold;
-        margin-top: 20px; 
-        opacity: 0; 
-        transform: scale(0.9); 
+        margin-top: 20px;
+        opacity: 0;
+        transform: scale(0.9);
         transition: all 1s ease;
-        animation: glow 2s infinite alternate; 
+        animation: glow 2s infinite alternate; /* Hoş geldiniz yazısı için glow animasyonu */
+        position: relative;
     }
+
+        /* Hoş geldiniz yazısının arka plan rengi ve animasyon */
+        .welcome-message::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 120%;
+            height: 150%;
+            background: linear-gradient(135deg, #3498db, #9b59b6); /* Yeni arka plan rengi */
+            transform: translate(-50%, -50%) scale(1.2);
+            z-index: -1;
+            border-radius: 20px;
+            filter: blur(20px); /* Blur efekti */
+            opacity: 0.7;
+        }
 
     /* Genel yazı stilini güzelleştirme */
     .centered-content p {
         font-size: 1.8em;
         color: #333;
         margin: 10px 0;
-        transition: color 0.5s ease; 
+        transition: color 0.5s ease;
     }
 
-    .centered-content p:hover {
-        color: #555;
-    }
+        .centered-content p:hover {
+            color: #555;
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
 
+    /* Animasyonlar */
     @@keyframes glow {
         from {
-            text-shadow: 0 0 10px #8B4513, 0 0 20px #8B4513, 0 0 30px #8B4513;
+            text-shadow: 0 0 10px #3498db, 0 0 20px #3498db, 0 0 30px #3498db;
         }
+
         to {
-            text-shadow: 0 0 20px #FF6347, 0 0 30px #FF6347, 0 0 40px #FF6347, 0 0 50px #FF6347;
+            text-shadow: 0 0 20px #9b59b6, 0 0 30px #9b59b6, 0 0 40px #9b59b6, 0 0 50px #9b59b6;
+        }
+    }
+
+    @@keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 
@@ -74,6 +122,7 @@
         opacity: 0;
         transform: translateY(20px);
         transition: all 1s ease;
+        animation: fadeInUp 1.5s forwards; /* İçerik yüklenme animasyonu */
     }
 </style>
 
@@ -101,7 +150,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-      
         setTimeout(() => {
             document.getElementById('clock-container').style.opacity = 1;
             document.getElementById('clock-container').style.transform = 'translateY(0)';
@@ -124,6 +172,7 @@
             });
         }, 800);
     });
+
     setInterval(updateClock, 1000);
     updateClock();
 </script>

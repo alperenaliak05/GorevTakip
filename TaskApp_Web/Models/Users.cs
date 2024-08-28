@@ -19,6 +19,8 @@ namespace TaskApp_Web.Models
         public ICollection<ToDoTasks> AssignedTasks { get; set; }
         public ICollection<UserToDoList> ToDoLists { get; set; }
         public ICollection<TaskReport> TaskReports { get; set; }
-        
+        public ICollection<ToDoTasks> CreatedTasks { get; set; }  // Kullanıcı tarafından oluşturulan görevler
+        public ICollection<TaskReport> CreatedReports { get; set; }
+
     }
 }

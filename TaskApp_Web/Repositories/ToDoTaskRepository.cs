@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using TaskApp_Web.Data;
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Repositories.IRepositories;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using TaskStatus = TaskApp_Web.Models.TaskStatus;
 
 namespace TaskApp_Web.Repositories
 {
@@ -43,12 +44,11 @@ namespace TaskApp_Web.Repositories
                 .ToListAsync();
         }
 
-
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
         {
             return await _context.Tasks
                 .Include(t => t.AssignedByUser)
-                .Include(t => t.AssignedToUser)  
+                .Include(t => t.AssignedToUser)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -75,9 +75,11 @@ namespace TaskApp_Web.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(Models.TaskStatus status)
+        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status)
         {
             return await _context.Tasks
+                .Include(t => t.AssignedToUser)  // Kullanıcıya atanan görev
+                .Include(t => t.AssignedByUser)  // Görevi atayan kullanıcı
                 .Where(t => t.Status == status)
                 .ToListAsync();
         }
@@ -97,6 +99,5 @@ namespace TaskApp_Web.Repositories
                 })
                 .ToListAsync();
         }
-
     }
 }

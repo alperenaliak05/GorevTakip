@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TaskApp_Web.Data;
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Services.IServices;
@@ -25,8 +24,8 @@ namespace TaskApp_Web.Services
 
         public async Task<TaskReportDTO> GetTaskReportByIdAsync(int id)
         {
-            var report = await _taskReportRepository.GetTaskReportsAsync();
-            return report.FirstOrDefault(r => r.TaskId == id);
+            var reports = await _taskReportRepository.GetTaskReportsAsync();
+            return reports.FirstOrDefault(r => r.TaskId == id);
         }
 
         public async Task<bool> AddTaskReportAsync(TaskReport taskReport)
@@ -42,6 +41,13 @@ namespace TaskApp_Web.Services
         public async Task<bool> DeleteTaskReportAsync(int id)
         {
             return await _taskReportRepository.DeleteTaskReportAsync(id);
+        }
+
+        // Kullanıcıya özel raporları getiren yeni metodun implementasyonu
+        public async Task<IEnumerable<TaskReportDTO>> GetTaskReportsByUserIdAsync(int userId)
+        {
+            var reports = await _taskReportRepository.GetTaskReportsAsync();
+            return reports.Where(r => r.CreatedByUserId == userId).ToList();
         }
     }
 }

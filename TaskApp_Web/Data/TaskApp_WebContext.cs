@@ -20,45 +20,52 @@ namespace TaskApp_Web.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            // Users ve Departments arasındaki ilişki
             modelBuilder.Entity<Users>()
                 .HasOne(u => u.Department)
                 .WithMany(d => d.Users)
-                .HasForeignKey(u => u.DepartmentId);
+                .HasForeignKey(u => u.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
 
+            // ToDoTasks ve Users (AssignedToUser) arasındaki ilişki
             modelBuilder.Entity<ToDoTasks>()
                 .HasOne(t => t.AssignedToUser)
                 .WithMany(u => u.Tasks)
                 .HasForeignKey(t => t.AssignedToUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
 
+            // ToDoTasks ve Users (AssignedByUser) arasındaki ilişki
             modelBuilder.Entity<ToDoTasks>()
                 .HasOne(t => t.AssignedByUser)
                 .WithMany(u => u.AssignedTasks)
                 .HasForeignKey(t => t.AssignedByUserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
 
+            // ToDoTasks Status alanı enum conversion
             modelBuilder.Entity<ToDoTasks>()
                .Property(t => t.Status)
                .HasConversion<int>();
 
+            // UserToDoList ve Users arasındaki ilişki
             modelBuilder.Entity<UserToDoList>()
                 .HasOne(t => t.User)
                 .WithMany(u => u.ToDoLists)
                 .HasForeignKey(t => t.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Cascade); // Kullanıcı silindiğinde ilgili todo listelerini sil
 
+            // TaskReport ve ToDoTasks arasındaki ilişki
             modelBuilder.Entity<TaskReport>()
                .HasOne(tr => tr.Task)
                .WithMany(t => t.TaskReports)
-               .HasForeignKey(tr => tr.TaskId);
+               .HasForeignKey(tr => tr.TaskId)
+               .OnDelete(DeleteBehavior.Cascade); // Görev silindiğinde ilgili raporları da sil
 
+            // TaskReport ve Users (CreatedByUser) arasındaki ilişki
             modelBuilder.Entity<TaskReport>()
                 .HasOne(tr => tr.CreatedByUser)
                 .WithMany(u => u.TaskReports)
                 .HasForeignKey(tr => tr.CreatedByUserId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-
+                .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
         }
     }
 }

@@ -69,20 +69,46 @@ namespace TaskApp_Web.Controllers
                     return View(model);
                 }
 
-                var task = new ToDoTasks
+                // Kullanıcıya görev atanıyorsa
+                if (model.AssignedToUserId != null)
                 {
-                    Title = model.Title,
-                    Description = model.Description,
-                    AssignedToUserId = model.AssignedToUserId,
-                    AssignedToDepartmentId = model.AssignedToDepartmentId,
-                    AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
-                    DueDate = model.DueDate,
-                    Status = TaskStatus.Bekliyor,
-                    Priority = model.Priority,
-                    Process = null  // Process initially null
-                };
+                    var task = new ToDoTasks
+                    {
+                        Title = model.Title,
+                        Description = model.Description,
+                        AssignedToUserId = model.AssignedToUserId,
+                        AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                        DueDate = model.DueDate,
+                        Status = TaskStatus.Bekliyor,
+                        Priority = model.Priority,
+                        Process = null  // Process initially null
+                    };
 
-                await _taskService.AddTaskAsync(task);
+                    await _taskService.AddTaskAsync(task);
+                }
+
+                // Departmana görev atanıyorsa
+                if (model.AssignedToDepartmentId != null)
+                {
+                    var usersInDepartment = await _taskService.GetUsersByDepartmentIdAsync(model.AssignedToDepartmentId.Value);
+
+                    foreach (var user in usersInDepartment)
+                    {
+                        var taskForUser = new ToDoTasks
+                        {
+                            Title = model.Title,
+                            Description = model.Description,
+                            AssignedToUserId = user.Id,
+                            AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
+                            DueDate = model.DueDate,
+                            Status = TaskStatus.Bekliyor,
+                            Priority = model.Priority,
+                            Process = null  // Process initially null
+                        };
+
+                        await _taskService.AddTaskAsync(taskForUser);
+                    }
+                }
 
                 return RedirectToAction("TaskTracking");  // After creating, redirect to TaskTracking
             }
@@ -104,6 +130,7 @@ namespace TaskApp_Web.Controllers
 
             return View(model);
         }
+
 
         [HttpGet]
         [Route("MyTasks")]

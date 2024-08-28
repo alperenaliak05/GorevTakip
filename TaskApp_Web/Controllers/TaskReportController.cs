@@ -35,8 +35,8 @@ namespace TaskApp_Web.Controllers
                 TaskId = task.Id,
                 TaskTitle = task.Title,
                 TaskDescription = task.Description,
-                AssignedByUserFirstName = task.AssignedByUser?.FirstName, 
-                AssignedByUserLastName = task.AssignedByUser?.LastName,
+                AssignedByUserFirstName = task.AssignedByUserFirstName, 
+                AssignedByUserLastName = task.AssignedByUserLastName,
                 
                 DueDate = task.DueDate,
                 TaskStatus = task.Status
@@ -130,5 +130,27 @@ namespace TaskApp_Web.Controllers
             await _taskReportService.DeleteTaskReportAsync(id);
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyReports()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var reports = await _taskReportService.GetTaskReportsByUserIdAsync(userId);
+
+            var reportDTOs = reports.Select(report => new TaskReportDTO
+            {
+                TaskId = report.TaskId,
+                TaskTitle = report.TaskTitle,
+                TaskDescription = report.TaskDescription,
+                DueDate = report.DueDate,
+                TaskStatus = report.TaskStatus,
+                ReportContent = report.ReportContent,
+                CreatedAt = report.CreatedAt
+            }).ToList();
+
+            return View(reportDTOs);
+        }
+
     }
+
 }
