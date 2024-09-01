@@ -3,16 +3,24 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using TaskApp_Web.Models.DTO;
 using TaskApp_Web.Services.IServices;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TaskApp_Web.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IAuthService _authService;
+        private readonly IConfiguration _configuration;
+        private readonly IToDoTaskService _taskService;
 
-        public AccountController(IAuthService authService)
+        public AccountController(IAuthService authService, IConfiguration configuration, IToDoTaskService taskService)
         {
             _authService = authService;
+            _configuration = configuration;
+            _taskService = taskService;
         }
 
         [HttpGet]
@@ -37,6 +45,23 @@ namespace TaskApp_Web.Controllers
                 return View("Login");
             }
 
+            // Kullanıcı ID'si ve varsa bir taskId alın (örneğin en son atanmış görev)
+            int userId = response.UserId ?? 0;  // Nullable tipin default değeri null ise, 0 olarak ayarlanır.
+
+            // Kullanıcının en son atanmış görevini al
+            var userTasks = await _taskService.GetTasksByUserIdAsync(userId); // Kullanıcıya ait görevleri al
+            int? latestTaskId = userTasks.OrderByDescending(t => t.DueDate).FirstOrDefault()?.Id; // Son görevi al
+
+            // JWT token oluştur
+            string token = GenerateJwtToken(userId.ToString(), latestTaskId);
+
+            // Token'ı HttpOnly cookie olarak ayarla
+            Response.Cookies.Append("JwtToken", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.UtcNow.AddMinutes(30)
+            });
+
             // Kullanıcı başarılı bir şekilde giriş yaptıktan sonra "Home" sayfasına yönlendiriliyor
             return RedirectToAction("Index", "Home");
         }
@@ -44,20 +69,41 @@ namespace TaskApp_Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            // Session'daki tüm verileri temizle
             HttpContext.Session.Clear();
-
-            // Cookie'deki JWT token'ı ve diğer oturum cookie'lerini sil
             HttpContext.Response.Cookies.Delete(".AspNetCore.Antiforgery");
             HttpContext.Response.Cookies.Delete(".AspNetCore.Session");
             HttpContext.Response.Cookies.Delete(".AspNetCore.Cookies");
             HttpContext.Response.Cookies.Delete("JwtToken");
 
-            // Cookie tabanlı oturum kapatma işlemi
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             return RedirectToAction("Login", "Account");
         }
 
+        private string GenerateJwtToken(string userId, int? taskId)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier, userId),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            if (taskId.HasValue)
+            {
+                claims.Add(new Claim("taskId", taskId.Value.ToString()));
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
     }
 }

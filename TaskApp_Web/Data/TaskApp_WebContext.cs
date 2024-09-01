@@ -15,6 +15,7 @@ namespace TaskApp_Web.Data
         public DbSet<ToDoTasks> Tasks { get; set; }
         public DbSet<UserToDoList> UserToDoLists { get; set; }
         public DbSet<TaskReport> TaskReports { get; set; }
+        public DbSet<TaskProcess> TaskProcesses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +67,12 @@ namespace TaskApp_Web.Data
                 .WithMany(u => u.TaskReports)
                 .HasForeignKey(tr => tr.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
+
+            modelBuilder.Entity<TaskProcess>()
+             .HasOne(tp => tp.Task)  // TaskProcess, ToDoTasks ile ilişkilendirilir
+             .WithMany(t => t.TaskProcesses)  // ToDoTasks, TaskProcess ilişkisine sahiptir
+             .HasForeignKey(tp => tp.TaskId)  // TaskProcess üzerindeki foreign key
+             .OnDelete(DeleteBehavior.Cascade); // 
         }
     }
 }

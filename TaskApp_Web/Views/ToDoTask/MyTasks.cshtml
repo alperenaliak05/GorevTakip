@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<TaskApp_Web.Models.DTO.TaskDTO>
 
-<h2>Görevlerim</h2>
+<h2 class="animated-header">Görevlerim</h2>
 
-<div class="mb-3">
+<div class="mb-3 animated-button">
     <a asp-action="CalendarView" class="btn btn-primary">Takvim Görünümü</a>
 </div>
 
-<div class="table-responsive">
+<div class="table-responsive animated-table">
     <table class="table table-striped table-hover">
         <thead class="thead-dark">
             <tr>
@@ -23,7 +23,7 @@
                 var timeRemaining = task.DueDate - DateTime.Now;
                 var remainingSeconds = (int)timeRemaining.TotalSeconds;
 
-                <tr>
+                <tr class="fade-in">
                     <td>@task.Title</td>
                     <td>
                         <span id="countdown-@task.Id" data-seconds="@remainingSeconds">
@@ -53,7 +53,7 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-info">Detay</a>
+                        <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-info task-button">Detay</a>
                         @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
                         {
                             <button class="btn btn-disabled" disabled>Tamamlandı</button>
@@ -132,30 +132,47 @@
         font-family: Arial, sans-serif;
         background-color: #f4f4f9;
         color: #333;
+        transition: background-color 0.5s ease;
     }
 
     h2 {
         text-align: center;
         margin-bottom: 20px;
         font-size: 28px;
+        animation: slide-in 1s ease-out forwards;
+    }
+
+    .animated-header {
+        animation: slide-in 1s ease-out forwards;
+    }
+
+    .animated-button {
+        animation: fade-in 1.5s ease-out forwards;
+    }
+
+    .animated-table {
+        animation: fade-in 2s ease-out forwards;
     }
 
     .table {
         width: 100%;
         margin-bottom: 20px;
         border-collapse: collapse;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     }
 
-        .table th, .table td {
-            text-align: center;
-            vertical-align: middle;
-            padding: 15px;
-        }
+    .table th, .table td {
+        text-align: center;
+        vertical-align: middle;
+        padding: 15px;
+    }
 
-        .table thead {
-            background-color: #343a40;
-            color: white;
-        }
+    .table thead {
+        background-color: #343a40;
+        color: white;
+    }
 
     .table-striped tbody tr:nth-of-type(odd) {
         background-color: #f8f9fa;
@@ -163,41 +180,75 @@
 
     .table-hover tbody tr:hover {
         background-color: #e9ecef;
+        transition: background-color 0.3s ease;
+    }
+
+    .fade-in {
+        opacity: 0;
+        animation: fade-in 1s ease-out forwards;
     }
 
     .btn-animate {
-        transform: scale(1.05);
+        transform: scale(1.1);
         transition: transform 0.2s;
     }
 
-    .btn-success, .btn-danger, .btn-warning {
-        transition: background-color 0.3s, color 0.3s;
+    .btn {
+        transition: transform 0.3s, background-color 0.3s, color 0.3s;
     }
 
-        .btn-success:hover {
-            background-color: #28a745;
-            color: white;
-        }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        color: white;
+        transform: scale(1.05);
+    }
 
-        .btn-danger:hover {
-            background-color: #dc3545;
-            color: white;
-        }
+    .btn-success:hover {
+        background-color: #28a745;
+        color: white;
+        transform: scale(1.05);
+    }
 
-        .btn-warning:hover {
-            background-color: #ffc107;
-            color: black;
-        }
+    .btn-danger:hover {
+        background-color: #dc3545;
+        color: white;
+        transform: scale(1.05);
+    }
 
-    /* Tamamlandı ve Reddedildi butonları için stil */
+    .btn-warning:hover {
+        background-color: #ffc107;
+        color: black;
+        transform: scale(1.05);
+    }
+
     .btn-disabled {
-        background-color: #343a40; /* Tablo başlıklarının arka plan rengi ile aynı */
+        background-color: #6c757d;
         color: white;
         border: none;
         cursor: not-allowed;
     }
 
-        .btn-disabled:hover {
-            color: white; /* Hover durumunda yazı rengini koru */
+    .btn-disabled:hover {
+        color: white;
+    }
+
+    @@keyframes slide-in {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
         }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
 </style>

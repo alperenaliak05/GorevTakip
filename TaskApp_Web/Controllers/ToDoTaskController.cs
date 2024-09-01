@@ -3,8 +3,8 @@ using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
 using System.Security.Claims;
 using TaskApp_Web.Services.IServices;
-using Models;
 using TaskStatus = TaskApp_Web.Models.TaskStatus;
+using System.Threading.Tasks;
 
 namespace TaskApp_Web.Controllers
 {
@@ -42,9 +42,9 @@ namespace TaskApp_Web.Controllers
             {
                 Users = userViewModels,
                 Departments = departmentViewModels,
-                Status = TaskStatus.Bekliyor,  // Status should be an enum, not int
-                DueDate = DateTime.Now,  // Default to current date
-                Priority = TaskPriority.Orta  // Varsayılan öncelik orta olarak ayarlandı
+                Status = TaskStatus.Bekliyor,
+                DueDate = DateTime.Now,
+                Priority = TaskPriority.Orta
             };
 
             return View(taskViewModel);
@@ -69,7 +69,6 @@ namespace TaskApp_Web.Controllers
                     return View(model);
                 }
 
-                // Kullanıcıya görev atanıyorsa
                 if (model.AssignedToUserId != null)
                 {
                     var task = new ToDoTasks
@@ -80,14 +79,12 @@ namespace TaskApp_Web.Controllers
                         AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                         DueDate = model.DueDate,
                         Status = TaskStatus.Bekliyor,
-                        Priority = model.Priority,
-                        Process = null  // Process initially null
+                        Priority = model.Priority
                     };
 
                     await _taskService.AddTaskAsync(task);
                 }
 
-                // Departmana görev atanıyorsa
                 if (model.AssignedToDepartmentId != null)
                 {
                     var usersInDepartment = await _taskService.GetUsersByDepartmentIdAsync(model.AssignedToDepartmentId.Value);
@@ -102,15 +99,14 @@ namespace TaskApp_Web.Controllers
                             AssignedByUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value),
                             DueDate = model.DueDate,
                             Status = TaskStatus.Bekliyor,
-                            Priority = model.Priority,
-                            Process = null  // Process initially null
+                            Priority = model.Priority
                         };
 
                         await _taskService.AddTaskAsync(taskForUser);
                     }
                 }
 
-                return RedirectToAction("TaskTracking");  // After creating, redirect to TaskTracking
+                return RedirectToAction("TaskTracking");
             }
 
             var users = await _taskService.GetAllUsersAsync();
@@ -130,7 +126,6 @@ namespace TaskApp_Web.Controllers
 
             return View(model);
         }
-
 
         [HttpGet]
         [Route("MyTasks")]
@@ -206,6 +201,7 @@ namespace TaskApp_Web.Controllers
             var tasks = await _taskService.GetTasksAssignedByUserAsync(userId);
             return View(tasks);
         }
+
         [HttpGet]
         [Route("EditTask/{id}")]
         public async Task<IActionResult> EditTask(int id)
@@ -220,7 +216,7 @@ namespace TaskApp_Web.Controllers
                 Description = task.Description,
                 DueDate = task.DueDate,
                 Status = task.Status,
-                Priority = task.Priority // Öncelik alanını ekledik
+                Priority = task.Priority
             };
 
             return View(model);
@@ -240,7 +236,7 @@ namespace TaskApp_Web.Controllers
                 task.Description = model.Description;
                 task.DueDate = model.DueDate;
                 task.Status = model.Status;
-                task.Priority = model.Priority; // Öncelik alanını ekledik
+                task.Priority = model.Priority;
 
                 await _taskService.UpdateTaskAsync(task);
                 return RedirectToAction("TaskTracking");
@@ -248,7 +244,6 @@ namespace TaskApp_Web.Controllers
 
             return View(model);
         }
-
 
         [HttpPost]
         [Route("DeleteTask/{id}")]
@@ -304,5 +299,66 @@ namespace TaskApp_Web.Controllers
 
             return View(taskEvents);
         }
+
+        [HttpGet]
+        [Route("TaskDetails/{id}")]
+        public async Task<IActionResult> TaskDetails(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Geçersiz görev ID'si.");
+            }
+
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task == null)
+            {
+                return NotFound("Görev bulunamadı.");
+            }
+
+            var taskDetailsViewModel = new TaskDetailsViewModel
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                DueDate = task.DueDate,
+                Status = task.Status,
+                Priority = task.Priority,
+                AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Not Assigned",
+                AssignedByUser = task.AssignedByUser != null ? $"{task.AssignedByUser.FirstName} {task.AssignedByUser.LastName}" : "Unknown",
+                TaskProcesses = task.TaskProcesses?.ToList() ?? new List<TaskProcess>()
+            };
+
+            return View(taskDetailsViewModel);
+        }
+
+        [HttpPost]
+        [Route("AddTaskProcess")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTaskProcess([FromForm] string processDescription, int id)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            var task = await _taskService.GetTaskByIdAsync(id);
+            if (task == null)
+            {
+                return NotFound("Görev bulunamadı.");
+            }
+
+            var taskProcess = new TaskProcess
+            {
+                TaskId = task.Id,
+                ProcessDescription = processDescription,
+                CreatedAt = DateTime.Now
+            };
+
+            await _taskService.AddTaskProcessAsync(taskProcess);
+
+            return RedirectToAction("TaskDetails", new { id = task.Id });
+        }
+
     }
 }

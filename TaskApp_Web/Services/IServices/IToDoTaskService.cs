@@ -19,5 +19,8 @@ namespace TaskApp_Web.Services.IServices
         Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId);
         Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync();
         Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId);
+        Task<IEnumerable<TaskProcess>> GetTaskProcessesByTaskIdAsync(int taskId);
+        Task<bool> AddTaskProcessAsync(TaskProcess taskProcess);
+
     }
 }

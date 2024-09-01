@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TaskApp_Web.Data;
 
@@ -11,9 +12,11 @@ using TaskApp_Web.Data;
 namespace TaskAppWeb.Migrations
 {
     [DbContext(typeof(TaskApp_WebContext))]
-    partial class TaskAppWebContextModelSnapshot : ModelSnapshot
+    [Migration("20240829120103_downprocess")]
+    partial class downprocess
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,31 +40,6 @@ namespace TaskAppWeb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
-                });
-
-            modelBuilder.Entity("TaskApp_Web.Models.TaskProcess", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ProcessDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("TaskProcesses");
                 });
 
             modelBuilder.Entity("TaskApp_Web.Models.TaskReport", b =>
@@ -217,17 +195,6 @@ namespace TaskAppWeb.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TaskApp_Web.Models.TaskProcess", b =>
-                {
-                    b.HasOne("TaskApp_Web.Models.ToDoTasks", "Task")
-                        .WithMany("TaskProcesses")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("TaskApp_Web.Models.TaskReport", b =>
                 {
                     b.HasOne("TaskApp_Web.Models.Users", "CreatedByUser")
@@ -302,8 +269,6 @@ namespace TaskAppWeb.Migrations
 
             modelBuilder.Entity("TaskApp_Web.Models.ToDoTasks", b =>
                 {
-                    b.Navigation("TaskProcesses");
-
                     b.Navigation("TaskReports");
                 });
 

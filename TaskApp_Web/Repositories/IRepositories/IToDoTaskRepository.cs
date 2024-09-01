@@ -10,6 +10,6 @@ public interface IToDoTaskRepository
     Task<bool> AddTaskAsync(ToDoTasks task);
     Task<bool> UpdateTaskAsync(ToDoTasks task);
     Task<bool> DeleteTaskAsync(int id);
-    Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status);  // Bu metod doğru
+    Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status);  
     Task<IEnumerable<TaskTrackingDTO>> GetTasksAssignedByUserAsync(int userId);
 }

@@ -57,7 +57,7 @@ namespace TaskApp_Web.Controllers
             // Geri kalan işlemler...
             var model = new TaskReportDetailsViewModel
             {
-                TaskId = task.Id.Value,
+                TaskId = task.Id,
                 TaskTitle = task.Title,
                 TaskDescription = task.Description,
                 DueDate = task.DueDate,

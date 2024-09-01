@@ -12,13 +12,19 @@ namespace TaskApp_Web.Services
     {
         private readonly IToDoTaskRepository _toDoTaskRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IDepartmentRepository _departmentRepository; // Yeni eklenen repository
+        private readonly IDepartmentRepository _departmentRepository;
+        private readonly ITaskProcessRepository _taskProcessRepository; // Yeni eklenen repository
 
-        public ToDoTaskService(IToDoTaskRepository toDoTaskRepository, IUserRepository userRepository, IDepartmentRepository departmentRepository)
+        public ToDoTaskService(
+            IToDoTaskRepository toDoTaskRepository,
+            IUserRepository userRepository,
+            IDepartmentRepository departmentRepository,
+            ITaskProcessRepository taskProcessRepository) // Yeni repository parametresi
         {
             _toDoTaskRepository = toDoTaskRepository;
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
+            _taskProcessRepository = taskProcessRepository; // Atama
         }
 
         public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
@@ -66,16 +72,26 @@ namespace TaskApp_Web.Services
             return await _toDoTaskRepository.GetTasksAssignedByUserAsync(userId);
         }
 
-        // Departmanları getirir
         public async Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync()
         {
             return await _departmentRepository.GetAllDepartmentsAsync();
         }
 
-        // Yeni eklenen metot: Belirli bir departmandaki tüm kullanıcıları getirir
         public async Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId)
         {
             return await _userRepository.GetUsersByDepartmentIdAsync(departmentId);
+        }
+
+        // Yeni eklenen metot: Belirli bir görevin tüm süreç kayıtlarını getirir
+        public async Task<IEnumerable<TaskProcess>> GetTaskProcessesByTaskIdAsync(int taskId)
+        {
+            return await _taskProcessRepository.GetTaskProcessesByTaskIdAsync(taskId);
+        }
+
+        // Yeni eklenen metot: Yeni bir süreç kaydı ekler
+        public async Task<bool> AddTaskProcessAsync(TaskProcess taskProcess)
+        {
+            return await _taskProcessRepository.AddTaskProcessAsync(taskProcess);
         }
     }
 }
