@@ -50,6 +50,9 @@
                             case TaskApp_Web.Models.TaskPriority.Yuksek:
                                 @("Yüksek")
                                 ; break;
+                            default:
+                                @("Bilinmiyor")
+                                ; break;
                         }
                     </td>
                     <td>
@@ -68,7 +71,7 @@
                         }
                         else
                         {
-                            <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;">
+                            <form asp-action="CompleteTask" asp-route-id="@task.Id" method="post" style="display:inline;" onsubmit="return handleFormSubmit(this);">
                                 <button type="submit" class="btn btn-success task-button">Tamamlandı</button>
                             </form>
                             <form asp-action="RejectTask" asp-route-id="@task.Id" method="post" style="display:inline;">
@@ -81,6 +84,12 @@
         </tbody>
     </table>
 </div>
+
+<!-- Tebrikler mesajı ve konfeti -->
+<div id="congratulations" class="congratulations">
+    <h2>Tebrikler!</h2>
+</div>
+<div id="confetti-container" class="confetti-container"></div>
 
 <script>
     // Kalan süreyi her saniye güncelleyen fonksiyon
@@ -125,6 +134,48 @@
             this.classList.remove('btn-animate');
         });
     });
+
+    // Form gönderimini engelleme, animasyonları gösterme ve sonra gönderme
+    function handleFormSubmit(form) {
+        disableButton(form);
+        showCongratulations();
+        
+        // Form gönderimini 3 saniye sonra yap
+        setTimeout(() => {
+            form.submit();
+        }, 3000);
+
+        return false; // Formun anında gönderilmesini engelle
+    }
+
+    // Tebrikler mesajı ve konfeti gösterme
+    function showCongratulations() {
+        document.getElementById('congratulations').style.display = 'block';
+        launchConfetti();
+        setTimeout(() => {
+            document.getElementById('congratulations').style.display = 'none';
+        }, 3000);
+    }
+
+    // Konfeti patlaması oluşturma
+    function launchConfetti() {
+        const confettiContainer = document.getElementById('confetti-container');
+        confettiContainer.innerHTML = ''; // Eski konfetileri temizle
+        for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.animationDelay = `${Math.random() * 2}s`;
+            confettiContainer.appendChild(confetti);
+        }
+    }
+
+    // Butonu devre dışı bırakma ve gizleme
+    function disableButton(form) {
+        const button = form.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.style.display = 'none';
+    }
 </script>
 
 <style>
@@ -232,6 +283,42 @@
         color: white;
     }
 
+    .congratulations {
+        display: none;
+        text-align: center;
+        font-size: 24px;
+        color: #28a745;
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1000;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        animation: fade-in 1s ease-out forwards;
+    }
+
+    .confetti-container {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        top: 0;
+        left: 0;
+        z-index: 999;
+    }
+
+    .confetti {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #ffc107;
+        opacity: 0.7;
+        animation: confetti-fall 2s linear infinite;
+    }
+
     @@keyframes slide-in {
         0% {
             opacity: 0;
@@ -249,6 +336,17 @@
         }
         100% {
             opacity: 1;
+        }
+    }
+
+    @@keyframes confetti-fall {
+        0% {
+            transform: translateY(0) rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
         }
     }
 </style>

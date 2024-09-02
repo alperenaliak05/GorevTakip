@@ -2,9 +2,11 @@
 using System.Threading.Tasks;
 using TaskApp_Web.Models;
 using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Repositories;
 using TaskApp_Web.Repositories.IRepositories;
 using TaskApp_Web.Services.IServices;
+using System.Linq;
+using TaskApp_Web.Repositories;
+using TaskStatus = TaskApp_Web.Models.TaskStatus; // ToList için gerekli
 
 namespace TaskApp_Web.Services
 {
@@ -13,18 +15,18 @@ namespace TaskApp_Web.Services
         private readonly IToDoTaskRepository _toDoTaskRepository;
         private readonly IUserRepository _userRepository;
         private readonly IDepartmentRepository _departmentRepository;
-        private readonly ITaskProcessRepository _taskProcessRepository; // Yeni eklenen repository
+        private readonly ITaskProcessRepository _taskProcessRepository;
 
         public ToDoTaskService(
             IToDoTaskRepository toDoTaskRepository,
             IUserRepository userRepository,
             IDepartmentRepository departmentRepository,
-            ITaskProcessRepository taskProcessRepository) // Yeni repository parametresi
+            ITaskProcessRepository taskProcessRepository)
         {
             _toDoTaskRepository = toDoTaskRepository;
             _userRepository = userRepository;
             _departmentRepository = departmentRepository;
-            _taskProcessRepository = taskProcessRepository; // Atama
+            _taskProcessRepository = taskProcessRepository;
         }
 
         public async Task<IEnumerable<ToDoTasks>> GetAllTasksAsync()
@@ -35,6 +37,23 @@ namespace TaskApp_Web.Services
         public async Task<IEnumerable<TaskDTO>> GetTasksByUserIdAsync(int userId)
         {
             return await _toDoTaskRepository.GetTasksByUserIdAsync(userId);
+        }
+
+        public async Task<ToDoTasks> GetTaskByIdAsync(int id, bool includeProcesses = false)
+        {
+            if (includeProcesses)
+            {
+                var task = await _toDoTaskRepository.GetTaskByIdAsync(id);
+                if (task != null)
+                {
+                    task.TaskProcesses = (await _taskProcessRepository.GetTaskProcessesByTaskIdAsync(id)).ToList();
+                }
+                return task;
+            }
+            else
+            {
+                return await _toDoTaskRepository.GetTaskByIdAsync(id);
+            }
         }
 
         public async Task<ToDoTasks> GetTaskByIdAsync(int id)
@@ -62,7 +81,7 @@ namespace TaskApp_Web.Services
             return await _toDoTaskRepository.DeleteTaskAsync(id);
         }
 
-        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(Models.TaskStatus status)
+        public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status)
         {
             return await _toDoTaskRepository.GetTasksByStatusAsync(status);
         }
@@ -82,16 +101,52 @@ namespace TaskApp_Web.Services
             return await _userRepository.GetUsersByDepartmentIdAsync(departmentId);
         }
 
-        // Yeni eklenen metot: Belirli bir görevin tüm süreç kayıtlarını getirir
         public async Task<IEnumerable<TaskProcess>> GetTaskProcessesByTaskIdAsync(int taskId)
         {
             return await _taskProcessRepository.GetTaskProcessesByTaskIdAsync(taskId);
         }
 
-        // Yeni eklenen metot: Yeni bir süreç kaydı ekler
         public async Task<bool> AddTaskProcessAsync(TaskProcess taskProcess)
         {
             return await _taskProcessRepository.AddTaskProcessAsync(taskProcess);
+        }
+
+        public async Task<bool> CompleteTaskAsync(int taskId)
+        {
+            var task = await _toDoTaskRepository.GetTaskByIdAsync(taskId);
+            if (task == null) return false;
+
+            task.Status = TaskStatus.Tamamlandı; // Görev durumunu güncelle
+
+            var result = await _toDoTaskRepository.UpdateTaskAsync(task);
+
+            if (result)
+            {
+                // Kullanıcının tamamladığı görev sayısını güncelle
+                await UpdateUserCompletedTasksCountAsync(task.AssignedToUserId);
+            }
+
+            return result;
+        }
+
+        public async Task UpdateUserCompletedTasksCountAsync(int? userId)
+        {
+            if (!userId.HasValue)
+            {
+                return;
+            }
+
+            var user = await _userRepository.GetUserByIdAsync(userId.Value);
+            if (user != null)
+            {
+                user.CompletedTasksCount++;
+                await _userRepository.UpdateUserAsync(user);
+            }
+        }
+
+        public Task UpdateUserCompletedTasksCountAsync(int userId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

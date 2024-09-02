@@ -20,10 +20,10 @@
     @if (Model.TaskProcesses != null && Model.TaskProcesses.Any())
     {
         <ul>
-        @foreach (var process in Model.TaskProcesses)
-        {
-            <li>@process.ProcessDescription - @process.CreatedAt.ToString("dd/MM/yyyy HH:mm")</li>
-        }
+            @foreach (var process in Model.TaskProcesses)
+            {
+                <li>@process.ProcessDescription - @process.CreatedAt.ToString("dd/MM/yyyy HH:mm")</li>
+            }
         </ul>
     }
     else
@@ -36,16 +36,20 @@
     <!-- Yeni Süreç Ekleme Formu -->
     <h4>Yeni Süreç Ekle</h4>
     <form asp-action="AddTaskProcess" asp-controller="ToDoTask" method="post">
-        <input type="hidden" asp-for="Id" />
+        <!-- Yeni Eklenen Gizli Id Alanı -->
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+
         <div class="form-group">
             <label for="processDescription"><strong>Süreç Açıklaması:</strong></label>
-            <textarea id="processDescription" name="processDescription" class="form-control" rows="4"></textarea>
+            <!-- Yeni Eklenen required Attribute -->
+            <textarea id="processDescription" name="processDescription" class="form-control" rows="4" required></textarea>
         </div>
         <button type="submit" class="btn btn-success">Ekle</button>
     </form>
 
     <a asp-action="MyTasks" class="btn btn-primary back-button">Geri</a>
 </div>
+
 
 <style>
     body {

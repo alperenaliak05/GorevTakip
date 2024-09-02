@@ -17,7 +17,7 @@ namespace TaskApp_Web.Models
         public int AssignedByUserId { get; set; }
         public Users AssignedByUser { get; set; }
         public ICollection<TaskReport> TaskReports { get; set; }
-        public TaskPriority? Priority { get; set; }
+        public TaskPriority Priority { get; set; }
         public string? AssignedByUserFirstName => AssignedByUser?.FirstName;
         public string? AssignedByUserLastName => AssignedByUser?.LastName;
         public ICollection<TaskProcess> TaskProcesses { get; set; } = new List<TaskProcess>();

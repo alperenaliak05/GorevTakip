@@ -9,7 +9,7 @@ namespace TaskApp_Web.Models.DTO
         public string? Description { get; set; }
         public int? AssignedToUserId { get; set; }
         public int? AssignedByUserId { get; set; }
-        public TaskPriority? Priority { get; set; }
+        public TaskPriority Priority { get; set; }
         public string? AssignedByUserFirstName { get; set; } // Yeni eklenen alan
         public string? AssignedByUserLastName { get; set; }  // Yeni eklenen alan
         public DateTime DueDate { get; set; }

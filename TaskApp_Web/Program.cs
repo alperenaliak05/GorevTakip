@@ -68,6 +68,9 @@ builder.Services.AddScoped<ITaskReportRepository, TaskReportRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ITaskProcessRepository, TaskProcessRepository>();
+builder.Services.AddScoped<IBadgeRepository, BadgeRepository>();
+builder.Services.AddScoped<IUserBadgeRepository, UserBadgeRepository>();
+builder.Services.AddScoped<IBadgeService, BadgeService>();
 
 builder.Services.AddRazorPages();
 

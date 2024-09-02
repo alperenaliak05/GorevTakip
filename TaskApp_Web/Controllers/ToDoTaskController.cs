@@ -151,7 +151,8 @@ namespace TaskApp_Web.Controllers
                 AssignedByUserId = task.AssignedByUserId,
                 AssignedByUserFirstName = task.AssignedByUserFirstName,
                 AssignedByUserLastName = task.AssignedByUserLastName,
-                DueDate = task.DueDate
+                DueDate = task.DueDate,
+                Priority = task.Priority
             }).ToList();
 
             return View(taskDTOs);
@@ -309,7 +310,7 @@ namespace TaskApp_Web.Controllers
                 return BadRequest("Geçersiz görev ID'si.");
             }
 
-            var task = await _taskService.GetTaskByIdAsync(id);
+            var task = await _taskService.GetTaskByIdAsync(id, includeProcesses: true);
             if (task == null)
             {
                 return NotFound("Görev bulunamadı.");
@@ -323,29 +324,55 @@ namespace TaskApp_Web.Controllers
                 DueDate = task.DueDate,
                 Status = task.Status,
                 Priority = task.Priority,
-                AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Not Assigned",
-                AssignedByUser = task.AssignedByUser != null ? $"{task.AssignedByUser.FirstName} {task.AssignedByUser.LastName}" : "Unknown",
+                AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Atanmadı",
+                AssignedByUser = task.AssignedByUser != null ? $"{task.AssignedByUser.FirstName} {task.AssignedByUser.LastName}" : "Bilinmiyor",
                 TaskProcesses = task.TaskProcesses?.ToList() ?? new List<TaskProcess>()
             };
 
             return View(taskDetailsViewModel);
         }
 
+
+
         [HttpPost]
         [Route("AddTaskProcess")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddTaskProcess([FromForm] string processDescription, int id)
         {
+            if (id <= 0)
+            {
+                return BadRequest("Geçersiz görev ID'si.");
+            }
+
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
             if (userIdClaim == null)
             {
                 return Unauthorized();
             }
 
-            var task = await _taskService.GetTaskByIdAsync(id);
+            var task = await _taskService.GetTaskByIdAsync(id, includeProcesses: true);
             if (task == null)
             {
                 return NotFound("Görev bulunamadı.");
+            }
+
+            if (string.IsNullOrWhiteSpace(processDescription))
+            {
+                ModelState.AddModelError("processDescription", "Süreç açıklaması gereklidir.");
+                // Hatalı durumda aynı sayfayı aynı model ile göster
+                var taskDetailsViewModel = new TaskDetailsViewModel
+                {
+                    Id = task.Id,
+                    Title = task.Title,
+                    Description = task.Description,
+                    DueDate = task.DueDate,
+                    Status = task.Status,
+                    Priority = task.Priority,
+                    AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Atanmadı",
+                    AssignedByUser = task.AssignedByUser != null ? $"{task.AssignedByUser.FirstName} {task.AssignedByUser.LastName}" : "Bilinmiyor",
+                    TaskProcesses = task.TaskProcesses?.ToList() ?? new List<TaskProcess>()
+                };
+                return View("TaskDetails", taskDetailsViewModel);
             }
 
             var taskProcess = new TaskProcess
@@ -359,6 +386,33 @@ namespace TaskApp_Web.Controllers
 
             return RedirectToAction("TaskDetails", new { id = task.Id });
         }
+        [HttpGet]
+        [Route("TaskTrackingDetails/{id}")]
+        public async Task<IActionResult> TaskTrackingDetails(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id, includeProcesses: true);
+
+            if (task == null)
+            {
+                return NotFound();
+            }
+
+            var taskDetailDTO = new TaskTrackingDetailsDTO
+            {
+                Id = task.Id,
+                Title = task.Title,
+                Description = task.Description,
+                Status = task.Status,
+                AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Atanmadı",
+                DueDate = task.DueDate,
+                Priority = task.Priority,
+                Processes = task.TaskProcesses // Eğer süreçler varsa ekleyin
+            };
+
+            return View(taskDetailDTO);
+        }
+
+
 
     }
 }

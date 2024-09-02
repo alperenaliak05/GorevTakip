@@ -39,7 +39,8 @@ namespace TaskApp_Web.Repositories
                     AssignedByUserFirstName = t.AssignedByUser.FirstName,
                     AssignedByUserLastName = t.AssignedByUser.LastName,
                     DueDate = t.DueDate,
-                    Status = t.Status
+                    Status = t.Status,
+                    Priority = t.Priority
                 })
                 .ToListAsync();
         }

@@ -1,0 +1,135 @@
+﻿@model TaskApp_Web.Models.DTO.TaskTrackingDetailsDTO
+
+<h2 class="task-details-title">Görev Detayları</h2>
+
+<div class="task-details-container">
+    <div class="task-info">
+        <h3>@Model.Title</h3>
+        <p><strong>Açıklama:</strong> @Model.Description</p>
+        <p><strong>Durum:</strong> @Model.Status</p>
+        <p><strong>Atanan Kişi:</strong> @Model.AssignedToUser</p>
+        <p><strong>Bitiş Tarihi:</strong> @Model.DueDate.ToShortDateString()</p>
+        <p><strong>Öncelik:</strong> @Model.Priority</p>
+    </div>
+
+    <div class="task-processes">
+        <h4>Süreçler</h4>
+        @if (Model.Processes != null && Model.Processes.Any())
+        {
+            <table class="processes-table">
+                <thead>
+                    <tr>
+                        <th>Süreç Açıklaması</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var process in Model.Processes)
+                    {
+                        <tr>
+                            <td>@process.ProcessDescription </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="no-processes">Mevcut süreç bulunamadı.</p>
+        }
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .task-details-title {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 36px;
+        color: #333;
+        animation: fade-in 1s ease-out;
+    }
+
+    .task-details-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: slide-up 0.5s ease-out;
+    }
+
+    .task-info {
+        margin-bottom: 20px;
+    }
+
+    .task-info p {
+        margin: 10px 0;
+        font-size: 18px;
+        line-height: 1.6;
+    }
+
+    .task-processes h4 {
+        margin-top: 20px;
+        font-size: 24px;
+        color: #555;
+    }
+
+    .processes-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        animation: fade-in 0.8s ease-out;
+    }
+
+    .processes-table th, .processes-table td {
+        text-align: left;
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .processes-table th {
+        background-color: #f4f4f4;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .processes-table tr:hover {
+        background-color: #f1f1f1;
+        transition: background-color 0.3s ease;
+    }
+
+    .no-processes {
+        font-style: italic;
+        color: #888;
+        margin-top: 10px;
+        animation: fade-in 1s ease-out;
+    }
+
+    @@keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @@keyframes slide-up {
+        0% {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>

@@ -16,6 +16,8 @@ namespace TaskApp_Web.Data
         public DbSet<UserToDoList> UserToDoLists { get; set; }
         public DbSet<TaskReport> TaskReports { get; set; }
         public DbSet<TaskProcess> TaskProcesses { get; set; }
+        public DbSet<Badge> Badges { get; set; } // Yeni Badge tablosu
+        public DbSet<UserBadge> UserBadges { get; set; } // Yeni UserBadge tablosu
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -68,11 +70,26 @@ namespace TaskApp_Web.Data
                 .HasForeignKey(tr => tr.CreatedByUserId)
                 .OnDelete(DeleteBehavior.Restrict); // Silme işlemi kısıtlaması
 
+            // TaskProcess ve ToDoTasks arasındaki ilişki
             modelBuilder.Entity<TaskProcess>()
              .HasOne(tp => tp.Task)  // TaskProcess, ToDoTasks ile ilişkilendirilir
              .WithMany(t => t.TaskProcesses)  // ToDoTasks, TaskProcess ilişkisine sahiptir
              .HasForeignKey(tp => tp.TaskId)  // TaskProcess üzerindeki foreign key
-             .OnDelete(DeleteBehavior.Cascade); // 
+             .OnDelete(DeleteBehavior.Cascade); // Görev silindiğinde ilgili süreçleri de sil
+
+            // UserBadge ve Users arasındaki ilişki
+            modelBuilder.Entity<UserBadge>()
+                .HasOne(ub => ub.User)
+                .WithMany(u => u.UserBadges)
+                .HasForeignKey(ub => ub.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Kullanıcı silindiğinde ilgili rozetlerini sil
+
+            // UserBadge ve Badge arasındaki ilişki
+            modelBuilder.Entity<UserBadge>()
+                .HasOne(ub => ub.Badge)
+                .WithMany()
+                .HasForeignKey(ub => ub.BadgeId)
+                .OnDelete(DeleteBehavior.Restrict); // Rozet silindiğinde UserBadge silinmez
         }
     }
 }

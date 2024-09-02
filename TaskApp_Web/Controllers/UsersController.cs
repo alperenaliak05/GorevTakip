@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TaskApp_Web.Services.IServices;
+using System.Security.Claims;
 
 namespace TaskApp_Web.Controllers
 {
@@ -13,10 +15,12 @@ namespace TaskApp_Web.Controllers
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
+        private readonly IBadgeService _badgeService;
 
-        public UsersController(IUserRepository userRepository)
+        public UsersController(IUserRepository userRepository, IBadgeService badgeService)
         {
             _userRepository = userRepository;
+            _badgeService = badgeService;
         }
 
         public async Task<IActionResult> AllUsers()
@@ -49,6 +53,10 @@ namespace TaskApp_Web.Controllers
                     return NotFound();
                 }
 
+
+                var userBadges = await _badgeService.GetUserBadgesAsync(user.Id);
+                var badges = userBadges.Select(ub => ub.Badge);
+
                 var model = new UserProfileViewModel
                 {
                     FirstName = user.FirstName,
@@ -57,7 +65,8 @@ namespace TaskApp_Web.Controllers
                     DepartmentName = user.Department?.Name,
                     PhoneNumber = user.PhoneNumber,
                     WorkingHours = user.WorkingHours,
-                    ProfilePicture = user.ProfilePicture // Profil resmi eklendi
+                    ProfilePicture = user.ProfilePicture,
+                    UserBadges = badges
                 };
 
                 return View(model);
@@ -185,6 +194,22 @@ namespace TaskApp_Web.Controllers
             var departments = await _userRepository.GetAllDepartmentsAsync();
             model.Departments = new SelectList(departments, "Id", "Name");
             return View(model);
+        }
+
+        // Kullanıcının rozetlerini görüntüler
+        public async Task<IActionResult> Badges()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var userBadges = await _badgeService.GetUserBadgesAsync(userId);
+            var availableBadges = await _badgeService.GetAvailableBadgesAsync(userId);
+
+            var model = new UserBadgesViewModel
+            {
+                UserBadges = userBadges,
+                AvailableBadges = availableBadges
+            };
+
+            return View("Badges", model); // "Badges" view dosyasını kullanıyoruz
         }
 
     }

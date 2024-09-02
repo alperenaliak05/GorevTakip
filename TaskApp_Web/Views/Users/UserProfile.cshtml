@@ -13,8 +13,28 @@
         <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
         <p><strong>Çalışma Saatleri:</strong> @Model.WorkingHours</p>
     </div>
-</div>
 
+    <div class="user-badges">
+        <h2>Rozetlerim</h2>
+        @if (Model.UserBadges != null && Model.UserBadges.Any())
+        {
+            <ul class="badges-list">
+                @foreach (var badge in Model.UserBadges)
+                {
+                    <li class="badge-item">
+                        <img src="@badge.ImageUrl" alt="@badge.Name" class="badge-image" />
+                        <span class="badge-name">@badge.Name</span>
+                        <p class="badge-description">@badge.Description</p>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <p>Henüz rozet kazanmadınız.</p>
+        }
+    </div>
+</div>
 <style>
     body {
         font-family: 'Lato', Arial, sans-serif;

@@ -1,0 +1,61 @@
+﻿@model TaskApp_Web.Models.UserBadgesViewModel
+
+<h2>Rozetlerim</h2>
+
+<div class="badge-container">
+    <h3>Mevcut Rozetler</h3>
+    <div class="badges">
+        @foreach (var badge in Model.UserBadges)
+        {
+            <div class="badge">
+                <img src="@badge.Badge.ImageUrl" alt="@badge.Badge.Name" />
+                <p>@badge.Badge.Name</p>
+                <p>@badge.Badge.Description</p>
+            </div>
+        }
+    </div>
+
+    <h3>Kazanılabilir Rozetler</h3>
+    <div class="badges">
+        @foreach (var badge in Model.AvailableBadges)
+        {
+            <div class="badge">
+                <img src="@badge.ImageUrl" alt="@badge.Name" />
+                <p>@badge.Name</p>
+                <p>@badge.Description</p>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .badge-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .badge {
+        width: 120px;
+        text-align: center;
+    }
+
+        .badge img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .badge p {
+            margin-top: 5px;
+        }
+</style>
