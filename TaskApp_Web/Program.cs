@@ -71,7 +71,8 @@ builder.Services.AddScoped<ITaskProcessRepository, TaskProcessRepository>();
 builder.Services.AddScoped<IBadgeRepository, BadgeRepository>();
 builder.Services.AddScoped<IUserBadgeRepository, UserBadgeRepository>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
-
+builder.Services.AddScoped<IInformationRepository, InformationRepository>();
+builder.Services.AddScoped<IInformationService, InformationService>();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

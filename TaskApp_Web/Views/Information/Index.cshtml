@@ -1,0 +1,115 @@
+﻿@model IEnumerable<TaskApp_Web.Models.Information>
+
+<h2 class="animated-title">Bilgilendirme Listesi</h2>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover animated-table">
+        <thead class="thead-dark">
+            <tr>
+                <th>Başlık</th>
+                <th>İçerik</th>
+                <th>Oluşturan Kullanıcı</th>
+                <th>Oluşturulma Tarihi</th>  
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var info in Model)
+            {
+                <tr class="fade-in">
+                    <td>@info.Title</td>
+                    <td>@info.Content</td>
+                    <td>@info.CreatedByUser.FirstName @info.CreatedByUser.LastName</td>
+                    <td>@info.CreatedAt.ToShortDateString()</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Başlık animasyonu
+            document.querySelector('.animated-title').classList.add('fade-in');
+
+            // Tablo satırlarına hover efekti
+            const rows = document.querySelectorAll('.table-hover tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function () {
+                    row.classList.add('row-hover');
+                });
+                row.addEventListener('mouseleave', function () {
+                    row.classList.remove('row-hover');
+                });
+            });
+        });
+    </script>
+}
+
+<style>
+    /* Sayfa Başlığı ve Tablo Animasyonları */
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Tablo Stilleri */
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+        transition: background-color 0.3s ease;
+    }
+
+    .thead-dark {
+        background-color: #343a40;
+        color: white;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8f9fa;
+    }
+
+    .table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+    }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+        }
+
+    /* Row Hover Effect */
+    .row-hover {
+        background-color: #e9ecef !important;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Table Responsive */
+    .table-responsive {
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+        .table-responsive:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+</style>

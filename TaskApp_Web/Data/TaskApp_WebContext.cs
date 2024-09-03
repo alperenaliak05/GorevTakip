@@ -18,6 +18,7 @@ namespace TaskApp_Web.Data
         public DbSet<TaskProcess> TaskProcesses { get; set; }
         public DbSet<Badge> Badges { get; set; } // Yeni Badge tablosu
         public DbSet<UserBadge> UserBadges { get; set; } // Yeni UserBadge tablosu
+         public DbSet<Information> Informations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,6 +91,12 @@ namespace TaskApp_Web.Data
                 .WithMany()
                 .HasForeignKey(ub => ub.BadgeId)
                 .OnDelete(DeleteBehavior.Restrict); // Rozet silindiğinde UserBadge silinmez
+
+            modelBuilder.Entity<Information>()
+                .HasOne(i => i.CreatedByUser)
+                .WithMany()
+                .HasForeignKey(i => i.CreatedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

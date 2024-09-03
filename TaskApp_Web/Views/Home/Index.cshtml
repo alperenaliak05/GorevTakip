@@ -4,6 +4,10 @@
 }
 
 <style>
+    body {
+        background-color: #f8f8f8; /* Hafif kirli beyaz arkaplan */
+    }
+
     /* Dijital Saatin Ortalanması ve Stili */
     .digital-clock-container {
         display: flex;
@@ -11,21 +15,17 @@
         align-items: center;
         padding: 20px;
         margin-bottom: 30px;
-        background-color: #343a40; /* Arka plan rengi koyu gri */
+        background-color: rgba(52, 58, 64, 0.8); /* Hafif saydam arka plan */
         border-bottom: 2px solid #222;
-        opacity: 0; /* Başlangıçta görünmez */
-        transform: translateY(-20px); /* Yukarıdan gelecek */
-        transition: all 1s ease;
     }
 
     .digital-clock {
         font-size: 3em;
-        color: #fff; /* Saat rengini beyaz yap */
+        color: #fff; /* Saat rengi beyaz */
         font-weight: bold;
-        animation: pulse 2s infinite; /* Saat için pulse animasyonu */
+        animation: pulse 2s infinite;
     }
 
-    /* İçerikleri yukarı çekme ve ortalama */
     .centered-content {
         display: flex;
         flex-direction: column;
@@ -34,62 +34,35 @@
         height: 100vh;
         padding-top: 60px;
         text-align: center;
-        opacity: 0; /* Başlangıçta görünmez */
-        transform: translateY(20px); /* Aşağıdan gelecek */
-        transition: all 1s ease;
     }
 
     .welcome-message {
-        font-size: 5em;
-        color: #FFFFFF; /* Hoş geldiniz yazısı rengi */
+        font-size: 10em;
+        color: #000; /* Başlık rengi siyah */
         font-weight: bold;
         margin-top: 20px;
-        opacity: 0;
-        transform: scale(0.9);
-        transition: all 1s ease;
-        animation: glow 2s infinite alternate; /* Hoş geldiniz yazısı için glow animasyonu */
         position: relative;
+        text-shadow: 2px 2px 4px #888; /* Gri gölgelendirme */
     }
 
-        /* Hoş geldiniz yazısının arka plan rengi ve animasyon */
-        .welcome-message::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 120%;
-            height: 150%;
-            background: linear-gradient(135deg, #3498db, #9b59b6); /* Yeni arka plan rengi */
-            transform: translate(-50%, -50%) scale(1.2);
-            z-index: -1;
-            border-radius: 20px;
-            filter: blur(20px); /* Blur efekti */
-            opacity: 0.7;
-        }
-
-    /* Genel yazı stilini güzelleştirme */
     .centered-content p {
         font-size: 1.8em;
-        color: #333;
+        color: #000; /* Paragraf rengi siyah */
         margin: 10px 0;
-        transition: color 0.5s ease;
+        transition: transform 0.3s ease, font-size 0.3s ease;
     }
 
         .centered-content p:hover {
-            color: #555;
-            transform: scale(1.05);
-            transition: transform 0.3s ease;
+            transform: scale(1.2); /* Metin üzerine gelindiğinde büyütme */
+            font-size: 2em; /* Font boyutunu artır */
         }
 
-    /* Animasyonlar */
-    @@keyframes glow {
-        from {
-            text-shadow: 0 0 10px #3498db, 0 0 20px #3498db, 0 0 30px #3498db;
-        }
-
-        to {
-            text-shadow: 0 0 20px #9b59b6, 0 0 30px #9b59b6, 0 0 40px #9b59b6, 0 0 50px #9b59b6;
-        }
+    #main-title {
+        font-size: 4em;
+        color: #000; /* Ana başlık rengi siyah */
+        text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
+        font-weight: 900;
+        margin-bottom: 20px;
     }
 
     @@keyframes pulse {
@@ -105,25 +78,6 @@
             transform: scale(1);
         }
     }
-
-    @@keyframes fadeInUp {
-        0% {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .animated-content {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all 1s ease;
-        animation: fadeInUp 1.5s forwards; /* İçerik yüklenme animasyonu */
-    }
 </style>
 
 <div class="digital-clock-container" id="clock-container">
@@ -133,7 +87,7 @@
 <div class="centered-content" id="content">
     <h1 id="main-title">GÖREV YÖNETİM SİSTEMİ</h1>
     <p class="welcome-message" id="welcome">Hoş geldiniz!</p>
-    <div class="animated-content">
+    <div>
         <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
         <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
     </div>
@@ -150,29 +104,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        setTimeout(() => {
-            document.getElementById('clock-container').style.opacity = 1;
-            document.getElementById('clock-container').style.transform = 'translateY(0)';
-        }, 200);
-
-        setTimeout(() => {
-            document.getElementById('content').style.opacity = 1;
-            document.getElementById('content').style.transform = 'translateY(0)';
-        }, 400);
-
-        setTimeout(() => {
-            document.getElementById('welcome').style.opacity = 1;
-            document.getElementById('welcome').style.transform = 'scale(1)';
-        }, 600);
-
-        setTimeout(() => {
-            document.querySelectorAll('.animated-content').forEach((el) => {
-                el.style.opacity = 1;
-                el.style.transform = 'translateY(0)';
-            });
-        }, 800);
+        updateClock();
+        setInterval(updateClock, 1000);
     });
-
-    setInterval(updateClock, 1000);
-    updateClock();
 </script>

@@ -43,31 +43,31 @@
                         {
                             case TaskApp_Web.Models.TaskPriority.Dusuk:
                                 @("Düşük")
-                                ; break;
+                                break;
                             case TaskApp_Web.Models.TaskPriority.Orta:
                                 @("Orta")
-                                ; break;
+                                break;
                             case TaskApp_Web.Models.TaskPriority.Yuksek:
                                 @("Yüksek")
-                                ; break;
+                                break;
                             default:
                                 @("Bilinmiyor")
-                                ; break;
+                                break;
                         }
                     </td>
                     <td>
-                        <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-info task-button">Detay</a>
+                        <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-secondary task-button">Detay</a>
                         @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
                         {
-                            <button class="btn btn-disabled" disabled>Tamamlandı</button>
+                            <button class="btn btn-success disabled" disabled>Tamamlandı</button>
                         }
                         else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
                         {
-                            <button class="btn btn-disabled" disabled>Reddedildi</button>
+                            <button class="btn btn-danger disabled" disabled>Reddedildi</button>
                         }
                         else if (task.Status == TaskApp_Web.Models.TaskStatus.SuresiGecti)
                         {
-                            <button class="btn btn-warning" disabled>Süresi Geçti</button>
+                            <button class="btn btn-warning disabled" disabled>Süresi Geçti</button>
                         }
                         else
                         {
@@ -139,7 +139,7 @@
     function handleFormSubmit(form) {
         disableButton(form);
         showCongratulations();
-        
+
         // Form gönderimini 3 saniye sonra yap
         setTimeout(() => {
             form.submit();
@@ -214,16 +214,16 @@
         box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     }
 
-    .table th, .table td {
-        text-align: center;
-        vertical-align: middle;
-        padding: 15px;
-    }
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+        }
 
-    .table thead {
-        background-color: #343a40;
-        color: white;
-    }
+        .table thead {
+            background-color: #343a40;
+            color: white;
+        }
 
     .table-striped tbody tr:nth-of-type(odd) {
         background-color: #f8f9fa;
@@ -279,9 +279,9 @@
         cursor: not-allowed;
     }
 
-    .btn-disabled:hover {
-        color: white;
-    }
+        .btn-disabled:hover {
+            color: white;
+        }
 
     .congratulations {
         display: none;
@@ -324,6 +324,7 @@
             opacity: 0;
             transform: translateY(-20px);
         }
+
         100% {
             opacity: 1;
             transform: translateY(0);
@@ -334,6 +335,7 @@
         0% {
             opacity: 0;
         }
+
         100% {
             opacity: 1;
         }
@@ -344,6 +346,7 @@
             transform: translateY(0) rotate(0deg);
             opacity: 1;
         }
+
         100% {
             transform: translateY(100vh) rotate(360deg);
             opacity: 0;

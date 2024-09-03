@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Users>
-
-@{
+﻿@{
     ViewData["Title"] = "Tüm Kullanıcılar";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var userDepartment = ViewBag.UserDepartment as string;
@@ -13,10 +11,8 @@
 {
     <a asp-action="CreateUser" class="btn btn-primary mb-3">Yeni Kullanıcı Ekle</a>
 }
-else
-{
-@*     <p class="text-warning">Bu sayfada yeni kullanıcı ekleme yetkiniz yok.</p> *@
-}
+
+
 
 <p>Kullanıcı departmanı: @userDepartment</p>
 
@@ -46,7 +42,7 @@ else
                     <td>@user.LastName</td>
                     <td>@user.Email</td>
                     <td>@user.Department.Name</td>
-                    <td><a asp-action="UserProfile" asp-route-id="@user.Id" class="btn btn-info profile-btn">Profil</a></td>
+                    <td><a asp-action="UserProfile" asp-route-id="@user.Id" class="btn btn-secondary profile-btn">Profil</a></td>
                 </tr>
             }
         </tbody>

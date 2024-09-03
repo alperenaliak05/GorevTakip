@@ -23,13 +23,6 @@
                 </div>
 
                 <div class="todo-item-actions">
-                    @if (!item.IsCompleted)
-                    {
-                        <form asp-action="UpdateToDoList" method="post" style="display:inline;">
-                            <input type="hidden" name="Id" value="@item.Id" />
-                            <input type="hidden" name="IsCompleted" value="true" />
-                        </form>
-                    }
                     <form asp-action="DeleteToDoList" method="post" class="delete-form">
                         <input type="hidden" name="id" value="@item.Id" />
                         <button type="submit" class="btn btn-danger btn-sm delete-btn">❌</button>
@@ -138,6 +131,11 @@
         cursor: pointer;
         transition: transform 0.2s ease;
     }
+
+        .todo-checkbox:checked {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
 
         .todo-checkbox:hover {
             transform: scale(1.1);

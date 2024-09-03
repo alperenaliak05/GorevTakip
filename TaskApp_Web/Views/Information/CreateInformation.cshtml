@@ -1,0 +1,27 @@
+﻿@model TaskApp_Web.Models.Information
+
+@{
+    ViewData["Title"] = "Yeni Bilgilendirme Ekle";
+}
+
+<h2>Yeni Bilgilendirme Ekle</h2>
+
+<form asp-action="CreateInformation" method="post">
+    <div class="form-group">
+        <label asp-for="Title"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Content"></label>
+        <textarea asp-for="Content" class="form-control"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
