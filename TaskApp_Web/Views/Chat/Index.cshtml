@@ -1,0 +1,338 @@
+﻿@model IEnumerable<TaskApp_Web.Models.Users>
+
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<div class="container-fluid mt-5">
+    <div class="chat-container">
+        <!-- Sohbet Listesi -->
+        <div class="chat-list">
+            <div class="chat-list-header">
+                <span>Sohbetler</span>
+                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userListModal">+</button>
+            </div>
+            <ul class="list-group list-group-flush" id="chatList">
+                <!-- JavaScript ile dinamik olarak doldurulacak -->
+            </ul>
+        </div>
+
+        <!-- Sohbet Penceresi -->
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-window-header" id="chatWindowHeader">
+                <!-- Seçilen kullanıcı adı buraya gelecek -->
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <!-- Sohbet mesajları buraya gelecek -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" class="form-control" placeholder="Bir mesaj yaz..." aria-label="Bir mesaj yaz..." aria-describedby="button-send">
+                <button class="btn btn-primary" id="button-send" onclick="sendMessage()">Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kullanıcı Seçim Modali -->
+    <div class="modal fade" id="userListModal" tabindex="-1" aria-labelledby="userListModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="userListModalLabel">Yeni Sohbet Başlat</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group" id="userList">
+                        @foreach (var user in Model)
+                        {
+                            <li class="list-group-item user-list-item" onclick="startChatWithUser('@user.Id', '@user.FirstName', '@user.LastName')">
+                                @user.FirstName @user.LastName
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-container {
+        display: flex;
+        height: calc(100vh - 56px);
+        overflow: hidden;
+    }
+
+    .chat-list {
+        width: 250px;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+    }
+
+    .chat-list-header {
+        padding: 15px;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-window {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-window-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+    }
+
+    .chat-input {
+        display: flex;
+    }
+
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            padding: 10px 15px;
+        }
+
+    .user-list-modal .modal-body {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .user-list-item {
+        cursor: pointer;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+        .user-list-item:hover {
+            background-color: #f1f1f1;
+        }
+
+    .list-group-item.active {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    #chatMessages {
+        height: 500px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+    }
+
+    .sent {
+        text-align: right;
+        background-color: #007bff;
+        color: white;
+        margin-left: auto;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .received {
+        text-align: left;
+        background-color: #f1f1f1;
+        margin-right: auto;
+        padding: 10px;
+        border-radius: 8px;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+
+    <script type="text/javascript">
+        let selectedUser = null;
+        let senderId = null;
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chathub")
+            .build();
+
+        connection.on("ReceiveMessage", function (message) {
+            const isSender = message.senderId == senderId;
+            addMessageToList(message.senderId, message.receiverId, message.content, message.timestamp, isSender);
+        });
+
+        connection.start().then(() => {
+            loadUserId();
+            loadChatList();
+        }).catch(function (err) {
+            console.error('SignalR bağlantı hatası:', err.toString());
+        });
+
+        function loadUserId() {
+            const token = getJwtToken();
+            if (token) {
+                senderId = parseInt(getUserIdFromToken(token));
+                console.log("Oturum açmış kullanıcı ID:", senderId);
+            } else {
+                console.error("JWT token bulunamadı.");
+            }
+        }
+
+        function getJwtToken() {
+            const name = "JwtToken=";  // Çerez ismi burada tanımlanmalı
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function getUserIdFromToken(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+
+            const payload = JSON.parse(jsonPayload);
+            return payload["nameid"];
+        }
+
+        function loadChatList() {
+            fetch('/Chat/GetChatList')
+                .then(response => response.json())
+                .then(chats => {
+                    const chatList = document.getElementById("chatList");
+                    chatList.innerHTML = '';
+
+                    chats.forEach(chat => {
+                        const li = document.createElement('li');
+                        li.classList.add('list-group-item');
+                        li.textContent = `${chat.userName}`;
+                        li.dataset.userId = chat.UserId;
+                        li.onclick = () => startChatWithUser(chat.UserId, chat.userName);
+                        chatList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Sohbet listesi yüklenemedi:', error));
+        }
+
+        function startChatWithUser(userId, userName) {
+            selectedUser = userId;
+            document.getElementById("chatWindowHeader").textContent = `Sohbet: ${userName}`;
+            $('#userListModal').modal('hide');
+
+            highlightSelectedChat(userId);
+
+            loadMessageHistory(userId);
+        }
+
+        function highlightSelectedChat(userId) {
+
+            document.querySelectorAll('#chatList .list-group-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            const selectedItem = document.querySelector(`#chatList .list-group-item[data-user-id='${userId}']`);
+            if (selectedItem) {
+                selectedItem.classList.add('active');
+            }
+        }
+
+        function selectUser(userId) {
+            selectedUser = userId;
+
+            highlightSelectedChat(userId);
+
+            loadMessageHistory(userId);
+        }
+
+        function loadMessageHistory(userId) {
+            fetch(`/Chat/GetMessageHistory?userId=${userId}`)
+                .then(response => response.json())
+                .then(messages => {
+                    console.log(messages); // Mesajları kontrol etmek için
+                    const chatMessages = document.getElementById("chatMessages");
+                    chatMessages.innerHTML = '';
+
+                    messages.forEach(message => {
+                        const isSender = message.senderId == senderId;
+                        const senderName = isSender ? 'You' : `User ${message.senderId}`; // Burada kullanıcı adını almanız gerekiyor
+                        addMessageToList(senderName, message.receiverId, message.messageContent, message.timestamp, isSender);
+                    });
+                })
+                .catch(error => console.error('Mesaj geçmişi yüklenemedi:', error));
+        }
+
+        function addMessageToList(senderName, receiverId, content, timestamp, isSender) {
+            const chatMessages = document.getElementById("chatMessages");
+            const messageElement = document.createElement("div");
+            messageElement.classList.add(isSender ? "sent" : "received", "mb-2", "rounded");
+            messageElement.innerHTML = `<strong>${senderName}:</strong> ${content} <span class="text-muted" style="font-size: 0.8em;">${new Date(timestamp).toLocaleTimeString()}</span>`;
+            chatMessages.appendChild(messageElement);
+
+            // Mesaj penceresini otomatik kaydır
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+
+        function sendMessage() {
+            const message = document.getElementById("messageInput").value;
+
+            if (!selectedUser) {
+                alert('Lütfen bir kullanıcı seçin.');
+                return;
+            }
+
+            if (message.trim() === "") {
+                alert('Boş mesaj gönderilemez.');
+                return;
+            }
+
+            fetch('/Chat/SendMessage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ receiverId: selectedUser, messageContent: message })
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Mesaj gönderilemedi');
+                }
+
+                addMessageToList(senderId, selectedUser, message, new Date().toISOString(), true);
+                document.getElementById("messageInput").value = ''; // Mesaj kutusunu temizle
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+}

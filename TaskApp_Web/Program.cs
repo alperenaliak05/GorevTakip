@@ -8,19 +8,19 @@ using TaskApp_Web.Data;
 using TaskApp_Web.Services.IServices;
 using TaskApp_Web.Services;
 using TaskApp_Web.Repositories.IRepositories;
+using TaskApp_Web.Hubs;
+using Microsoft.AspNetCore.SignalR;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Database context configuration
 builder.Services.AddDbContext<TaskApp_WebContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
 
-// JWT and Cookie Authentication configuration
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme; // Default olarak Cookie'yi kullanýyoruz
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 })
@@ -45,14 +45,18 @@ builder.Services.AddAuthentication(options =>
     options.SlidingExpiration = true;
 });
 
-// Session configuration
-builder.Services.AddDistributedMemoryCache(); // Session management için in-memory cache
+builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Session timeout
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.Name = "JwtToken";
 });
+
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
 
 // Dependency Injection for repositories and services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -65,19 +69,19 @@ builder.Services.AddScoped<IDepartmentService, DepartmentsService>();
 builder.Services.AddScoped<IUserToDoListRepository, UserToDoListRepository>();
 builder.Services.AddScoped<ITaskReportService, TaskReportService>();
 builder.Services.AddScoped<ITaskReportRepository, TaskReportRepository>();
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<ITaskProcessRepository, TaskProcessRepository>();
 builder.Services.AddScoped<IBadgeRepository, BadgeRepository>();
 builder.Services.AddScoped<IUserBadgeRepository, UserBadgeRepository>();
 builder.Services.AddScoped<IBadgeService, BadgeService>();
 builder.Services.AddScoped<IInformationRepository, InformationRepository>();
 builder.Services.AddScoped<IInformationService, InformationService>();
-builder.Services.AddRazorPages();
+builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+builder.Services.AddScoped<IMessageService, MessageService>();
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -89,10 +93,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession(); // Session middleware'i etkinleþtirin
+app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.UseAuthentication(); // Authentication middleware'i etkinleþtirin
-app.UseAuthorization();  // Authorization middleware'i etkinleþtirin
+app.MapHub<ChatHub>("/chathub");
 
 app.MapControllerRoute(
     name: "default",

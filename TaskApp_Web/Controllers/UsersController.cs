@@ -196,7 +196,6 @@ namespace TaskApp_Web.Controllers
             return View(model);
         }
 
-        // Kullanıcının rozetlerini görüntüler
         public async Task<IActionResult> Badges()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);

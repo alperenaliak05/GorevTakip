@@ -13,6 +13,6 @@ namespace TaskApp_Web.Repositories
         Task<bool> UpdateUserAsync(Users user);
         Task<bool> DeleteUserAsync(int id);
         Task<List<Departments>> GetAllDepartmentsAsync();
-        Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId); // Yeni metot eklendi
+        Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId);
     }
 }

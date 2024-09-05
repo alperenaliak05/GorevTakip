@@ -103,6 +103,41 @@ namespace TaskAppWeb.Migrations
                     b.ToTable("Informations");
                 });
 
+            modelBuilder.Entity("TaskApp_Web.Models.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SenderId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
             modelBuilder.Entity("TaskApp_Web.Models.TaskProcess", b =>
                 {
                     b.Property<int>("Id")
@@ -321,6 +356,25 @@ namespace TaskAppWeb.Migrations
                     b.Navigation("CreatedByUser");
                 });
 
+            modelBuilder.Entity("TaskApp_Web.Models.Message", b =>
+                {
+                    b.HasOne("TaskApp_Web.Models.Users", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TaskApp_Web.Models.Users", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
             modelBuilder.Entity("TaskApp_Web.Models.TaskProcess", b =>
                 {
                     b.HasOne("TaskApp_Web.Models.ToDoTasks", "Task")
@@ -437,6 +491,10 @@ namespace TaskAppWeb.Migrations
                     b.Navigation("CreatedReports");
 
                     b.Navigation("CreatedTasks");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
 
                     b.Navigation("TaskReports");
 

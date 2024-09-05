@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <style>
-        /* Dark Mode Stil Tanımları */
         .dark-mode {
             background-color: #333;
             color: #f0f0f0;
@@ -23,7 +22,6 @@
                     color: #ddd;
                 }
 
-        /* Geçişler için Animasyon Tanımları */
         .nav-link, .logout-button, .navbar-brand {
             transition: color 0.3s ease, background-color 0.3s ease, transform 0.3s ease;
         }
@@ -39,7 +37,6 @@
                 transform: scale(1.1);
             }
 
-        /* Sayfa Yüklenirken Animasyon */
         body {
             opacity: 0;
             transition: opacity 1s ease-in-out;
@@ -63,6 +60,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="Users" asp-action="AllUsers">Tüm Kullanıcılar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Chat" asp-action="Index">Chat</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownTasks" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -92,7 +92,6 @@
                                 </ul>
                             </li>
                             <li class="nav-item">
-                                <!-- Dark mode toggle emoji -->
                                 <a class="nav-link" href="#" id="darkModeToggle">🌙</a>
                             </li>
                             <li class="nav-item">
@@ -130,9 +129,7 @@
     @RenderSection("Scripts", required: false)
 
     <script>
-        // Sayfa yüklendiğinde dark mode kontrolü ve sayfa animasyonu
         document.addEventListener('DOMContentLoaded', function () {
-            // Sayfa fade-in efekti
             document.body.style.opacity = 1;
 
             const darkModeToggle = document.getElementById('darkModeToggle');
@@ -152,7 +149,6 @@
                 }
             });
 
-            // Navbar ve diğer tuşlar için hover animasyonu
             const navLinks = document.querySelectorAll('.nav-link, .logout-button, .navbar-brand');
             navLinks.forEach(link => {
                 link.addEventListener('mouseenter', function () {

@@ -59,7 +59,9 @@ namespace TaskApp_Web.Controllers
             Response.Cookies.Append("JwtToken", token, new CookieOptions
             {
                 HttpOnly = true,
-                Expires = DateTime.UtcNow.AddMinutes(30)
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                Secure = true, // HTTPS gerektirir
+                SameSite = SameSiteMode.Strict
             });
 
             // Kullanıcı başarılı bir şekilde giriş yaptıktan sonra "Home" sayfasına yönlendiriliyor
