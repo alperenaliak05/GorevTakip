@@ -2,9 +2,11 @@
 {
     public class MessageDTO
     {
-        public int SenderId { get; set; }       // Gönderenin ID'si
-        public int ReceiverId { get; set; }     // Alıcının ID'si
-        public string MessageContent { get; set; }  // Mesaj içeriği
-        public DateTime Timestamp { get; set; }   // Mesajın gönderildiği zaman (string olarak formatlanmış)
+        public int SenderId { get; set; }
+        public int ReceiverId { get; set; }
+        public string SenderName { get; set; } // Gönderen ismi
+        public string ReceiverName { get; set; } // Alıcı ismi
+        public string MessageContent { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

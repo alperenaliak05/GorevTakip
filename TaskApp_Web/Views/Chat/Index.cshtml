@@ -7,7 +7,7 @@
 <div class="container-fluid mt-5">
     <div class="chat-container">
         <!-- Sohbet Listesi -->
-        <div class="chat-list">
+        <div class="chat-list shadow-sm rounded">
             <div class="chat-list-header">
                 <span>Sohbetler</span>
                 <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userListModal">+</button>
@@ -18,11 +18,11 @@
         </div>
 
         <!-- Sohbet Penceresi -->
-        <div class="chat-window" id="chatWindow">
+        <div class="chat-window shadow-sm rounded" id="chatWindow">
             <div class="chat-window-header" id="chatWindowHeader">
                 <!-- Seçilen kullanıcı adı buraya gelecek -->
             </div>
-            <div class="chat-messages" id="chatMessages">
+            <div class="chat-messages p-3" id="chatMessages">
                 <!-- Sohbet mesajları buraya gelecek -->
             </div>
             <div class="chat-input">
@@ -60,21 +60,31 @@
         display: flex;
         height: calc(100vh - 56px);
         overflow: hidden;
+        gap: 20px;
     }
 
     .chat-list {
-        width: 250px;
+        width: 300px;
         border-right: 1px solid #ddd;
         overflow-y: auto;
+        background-color: #f8f9fa;
+        transition: all 0.3s ease;
+    }
+
+    .chat-list:hover {
+        background-color: #ffffff;
     }
 
     .chat-list-header {
         padding: 15px;
-        background-color: #f5f5f5;
+        background-color: #007bff;
+        color: white;
         border-bottom: 1px solid #ddd;
         display: flex;
         justify-content: space-between;
         align-items: center;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
 
     .chat-window {
@@ -83,6 +93,9 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
+        background-color: #ffffff;
+        border-radius: 8px;
+        position: relative;
     }
 
     .chat-window-header {
@@ -91,29 +104,54 @@
         align-items: center;
         padding-bottom: 10px;
         border-bottom: 1px solid #ddd;
+        font-weight: bold;
     }
 
     .chat-messages {
         flex: 1;
         overflow-y: auto;
         margin-bottom: 10px;
+        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        border-radius: 8px;
+        padding: 15px;
+        animation: fadeIn 0.5s ease;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     .chat-input {
         display: flex;
+        position: sticky;
+        bottom: 0;
+        background-color: white;
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
     }
 
-        .chat-input input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
+    .chat-input input {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-right: 10px;
+        transition: all 0.2s ease;
+    }
 
-        .chat-input button {
-            padding: 10px 15px;
-        }
+    .chat-input input:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .chat-input button {
+        padding: 10px 15px;
+    }
 
     .user-list-modal .modal-body {
         max-height: 400px;
@@ -124,11 +162,12 @@
         cursor: pointer;
         padding: 10px;
         border-bottom: 1px solid #ddd;
+        transition: background-color 0.2s ease;
     }
 
-        .user-list-item:hover {
-            background-color: #f1f1f1;
-        }
+    .user-list-item:hover {
+        background-color: #e2e6ea;
+    }
 
     .list-group-item.active {
         background-color: #007bff;
@@ -146,6 +185,7 @@
         padding: 15px;
         border-radius: 8px;
         border: 1px solid #ddd;
+        transition: all 0.3s ease;
     }
 
     .sent {
@@ -155,6 +195,8 @@
         margin-left: auto;
         padding: 10px;
         border-radius: 8px;
+        animation: slideInRight 0.3s ease-out;
+        max-width: 60%;
     }
 
     .received {
@@ -163,6 +205,30 @@
         margin-right: auto;
         padding: 10px;
         border-radius: 8px;
+        animation: slideInLeft 0.3s ease-out;
+        max-width: 60%;
+    }
+
+    @@keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
     }
 </style>
 
@@ -256,7 +322,6 @@
         }
 
         function highlightSelectedChat(userId) {
-
             document.querySelectorAll('#chatList .list-group-item').forEach(item => {
                 item.classList.remove('active');
             });
@@ -279,13 +344,13 @@
             fetch(`/Chat/GetMessageHistory?userId=${userId}`)
                 .then(response => response.json())
                 .then(messages => {
-                    console.log(messages); // Mesajları kontrol etmek için
+                    console.log(messages);
                     const chatMessages = document.getElementById("chatMessages");
                     chatMessages.innerHTML = '';
 
                     messages.forEach(message => {
                         const isSender = message.senderId == senderId;
-                        const senderName = isSender ? 'You' : `User ${message.senderId}`; // Burada kullanıcı adını almanız gerekiyor
+                        const senderName = isSender ? 'You' : message.senderName;
                         addMessageToList(senderName, message.receiverId, message.messageContent, message.timestamp, isSender);
                     });
                 })
@@ -302,7 +367,6 @@
             // Mesaj penceresini otomatik kaydır
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-
 
         function sendMessage() {
             const message = document.getElementById("messageInput").value;

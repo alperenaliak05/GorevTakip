@@ -68,7 +68,6 @@ namespace TaskApp_Web.Controllers
         }
 
 
-
         [HttpGet]
         public async Task<IActionResult> GetMessageHistory(int userId)
         {
@@ -81,7 +80,6 @@ namespace TaskApp_Web.Controllers
 
             var messages = await _messageRepository.GetMessagesBetweenUsersAsync(currentUser.Id, userId);
 
-            // Kullanıcı adlarını almak için yeni bir liste oluşturun
             var messageDTOs = new List<MessageDTO>();
 
             foreach (var message in messages)
@@ -93,6 +91,8 @@ namespace TaskApp_Web.Controllers
                 {
                     SenderId = message.SenderId,
                     ReceiverId = message.ReceiverId,
+                    SenderName = sender?.FirstName + " " + sender?.LastName, // Gönderenin ismi
+                    ReceiverName = receiver?.FirstName + " " + receiver?.LastName, // Alıcının ismi
                     MessageContent = message.Content,
                     Timestamp = message.Timestamp
                 });
@@ -100,6 +100,7 @@ namespace TaskApp_Web.Controllers
 
             return Json(messageDTOs);
         }
+
 
 
 
