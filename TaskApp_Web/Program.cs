@@ -1,21 +1,22 @@
-using Microsoft.EntityFrameworkCore;
+using Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using TaskApp_Web.Repositories;
-using TaskApp_Web.Data;
-using TaskApp_Web.Services.IServices;
-using TaskApp_Web.Services;
-using TaskApp_Web.Repositories.IRepositories;
-using TaskApp_Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Repositories;
+using Repositories.IReporsitory;
+using Services;
+using Services.IServices;
+using System.Text;
+using TaskApp_Web.Hubs;
+using TaskApp_Web.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<TaskApp_WebContext>(options =>
+builder.Services.AddDbContext<TaskAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
 
 builder.Services.AddAuthentication(options =>

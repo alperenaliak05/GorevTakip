@@ -2,9 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Controllers
 {
@@ -20,20 +17,20 @@ namespace Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Department>>> GetDepartments()
+        public async Task<ActionResult<IEnumerable<Departments>>> GetDepartments()
         {
             return await _context.Departments
-                .Include(d => d.Users) 
-                .ThenInclude(u => u.Tasks) 
+                .Include(d => d.Users)
+                .ThenInclude(u => u.Tasks)
                 .ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Department>> GetDepartment(int id)
+        public async Task<ActionResult<Departments>> GetDepartment(int id)
         {
             var department = await _context.Departments
-                .Include(d => d.Users) 
-                .ThenInclude(u => u.Tasks) 
+                .Include(d => d.Users)
+                .ThenInclude(u => u.Tasks)
                 .FirstOrDefaultAsync(d => d.Id == id);
 
             if (department == null)
@@ -45,7 +42,7 @@ namespace Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Department>> CreateDepartment(Department department)
+        public async Task<ActionResult<Departments>> CreateDepartment(Departments department)
         {
             _context.Departments.Add(department);
             await _context.SaveChangesAsync();
@@ -60,7 +57,7 @@ namespace Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDepartment(int id, Department department)
+        public async Task<IActionResult> UpdateDepartment(int id, Departments department)
         {
             if (id != department.Id)
             {

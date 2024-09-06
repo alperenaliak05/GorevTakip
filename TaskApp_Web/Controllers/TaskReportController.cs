@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DTO;
+using DTOs.TaskApp_WebDTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Models;
+using Services.IServices;
 using System.Security.Claims;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Services.IServices;
-using TaskStatus = TaskApp_Web.Models.TaskStatus;
+using TaskStatus = Models.TaskStatus;
+
 
 namespace TaskApp_Web.Controllers
 {
@@ -35,11 +37,11 @@ namespace TaskApp_Web.Controllers
                 TaskId = task.Id,
                 TaskTitle = task.Title,
                 TaskDescription = task.Description,
-                AssignedByUserFirstName = task.AssignedByUserFirstName, 
+                AssignedByUserFirstName = task.AssignedByUserFirstName,
                 AssignedByUserLastName = task.AssignedByUserLastName,
-                
+
                 DueDate = task.DueDate,
-                TaskStatus = task.Status
+                TaskStatus = (System.Threading.Tasks.TaskStatus)task.Status
             }).ToList();
 
             return View(taskReports);
@@ -61,7 +63,7 @@ namespace TaskApp_Web.Controllers
                 TaskTitle = task.Title,
                 TaskDescription = task.Description,
                 DueDate = task.DueDate,
-                TaskStatus = task.Status,
+                TaskStatus = (System.Threading.Tasks.TaskStatus)task.Status,
                 CanAddReport = (task.AssignedByUserId == int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             };
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskApp_Web.Models.Users>
+﻿@model IEnumerable<Models.Users>
 
 @{
     ViewData["Title"] = "Chat";
@@ -10,7 +10,7 @@
         <div class="chat-list shadow-sm rounded">
             <div class="chat-list-header">
                 <span>Sohbetler</span>
-                <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#userListModal">+</button>
+                <button class="btn btn-sm btn-primary chat-btn-effect" data-bs-toggle="modal" data-bs-target="#userListModal">+</button>
             </div>
             <ul class="list-group list-group-flush" id="chatList">
                 <!-- JavaScript ile dinamik olarak doldurulacak -->
@@ -26,8 +26,8 @@
                 <!-- Sohbet mesajları buraya gelecek -->
             </div>
             <div class="chat-input">
-                <input type="text" id="messageInput" class="form-control" placeholder="Bir mesaj yaz..." aria-label="Bir mesaj yaz..." aria-describedby="button-send">
-                <button class="btn btn-primary" id="button-send" onclick="sendMessage()">Gönder</button>
+                <input type="text" id="messageInput" class="form-control" placeholder="Bir mesaj yaz..." aria-label="Bir mesaj yaz..." aria-describedby="button-send" onkeypress="checkEnter(event)">
+                <button class="btn btn-primary chat-btn-effect" id="button-send" onclick="sendMessage()">Gönder</button>
             </div>
         </div>
     </div>
@@ -56,28 +56,29 @@
 </div>
 
 <style>
+    /* WhatsApp/Telegram Web Tarzı Tasarım */
     .chat-container {
         display: flex;
-        height: calc(100vh - 56px);
+        height: calc(80vh - 56px); /* Daha küçük bir yükseklik */
         overflow: hidden;
         gap: 20px;
     }
 
     .chat-list {
-        width: 300px;
+        width: 250px; /* Daha küçük genişlik */
         border-right: 1px solid #ddd;
         overflow-y: auto;
-        background-color: #f8f9fa;
+        background-color: #f0f0f0;
         transition: all 0.3s ease;
     }
 
     .chat-list:hover {
-        background-color: #ffffff;
+        background-color: #e6e6e6;
     }
 
     .chat-list-header {
         padding: 15px;
-        background-color: #007bff;
+        background-color: #075e54; /* WhatsApp benzeri yeşil */
         color: white;
         border-bottom: 1px solid #ddd;
         display: flex;
@@ -93,9 +94,10 @@
         overflow-y: auto;
         display: flex;
         flex-direction: column;
-        background-color: #ffffff;
+        background-color: #e5ddd5; /* WhatsApp arka planı */
         border-radius: 8px;
         position: relative;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     .chat-window-header {
@@ -111,18 +113,73 @@
         flex: 1;
         overflow-y: auto;
         margin-bottom: 10px;
-        background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+        background: #ffffff; /* Mesajlar arka planı */
         border-radius: 8px;
         padding: 15px;
         animation: fadeIn 0.5s ease;
     }
 
+    /* Mesaj Balonları */
+    .sent {
+        text-align: right;
+        background-color: #dcf8c6; /* WhatsApp yeşili */
+        color: #000;
+        margin-left: auto;
+        padding: 10px;
+        border-radius: 8px;
+        animation: slideInRight 0.3s ease-out;
+        max-width: 60%;
+        word-wrap: break-word;
+        font-size: 0.9em;
+    }
+
+    .received {
+        text-align: left;
+        background-color: #fff;
+        margin-right: auto;
+        padding: 10px;
+        border-radius: 8px;
+        animation: slideInLeft 0.3s ease-out;
+        max-width: 60%;
+        word-wrap: break-word;
+        font-size: 0.9em;
+    }
+
+    /* Tarih Başlıkları */
+    .date-separator {
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0;
+        font-size: 0.85em;
+        background-color: #ece5dd;
+        border-radius: 8px;
+    }
+
+    /* Animasyonlar */
     @@keyframes fadeIn {
         from {
             opacity: 0;
         }
         to {
             opacity: 1;
+        }
+    }
+
+    @@keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+        }
+        to {
+            transform: translateX(0);
+        }
+    }
+
+    @@keyframes slideInLeft {
+        from {
+            transform: translateX(-100%);
+        }
+        to {
+            transform: translateX(0);
         }
     }
 
@@ -145,90 +202,25 @@
     }
 
     .chat-input input:focus {
-        border-color: #007bff;
+        border-color: #075e54;
         box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
     }
 
-    .chat-input button {
+    /* Buton Efektleri */
+    .chat-btn-effect {
         padding: 10px 15px;
+        background-color: #075e54;
+        border-color: #075e54;
+        transition: background-color 0.3s ease-in-out, transform 0.2s;
     }
 
-    .user-list-modal .modal-body {
-        max-height: 400px;
-        overflow-y: auto;
+    .chat-btn-effect:hover {
+        background-color: #128c7e;
+        transform: scale(1.05);
     }
 
-    .user-list-item {
-        cursor: pointer;
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-        transition: background-color 0.2s ease;
-    }
-
-    .user-list-item:hover {
-        background-color: #e2e6ea;
-    }
-
-    .list-group-item.active {
-        background-color: #007bff;
-        color: white;
-    }
-
-    .table-hover tbody tr:hover {
-        background-color: #f1f1f1;
-    }
-
-    #chatMessages {
-        height: 500px;
-        overflow-y: auto;
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        transition: all 0.3s ease;
-    }
-
-    .sent {
-        text-align: right;
-        background-color: #007bff;
-        color: white;
-        margin-left: auto;
-        padding: 10px;
-        border-radius: 8px;
-        animation: slideInRight 0.3s ease-out;
-        max-width: 60%;
-    }
-
-    .received {
-        text-align: left;
-        background-color: #f1f1f1;
-        margin-right: auto;
-        padding: 10px;
-        border-radius: 8px;
-        animation: slideInLeft 0.3s ease-out;
-        max-width: 60%;
-    }
-
-    @@keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-        }
-        to {
-            transform: translateX(0);
-        }
-    }
-
-    @@keyframes slideInLeft {
-        from {
-            transform: translateX(-100%);
-        }
-        to {
-            transform: translateX(0);
-        }
-    }
-
-    .shadow-sm {
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    .chat-btn-effect:active {
+        transform: scale(1);
     }
 </style>
 
@@ -238,6 +230,7 @@
     <script type="text/javascript">
         let selectedUser = null;
         let senderId = null;
+        let lastMessageDate = null;
 
         const connection = new signalR.HubConnectionBuilder()
             .withUrl("/chathub")
@@ -266,17 +259,12 @@
         }
 
         function getJwtToken() {
-            const name = "JwtToken=";  // Çerez ismi burada tanımlanmalı
+            const name = "JwtToken=";
             const decodedCookie = decodeURIComponent(document.cookie);
             const ca = decodedCookie.split(';');
             for (let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
+                let c = ca[i].trim();
+                if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
             }
             return "";
         }
@@ -344,7 +332,6 @@
             fetch(`/Chat/GetMessageHistory?userId=${userId}`)
                 .then(response => response.json())
                 .then(messages => {
-                    console.log(messages);
                     const chatMessages = document.getElementById("chatMessages");
                     chatMessages.innerHTML = '';
 
@@ -359,9 +346,34 @@
 
         function addMessageToList(senderName, receiverId, content, timestamp, isSender) {
             const chatMessages = document.getElementById("chatMessages");
+            const messageDate = new Date(timestamp);
+            const today = new Date();
+            const yesterday = new Date();
+            yesterday.setDate(today.getDate() - 1);
+            
+            const dateString = messageDate.toLocaleDateString();
+            const timeString = messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            // Tarih başlığı kontrolü
+            if (lastMessageDate !== dateString) {
+                const dateSeparator = document.createElement("div");
+                dateSeparator.classList.add("date-separator");
+                
+                if (messageDate.toDateString() === today.toDateString()) {
+                    dateSeparator.textContent = "Bugün";
+                } else if (messageDate.toDateString() === yesterday.toDateString()) {
+                    dateSeparator.textContent = "Dün";
+                } else {
+                    dateSeparator.textContent = dateString;
+                }
+                
+                chatMessages.appendChild(dateSeparator);
+                lastMessageDate = dateString;
+            }
+
             const messageElement = document.createElement("div");
             messageElement.classList.add(isSender ? "sent" : "received", "mb-2", "rounded");
-            messageElement.innerHTML = `<strong>${senderName}:</strong> ${content} <span class="text-muted" style="font-size: 0.8em;">${new Date(timestamp).toLocaleTimeString()}</span>`;
+            messageElement.innerHTML = `<strong>${senderName}:</strong> ${content} <span class="message-time">${timeString}</span>`;
             chatMessages.appendChild(messageElement);
 
             // Mesaj penceresini otomatik kaydır
@@ -392,11 +404,18 @@
                     throw new Error('Mesaj gönderilemedi');
                 }
 
-                addMessageToList(senderId, selectedUser, message, new Date().toISOString(), true);
+                addMessageToList('You', selectedUser, message, new Date().toISOString(), true);
                 document.getElementById("messageInput").value = ''; // Mesaj kutusunu temizle
             }).catch(error => {
                 console.error('Error:', error);
             });
+        }
+
+        // Enter tuşuna basıldığında mesaj gönder
+        function checkEnter(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
         }
     </script>
 }

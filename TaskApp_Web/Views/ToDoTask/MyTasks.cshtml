@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskApp_Web.Models.DTO.TaskDTO>
+﻿@model IEnumerable<DTOs.TaskApp_WebDTO.TaskDTO>
 
 <h2 class="animated-header">Görevlerim</h2>
 
@@ -41,13 +41,13 @@
                     <td>
                         @switch (task.Priority)
                         {
-                            case TaskApp_Web.Models.TaskPriority.Dusuk:
+                            case Models.TaskPriority.Dusuk:
                                 @("Düşük")
                                 break;
-                            case TaskApp_Web.Models.TaskPriority.Orta:
+                            case Models.TaskPriority.Orta:
                                 @("Orta")
                                 break;
-                            case TaskApp_Web.Models.TaskPriority.Yuksek:
+                            case Models.TaskPriority.Yuksek:
                                 @("Yüksek")
                                 break;
                             default:
@@ -57,15 +57,15 @@
                     </td>
                     <td>
                         <a asp-action="TaskDetails" asp-route-id="@task.Id" class="btn btn-secondary task-button">Detay</a>
-                        @if (task.Status == TaskApp_Web.Models.TaskStatus.Tamamlandı)
+                        @if (task.Status == Models.TaskStatus.Tamamlandı)
                         {
                             <button class="btn btn-success disabled" disabled>Tamamlandı</button>
                         }
-                        else if (task.Status == TaskApp_Web.Models.TaskStatus.Reddedildi)
+                        else if (task.Status == Models.TaskStatus.Reddedildi)
                         {
                             <button class="btn btn-danger disabled" disabled>Reddedildi</button>
                         }
-                        else if (task.Status == TaskApp_Web.Models.TaskStatus.SuresiGecti)
+                        else if (task.Status == Models.TaskStatus.SuresiGecti)
                         {
                             <button class="btn btn-warning disabled" disabled>Süresi Geçti</button>
                         }

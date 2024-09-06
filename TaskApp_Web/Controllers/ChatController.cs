@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DTOs.TaskApp_WebDTO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using System.Threading.Tasks;
-using TaskApp_Web.Repositories.IRepositories;
+using Models;
+using Repositories.IReporsitory;
 using TaskApp_Web.Hubs;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Repositories;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
 
 namespace TaskApp_Web.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Repositories.IRepository;
+using Repositories.IReporsitory;
 
 
 [ApiController]

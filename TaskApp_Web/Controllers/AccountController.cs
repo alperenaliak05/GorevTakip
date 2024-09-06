@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using DTOs.TaskApp_WebDTO;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Services.IServices;
+using Microsoft.IdentityModel.Tokens;
+using Services.IServices;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
 
 namespace TaskApp_Web.Controllers
 {

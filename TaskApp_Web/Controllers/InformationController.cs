@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using TaskApp_Web.Models;
-using TaskApp_Web.Repositories;
+using Models;
+using Repositories.IReporsitory;
 
 namespace TaskApp_Web.Controllers
 {

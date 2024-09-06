@@ -1,15 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Models;  // User ve Task gibi modellerin bulunduğu namespace
-using Repositories.IRepository;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using USERDTO.Models;
-using DepartmanDTO.models;
+﻿using DTOs.TaskApp_WebDTO;
+using Microsoft.AspNetCore.Mvc;
+using Models;
 using Models.USERDTO;
-using Microsoft.EntityFrameworkCore;
-using Models.TaskAppDTO;
+using Repositories.IReporsitory;
 
 namespace Controllers
 {
@@ -34,16 +27,16 @@ namespace Controllers
 
             var userDtos = users.Select(user => new UserDTO
             {
-                Id = ((User)user).Id,  // user nesnesinin doğru tipe dönüştürüldüğünden emin olun
-                FirstName = ((User)user).FirstName,
-                LastName = ((User)user).LastName,
-                Email = ((User)user).Email,
+                Id = ((Users)user).Id,  // user nesnesinin doğru tipe dönüştürüldüğünden emin olun
+                FirstName = ((Users)user).FirstName,
+                LastName = ((Users)user).LastName,
+                Email = ((Users)user).Email,
                 Department = new DepartmentDTO
                 {
-                    Id = ((User)user).Department.Id,
-                    Name = ((User)user).Department.Name
+                    Id = ((Users)user).Department.Id,
+                    Name = ((Users)user).Department.Name
                 },
-                Tasks = ((User)user).Tasks?.Select(task => new TaskDTO
+                Tasks = ((Users)user).Tasks?.Select(task => new TaskDTO
                 {
                     Id = task.Id,
                     Title = task.Title,
@@ -104,7 +97,7 @@ namespace Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateUser([FromBody] UserCreatedDTO userCreatedDTO)
         {
-            var user = new User
+            var user = new Users
             {
                 FirstName = userCreatedDTO.FirstName,
                 LastName = userCreatedDTO.LastName,

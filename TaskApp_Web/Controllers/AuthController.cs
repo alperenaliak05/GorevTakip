@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using TaskApp_Web.Models.DTO;
-using TaskApp_Web.Services.IServices;
+﻿using DTOs.TaskApp_WebDTO;
+using Microsoft.AspNetCore.Mvc;
+using Services.IServices;
 
 namespace TaskApp_Web.Controllers
 {

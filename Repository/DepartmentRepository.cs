@@ -1,39 +1,62 @@
 ﻿using Data;
+using Microsoft.EntityFrameworkCore;
 using Models;
-using Repositories.IRepository;
-
+using Repositories.IReporsitory;
+using System.Linq.Expressions;
 
 namespace Repositories
 {
-
-    public class DepartmentRepository : Repository<Department>, IDepartmentRepository
+    public class DepartmentRepository : Repository<Departments>, IDepartmentRepository
     {
-        private readonly TaskAppContext _context;
-
         public DepartmentRepository(TaskAppContext context) : base(context)
         {
-            _context = context;
         }
 
-        public Task<Department> CreateAsync(Department department)
+        public async Task<IEnumerable<Departments>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Departments.ToListAsync();
         }
 
-        public ToTask DeleteAsync(int id)
+        public async Task<Departments> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Departments.FindAsync(id);
         }
 
-        public Task<Department> GetDepartmentWithUsersAsync(int id)
+        public async Task<IEnumerable<Departments>> FindAsync(Expression<Func<Departments, bool>> predicate)
         {
-            throw new NotImplementedException();
+            return await _context.Departments.Where(predicate).ToListAsync();
         }
 
-        ToTask IDepartmentRepository.UpdateAsync(Department department)
+        public async Task AddAsync(Departments entity)
         {
-            throw new NotImplementedException();
+            await _context.Departments.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Departments entity)
+        {
+            _context.Departments.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var department = await _context.Departments.FindAsync(id);
+            if (department != null)
+            {
+                _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<DepartmentViewModel>> GetAllDepartmentsAsync()
+        {
+            return await _context.Departments
+              .Select(d => new DepartmentViewModel
+              {
+                  Id = d.Id,
+                  Name = d.Name,
+              }).ToListAsync();
         }
     }
-
 }

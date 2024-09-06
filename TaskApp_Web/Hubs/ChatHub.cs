@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using TaskApp_Web.Data;
-using TaskApp_Web.Models;
-using System.Threading.Tasks;
-using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Data;
+using Microsoft.AspNetCore.SignalR;
+using Models;
 
 namespace TaskApp_Web.Hubs
 {
     public class ChatHub : Hub
     {
-        private readonly TaskApp_WebContext _context;
+        private readonly TaskAppContext _context;
 
-        public ChatHub(TaskApp_WebContext context)
+        public ChatHub(TaskAppContext context)
         {
             _context = context;
         }

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TaskApp_Web.Models;
-using TaskApp_Web.Models.DTO;
+﻿using DTOs.TaskApp_WebDTO;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using Services.IServices;
 using System.Security.Claims;
-using TaskApp_Web.Services.IServices;
-using TaskStatus = TaskApp_Web.Models.TaskStatus;
-using System.Threading.Tasks;
+using TaskStatus = Models.TaskStatus;
+
 
 namespace TaskApp_Web.Controllers
 {
