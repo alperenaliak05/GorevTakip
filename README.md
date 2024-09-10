@@ -1,110 +1,80 @@
-# GörevTakip Projesi
+# Görev Takip Sistemi
 
-Bu proje, bir görev yönetim sistemi olan **GörevTakip**'i içerir. Bu sistem, kullanıcıların görevleri görüntülemesini, güncellemesini ve yönetmesini sağlar. Proje, .NET Core ve Entity Framework Core kullanılarak geliştirilmiştir.
+Görev Takip Sistemi, kullanıcıların görevlerini yönetmelerine ve takip etmelerine olanak sağlayan bir web uygulamasıdır. Bu proje, C# ve ASP.NET Core kullanılarak geliştirilmiştir ve görevlerin atamasını, ilerlemesini, ve durumlarını kolayca takip etmeyi sağlar.
 
 ## İçindekiler
 
-- [Özellikler](#özellikler)
+- [Başlarken](#başlarken)
+- [Proje Yapısı](#proje-yapısı)
 - [Kurulum](#kurulum)
 - [Kullanım](#kullanım)
-- [Ekran Görüntüleri](#ekran-görüntüleri)
 - [Katkıda Bulunanlar](#katkıda-bulunanlar)
 - [Lisans](#lisans)
 
-## Özellikler
+## Başlarken
 
-- Kullanıcıların görevlerini yönetmesi
-- Görev durumlarını güncelleme
-- Kullanıcı ve görev yönetimi
-- Basit ve kullanıcı dostu arayüz
+Bu belgede, Görev Takip Sistemi'ni nasıl kuracağınız ve kullanacağınız ile ilgili temel bilgileri bulabilirsiniz.
 
+### Ön Koşullar
 
-## KURULUM
+- [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0) (veya daha yeni bir sürüm)
+- [Visual Studio](https://visualstudio.microsoft.com/) (veya [VS Code](https://code.visualstudio.com/))
+- [SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) veya başka bir ilişkisel veritabanı
 
-1-Proje Deposunu Kopyalayın:
+## Proje Yapısı
 
-```bash
-git clone https://github.com/alperenaliak05/GörevTakip.git
-```
-2-Gerekli Bağımlılıkları Yükleyin: Proje dizinine gidin ve gerekli NuGet paketlerini yükleyin.
-```bash
-cd GörevTakip
-dotnet restore
-```
-3-Veritabanını Göç Ettirin:Veritabanı şemasını oluşturmak için Entity Framework Core göçlerini çalıştırın.
-```bash
-dotnet ef database update
-```
-4-Projeyi Çalıştırın:
-```bash
-dotnet run --project TaskApp_Web
-```
-Bu komut, projeyi çalıştıracak ve tarayıcınızda açılacaktır.
+Bu proje aşağıdaki ana bileşenleri içerir:
+
+- **Controllers**: API ve web isteklerini işleyen kontrolcüler.
+- **Models**: Veritabanı tablolarını ve iş mantığını temsil eden modeller.
+- **Views**: Kullanıcı arayüzü bileşenleri için Razor sayfaları.
+- **DTOs**: Veri transfer nesneleri.
+- **Repositories**: Veritabanı işlemlerini yöneten sınıflar.
+
+## Kurulum
+
+1. **Proje Dosyalarını Klonlayın**
+
+    ```bash
+    git clone https://github.com/alperenaliak05/GorevTakip.git
+    cd GorevTakip
+    ```
+
+2. **Bağımlılıkları Yükleyin**
+
+    Visual Studio veya komut satırı kullanarak bağımlılıkları yükleyin:
+
+    ```bash
+    dotnet restore
+    ```
+
+3. **Veritabanı Yapılandırması**
+
+    Veritabanını yapılandırmak için gerekli ayarları yapın ve veritabanını oluşturun. `appsettings.json` dosyasını düzenleyerek veritabanı bağlantı bilgilerini girin.
+
+4. **Uygulamayı Çalıştırın**
+
+    Projeyi çalıştırmak için aşağıdaki komutu kullanın:
+
+    ```bash
+    dotnet run
+    ```
 
 ## Kullanım
 
-Projeyi çalıştırdıktan sonra, web tarayıcınızda http://localhost:5000 adresine gidin. Bu adreste görev yönetimi işlemlerini gerçekleştirebilirsiniz.
+- **Görev Atama**: Görevleri kullanıcılara veya departmanlara atayabilirsiniz.
+- **Görev İlerleme**: Görevlerin ilerleme durumlarını güncelleyebilir ve takip edebilirsiniz.
+- **Görev Raporları**: Görevlerle ilgili raporlar görüntüleyebilirsiniz.
 
-## Ekran Görüntüleri
-### Giriş
-![Giriş](https://github.com/user-attachments/assets/cca381f9-92ac-4ca2-9596-326dbf05a55b)
+### Örnek Kullanım
 
-### Ana Sayfa
-![ANA SAYFA](https://github.com/user-attachments/assets/48d0d803-4e31-4be3-b040-f9b26913212d)
+- **Yeni Görev Ekleme**: [Ekran görüntüleri ve açıklamalar ekleyin]
+- **Görev Durumunu Güncelleme**: [Ekran görüntüleri ve açıklamalar ekleyin]
 
-### Tüm Kullanıcılar
-![TÜM K](https://github.com/user-attachments/assets/57f6d5fa-f140-40c8-b219-35b01f308339)
+## Katkıda Bulunanlar
 
-### Görevlerim
-![GÖREVLERİM](https://github.com/user-attachments/assets/6d9cc8fd-3ffe-4397-a9b5-30329fa92007)
+- [Alperen Ali Ak](https://github.com/alperenaliak05) - Proje sahibi ve geliştirici
 
-### Görev Oluştur
-![GÖREV OLUŞTUR](https://github.com/user-attachments/assets/1f68af99-60de-45a9-b869-48139775e96f)
+## Lisans
 
-### Görev Takibi
-![GÖREV TAKİBİ](https://github.com/user-attachments/assets/9f190261-9de4-41aa-9248-245ca2a1c475)
-
-### Profilim 
-![PROFİL](https://github.com/user-attachments/assets/76c4c082-1b6c-4cf2-81fe-0f201a1ef5d3)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Bu proje [MIT Lisansı](LICENSE) altında lisanslanmıştır.
