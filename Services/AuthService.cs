@@ -26,7 +26,6 @@ public class AuthService : IAuthService
 
     public async Task<APIResponse> LoginAsync(LoginRequestDTO loginRequest)
     {
-        // Kullanıcının e-postasına göre kullanıcı bilgilerini veritabanından al
         var user = await _userRepository.GetUserByEmailAsync(loginRequest.Email);
 
         if (user == null)
@@ -38,7 +37,6 @@ public class AuthService : IAuthService
             };
         }
 
-        // Kullanıcı doğrulandıysa, JWT token oluştur
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.Name, user.Email),
@@ -60,10 +58,8 @@ public class AuthService : IAuthService
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-        // Kullanıcıyı cookie tabanlı olarak oturum açmış olarak işaretleyin
         await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
-        // Session kullanarak JWT token'ı sakla (isteğe bağlı)
         _httpContextAccessor.HttpContext.Session.SetString("JwtToken", tokenString);
 
         return new APIResponse

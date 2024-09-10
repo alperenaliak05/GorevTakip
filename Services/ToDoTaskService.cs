@@ -113,13 +113,12 @@ namespace Services
             var task = await _toDoTaskRepository.GetTaskByIdAsync(taskId);
             if (task == null) return false;
 
-            task.Status = TaskStatus.Tamamlandı; // Görev durumunu güncelle
+            task.Status = TaskStatus.Tamamlandı; 
 
             var result = await _toDoTaskRepository.UpdateTaskAsync(task);
 
             if (result)
             {
-                // Kullanıcının tamamladığı görev sayısını güncelle
                 await UpdateUserCompletedTasksCountAsync(task.AssignedToUserId);
             }
 

@@ -25,12 +25,14 @@
                 <th><input type="text" id="searchEmail" placeholder="Mail Adresi Ara" class="form-control search-input"></th>
                 <th><input type="text" id="searchDepartment" placeholder="Departman Ara" class="form-control search-input"></th>
                 <th>     </th>
+                <th>     </th>
             </tr>
             <tr>
                 <th>Ad</th>
                 <th>Soyad</th>
                 <th>Email</th>
                 <th>Departman</th>
+                <th>Durum</th>
                 <th>Profil</th>
             </tr>
         </thead>
@@ -42,6 +44,7 @@
                     <td>@user.LastName</td>
                     <td>@user.Email</td>
                     <td>@user.Department.Name</td>
+                    <td>@user.Status.ToString()</td>
                     <td><a asp-action="UserProfile" asp-route-id="@user.Id" class="btn btn-secondary profile-btn">Profil</a></td>
                 </tr>
             }

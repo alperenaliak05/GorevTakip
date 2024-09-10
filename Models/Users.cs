@@ -13,6 +13,7 @@
         public string? WorkingHours { get; set; }
         public string? ProfilePicture { get; set; }
         public int CompletedTasksCount { get; set; }
+        public UsersStatus Status { get; set; }
         public ICollection<ToDoTasks> Tasks { get; set; }
         public ICollection<ToDoTasks> AssignedTasks { get; set; }
         public ICollection<UserToDoList> ToDoLists { get; set; }

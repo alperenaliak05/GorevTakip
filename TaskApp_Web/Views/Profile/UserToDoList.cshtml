@@ -34,7 +34,6 @@
 </div>
 
 <style>
-    /* Başlık */
     .todo-title {
         text-align: center;
         margin-bottom: 20px;
@@ -44,7 +43,6 @@
         transition: color 0.3s ease;
     }
 
-    /* Görev Ekleme Kutusu */
     .todo-container {
         max-width: 600px;
         margin: 0 auto;
@@ -95,7 +93,6 @@
             transform: scale(1.05);
         }
 
-    /* Tik Kutusu ve Liste */
     .todo-list {
         list-style-type: none;
         padding: 0;
@@ -152,7 +149,6 @@
             color: #007bff;
         }
 
-    /* Silme Butonu */
     .delete-form {
         margin-left: 10px;
     }
@@ -175,7 +171,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Silme butonlarına hover animasyonu ekleyin
+       
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('mouseover', function () {
                 this.classList.add('btn-animate');
@@ -185,7 +181,6 @@
             });
         });
 
-        // Görev ekleme butonuna hover animasyonu ekleyin
         document.querySelector('.todo-add-btn').addEventListener('mouseover', function () {
             this.style.transform = 'scale(1.05)';
         });
@@ -193,7 +188,6 @@
             this.style.transform = 'scale(1)';
         });
 
-        // Görev kutusuna odaklanıldığında efekt ekleyin
         document.querySelector('.todo-input').addEventListener('focus', function () {
             this.style.borderColor = '#007bff';
             this.style.boxShadow = '0 0 5px rgba(0, 123, 255, 0.5)';

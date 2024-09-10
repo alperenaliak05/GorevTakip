@@ -54,16 +54,13 @@ namespace Repositories
                 .ToListAsync();
         }
 
-        // Yeni metodun tanımı
         public async Task<IEnumerable<Badge>> GetAvailableBadgesAsync(int userId)
         {
-            // Kullanıcının mevcut rozetlerini almak için UserBadges tablosunu kontrol edin
             var userBadges = await _context.UserBadges
                 .Where(ub => ub.UserId == userId)
                 .Select(ub => ub.BadgeId)
                 .ToListAsync();
 
-            // Mevcut rozetler listesine göre kullanıcının kazanabileceği rozetleri döndür
             return await _context.Badges
                 .Where(b => !userBadges.Contains(b.BadgeId))
                 .ToListAsync();

@@ -42,7 +42,6 @@ namespace Services
             return await _taskReportRepository.DeleteTaskReportAsync(id);
         }
 
-        // Kullanıcıya özel raporları getiren yeni metodun implementasyonu
         public async Task<IEnumerable<TaskReportDTO>> GetTaskReportsByUserIdAsync(int userId)
         {
             var reports = await _taskReportRepository.GetTaskReportsAsync();

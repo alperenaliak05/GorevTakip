@@ -23,9 +23,9 @@ namespace Models
         public string Gender { get; set; }
 
         [Phone(ErrorMessage = "Geçersiz Telefon Numarası")]
-        public string PhoneNumber { get; set; } // Yeni eklenen alan
+        public string PhoneNumber { get; set; } 
 
         [Required(ErrorMessage = "Çalışma saatleri gereklidir.")]
-        public string WorkingHours { get; set; } // Yeni eklenen alan
+        public string WorkingHours { get; set; } 
     }
 }

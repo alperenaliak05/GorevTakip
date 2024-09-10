@@ -85,14 +85,12 @@
     </table>
 </div>
 
-<!-- Tebrikler mesajı ve konfeti -->
 <div id="congratulations" class="congratulations">
     <h2>Tebrikler!</h2>
 </div>
 <div id="confetti-container" class="confetti-container"></div>
 
 <script>
-    // Kalan süreyi her saniye güncelleyen fonksiyon
     function startCountdown(id, seconds) {
         const countdownElement = document.getElementById(id);
 
@@ -116,7 +114,6 @@
         setInterval(updateCountdown, 1000);
     }
 
-    // Her bir görev için geri sayımı başlat
     document.addEventListener("DOMContentLoaded", function () {
         const countdownElements = document.querySelectorAll("[id^='countdown-']");
         countdownElements.forEach(element => {
@@ -125,7 +122,6 @@
         });
     });
 
-    // Butonlara ufak bir animasyon eklemek
     document.querySelectorAll('.task-button').forEach(button => {
         button.addEventListener('mouseover', function () {
             this.classList.add('btn-animate');
@@ -135,20 +131,16 @@
         });
     });
 
-    // Form gönderimini engelleme, animasyonları gösterme ve sonra gönderme
     function handleFormSubmit(form) {
         disableButton(form);
         showCongratulations();
 
-        // Form gönderimini 3 saniye sonra yap
         setTimeout(() => {
             form.submit();
         }, 3000);
 
-        return false; // Formun anında gönderilmesini engelle
-    }
+        return false; 
 
-    // Tebrikler mesajı ve konfeti gösterme
     function showCongratulations() {
         document.getElementById('congratulations').style.display = 'block';
         launchConfetti();
@@ -157,7 +149,6 @@
         }, 3000);
     }
 
-    // Konfeti patlaması oluşturma
     function launchConfetti() {
         const confettiContainer = document.getElementById('confetti-container');
         confettiContainer.innerHTML = ''; // Eski konfetileri temizle
@@ -170,7 +161,6 @@
         }
     }
 
-    // Butonu devre dışı bırakma ve gizleme
     function disableButton(form) {
         const button = form.querySelector('button[type="submit"]');
         button.disabled = true;

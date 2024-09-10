@@ -30,10 +30,9 @@
 @section Scripts {
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Başlık animasyonu
+
             document.querySelector('.animated-title').classList.add('fade-in');
 
-            // Tablo satırlarına hover efekti
             const rows = document.querySelectorAll('.table-hover tbody tr');
             rows.forEach(row => {
                 row.addEventListener('mouseenter', function () {
@@ -48,7 +47,6 @@
 }
 
 <style>
-    /* Sayfa Başlığı ve Tablo Animasyonları */
     .fade-in {
         opacity: 0;
         animation: fadeIn 1s forwards;
@@ -64,7 +62,6 @@
         }
     }
 
-    /* Tablo Stilleri */
     .table-hover tbody tr:hover {
         background-color: #f1f1f1;
         transition: background-color 0.3s ease;
@@ -91,13 +88,11 @@
             padding: 15px;
         }
 
-    /* Row Hover Effect */
     .row-hover {
         background-color: #e9ecef !important;
         transition: background-color 0.3s ease;
     }
 
-    /* Table Responsive */
     .table-responsive {
         max-width: 100%;
         margin: 20px auto;

@@ -13,19 +13,17 @@ public class TasksController : ControllerBase
         _context = context;
     }
 
-    // Görev alan kişinin altındaki görevleri ve görevi atan kişinin ismini listeleme
     [HttpGet("assigned/{userId}")]
     public async Task<IActionResult> GetTasksForUser(int userId)
     {
         var tasks = await _context.Tasks
             .Where(task => task.AssignedToUserId == userId)
-            .Include(task => task.AssignedByUser) // Görevi atan kişiyi de dahil et
+            .Include(task => task.AssignedByUser) 
             .ToListAsync();
 
         return Ok(tasks);
     }
 
-    // Görev atayan kişinin görev atadığı kullanıcıları listeleme
     [HttpGet("assigner/{assignerId}")]
     public async Task<IActionResult> GetUsersAssignedTasks(int assignerId)
     {

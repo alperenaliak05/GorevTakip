@@ -24,7 +24,7 @@
                     <td>@task.Description</td>
                     <td>@task.AssignedToUserName</td>
                     <td>@task.DueDate.ToString("yyyy-MM-dd")</td>
-                    <td>@task.Status.ToString()</td>
+                    <td>@task.Status</td>
                     <td>
                         <a asp-action="TaskTrackingDetails" asp-route-id="@task.TaskId" class="btn btn-info detail-btn">Detay</a>
                     </td>

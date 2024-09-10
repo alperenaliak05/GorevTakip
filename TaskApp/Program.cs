@@ -12,11 +12,9 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add DbContext
 builder.Services.AddDbContext<TaskAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")));
 
-// Register Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IToDoTaskRepository, ToDoTaskRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
@@ -36,10 +34,8 @@ builder.Services.AddScoped<IInformationService, InformationService>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IMessageService, MessageService>();
 
-// Add HttpContextAccessor
 builder.Services.AddHttpContextAccessor();
 
-// Add Authentication & JWT Bearer
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,7 +55,6 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-// Add Controllers with Newtonsoft Json
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
@@ -67,10 +62,8 @@ builder.Services.AddControllers()
     });
 
 
-// Add Swagger
 builder.Services.AddSwaggerGen();
 
-// Add CORS policy
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin",

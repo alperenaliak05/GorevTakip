@@ -63,7 +63,8 @@ namespace TaskApp_Web.Controllers
                     PhoneNumber = user.PhoneNumber,
                     WorkingHours = user.WorkingHours,
                     ProfilePicture = user.ProfilePicture,
-                    UserBadges = badges
+                    UserBadges = badges,
+                    Status = user.Status
                 };
 
                 return View(model);
@@ -85,7 +86,8 @@ namespace TaskApp_Web.Controllers
                     DepartmentName = user.Department?.Name,
                     PhoneNumber = user.PhoneNumber,
                     WorkingHours = user.WorkingHours,
-                    ProfilePicture = user.ProfilePicture // Profil resmi eklendi
+                    ProfilePicture = user.ProfilePicture ,
+                    Status = user.Status
                 };
 
                 return View(model);
@@ -174,7 +176,7 @@ namespace TaskApp_Web.Controllers
                     PhoneNumber = model.PhoneNumber,
                     WorkingHours = model.WorkingHours,
                     Gender = model.Gender,
-                    ProfilePicture = profilePicturePath // Profil resmi ekleniyor
+                    ProfilePicture = profilePicturePath 
                 };
 
                 bool isAdded = await _userRepository.AddUserAsync(user);
@@ -205,8 +207,24 @@ namespace TaskApp_Web.Controllers
                 AvailableBadges = availableBadges
             };
 
-            return View("Badges", model); // "Badges" view dosyasını kullanıyoruz
+            return View("Badges", model); 
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(UsersStatus status)
+        {
+            var user = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.Status = status;
+            await _userRepository.UpdateUserAsync(user);
+
+            return RedirectToAction("UserProfile");
+        }
+
 
     }
 }

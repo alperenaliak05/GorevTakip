@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Repositories.IReporsitory;
 using TaskStatus = Models.TaskStatus;
-using Task = System.Threading.Tasks.Task;
 
 
 
@@ -79,8 +78,8 @@ namespace Repositories
         public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedToUser)  // Kullanıcıya atanan görev
-                .Include(t => t.AssignedByUser)  // Görevi atayan kullanıcı
+                .Include(t => t.AssignedToUser) 
+                .Include(t => t.AssignedByUser)  
                 .Where(t => t.Status == status)
                 .ToListAsync();
         }
@@ -96,7 +95,7 @@ namespace Repositories
                     Description = t.Description,
                     AssignedToUserName = t.AssignedToUser.FirstName + " " + t.AssignedToUser.LastName,
                     DueDate = t.DueDate,
-                    Status = (System.Threading.Tasks.TaskStatus)t.Status  // Status'u açıkça Models.TaskStatus olarak belirtiyoruz
+                    Status = t.Status  
                 })
                 .ToListAsync();
         }

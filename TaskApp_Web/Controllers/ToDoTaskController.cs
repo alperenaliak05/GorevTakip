@@ -406,7 +406,7 @@ namespace TaskApp_Web.Controllers
                 AssignedToUser = task.AssignedToUser != null ? $"{task.AssignedToUser.FirstName} {task.AssignedToUser.LastName}" : "Atanmadı",
                 DueDate = task.DueDate,
                 Priority = task.Priority,
-                Processes = task.TaskProcesses // Eğer süreçler varsa ekleyin
+                Processes = task.TaskProcesses 
             };
 
             return View(taskDetailDTO);

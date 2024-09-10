@@ -16,15 +16,13 @@ namespace TaskApp_Web.Controllers
             _userToDoListRepository = userToDoListRepository;
         }
 
-        // Kullanıcının yapılacaklar listesini görüntüler
         public async Task<IActionResult> UserToDoList()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var userToDoLists = await _userToDoListRepository.GetToDoListsByUserIdAsync(userId);
-            return View("UserToDoList", userToDoLists); // CSHTML dosyasının adını belirttik
+            return View("UserToDoList", userToDoLists);
         }
 
-        // Yeni bir yapılacak görev ekler
         [HttpPost]
         public async Task<IActionResult> AddToDoList(UserToDoList model)
         {
@@ -38,10 +36,9 @@ namespace TaskApp_Web.Controllers
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var userToDoLists = await _userToDoListRepository.GetToDoListsByUserIdAsync(userId);
-            return View("UserToDoList", userToDoLists); // Hata durumunda da aynı view kullanılıyor
+            return View("UserToDoList", userToDoLists); 
         }
 
-        // Yapılacak bir görevi günceller
         [HttpPost]
         public async Task<IActionResult> UpdateToDoList(UserToDoList model)
         {
@@ -53,10 +50,9 @@ namespace TaskApp_Web.Controllers
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var userToDoLists = await _userToDoListRepository.GetToDoListsByUserIdAsync(userId);
-            return View("UserToDoList", userToDoLists); // Güncelleme sonrası
+            return View("UserToDoList", userToDoLists); 
         }
 
-        // Yapılacaklar listesinden bir görevi siler
         [HttpPost]
         public async Task<IActionResult> DeleteToDoList(int id)
         {

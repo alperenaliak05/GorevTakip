@@ -51,7 +51,7 @@ namespace TaskApp_Web.Controllers
             {
                 SenderId = sender.Id,
                 ReceiverId = messageDto.ReceiverId,
-                Content = messageDto.MessageContent,  // Mesaj içeriğini doğru şekilde alıyoruz
+                Content = messageDto.MessageContent, 
                 Timestamp = DateTime.UtcNow,
                 IsRead = false
             };
@@ -86,8 +86,8 @@ namespace TaskApp_Web.Controllers
                 {
                     SenderId = message.SenderId,
                     ReceiverId = message.ReceiverId,
-                    SenderName = sender?.FirstName + " " + sender?.LastName, // Gönderenin ismi
-                    ReceiverName = receiver?.FirstName + " " + receiver?.LastName, // Alıcının ismi
+                    SenderName = sender?.FirstName + " " + sender?.LastName, 
+                    ReceiverName = receiver?.FirstName + " " + receiver?.LastName,
                     MessageContent = message.Content,
                     Timestamp = message.Timestamp
                 });

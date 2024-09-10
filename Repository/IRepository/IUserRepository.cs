@@ -14,10 +14,10 @@ namespace Repositories.IReporsitory
         Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId);
         Task<Users> GetUserWithTasksAsync(int id);
         Task<IEnumerable<Users>> GetAllWithTasksAndDepartment();
-        Task<Users> GetByIdAsync(int id); // GetByIdAsync metodu
-        Task<bool> AddAsync(Users user);  // AddAsync metodu
-        Task<bool> UpdateAsync(Users user); // UpdateAsync metodu
-        Task<bool> DeleteAsync(int id); // DeleteAsync metodu
+        Task<Users> GetByIdAsync(int id); 
+        Task<bool> AddAsync(Users user);
+        Task<bool> UpdateAsync(Users user); 
+        Task<bool> DeleteAsync(int id); 
 
 
     }

@@ -28,10 +28,8 @@ namespace TaskApp_Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            // Tamamlanan görevleri çekiyoruz
             var completedTasks = await _taskService.GetTasksByStatusAsync(TaskStatus.Tamamlandı);
 
-            // Görevler raporlarıyla birlikte View'a gönderiliyor
             var taskReports = completedTasks.Select(task => new TaskReportDTO
             {
                 TaskId = task.Id,
@@ -56,7 +54,6 @@ namespace TaskApp_Web.Controllers
                 return NotFound();
             }
 
-            // Geri kalan işlemler...
             var model = new TaskReportDetailsViewModel
             {
                 TaskId = task.Id,

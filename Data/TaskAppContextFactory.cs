@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
 public class TaskAppContextFactory : IDesignTimeDbContextFactory<TaskAppContext>
 {
@@ -10,9 +9,8 @@ public class TaskAppContextFactory : IDesignTimeDbContextFactory<TaskAppContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<TaskAppContext>();
 
-        // Burada migration işlemi sırasında kullanılacak bağlantı dizgesini sağlıyoruz.
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
+            .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "../TaskApp"))
             .AddJsonFile("appsettings.json")
             .Build();
 

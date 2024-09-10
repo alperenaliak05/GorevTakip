@@ -45,26 +45,21 @@ namespace TaskApp_Web.Controllers
                 return View("Login");
             }
 
-            // Kullanıcı ID'si ve varsa bir taskId alın (örneğin en son atanmış görev)
-            int userId = response.UserId ?? 0;  // Nullable tipin default değeri null ise, 0 olarak ayarlanır.
+            int userId = response.UserId ?? 0;  
 
-            // Kullanıcının en son atanmış görevini al
-            var userTasks = await _taskService.GetTasksByUserIdAsync(userId); // Kullanıcıya ait görevleri al
-            int? latestTaskId = userTasks.OrderByDescending(t => t.DueDate).FirstOrDefault()?.Id; // Son görevi al
+            var userTasks = await _taskService.GetTasksByUserIdAsync(userId); 
+            int? latestTaskId = userTasks.OrderByDescending(t => t.DueDate).FirstOrDefault()?.Id; 
 
-            // JWT token oluştur
             string token = GenerateJwtToken(userId.ToString(), latestTaskId);
 
-            // Token'ı HttpOnly cookie olarak ayarla
             Response.Cookies.Append("JwtToken", token, new CookieOptions
             {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddMinutes(30),
-                Secure = true, // HTTPS gerektirir
+                Secure = true, 
                 SameSite = SameSiteMode.Strict
             });
 
-            // Kullanıcı başarılı bir şekilde giriş yaptıktan sonra "Home" sayfasına yönlendiriliyor
             return RedirectToAction("Index", "Home");
         }
 

@@ -24,11 +24,10 @@ namespace TaskApp_Web.Controllers
         [Authorize]
         public IActionResult CreateInformation()
         {
-            // Kullanıcı departmanını JWT token'dan alarak kontrol ediyoruz
             var userDepartment = User.FindFirst("Department")?.Value;
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized(); // Eğer kullanıcı yetkili değilse 401 döndürüyoruz
+                return Unauthorized(); 
             }
 
             return View();
