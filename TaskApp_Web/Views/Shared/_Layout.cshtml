@@ -47,7 +47,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-light">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">TKT Görev Yönetim</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index"><img src="~/uploads/Dark Blue Modern Professional Technology Company Logo (1).png" alt="Alternate Text" width="80" height="auto" /></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -116,15 +116,27 @@
         @RenderBody()
     </main>
 
-    <footer class="footer text-muted">
+    <footer class="footer text-muted fixed-bottom">
         <div class="container-fluid text-center">
             &copy; @DateTime.Now.Year - TKTGörevYönetim - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
+    <!-- Toast Bildirimi -->
+    <div class="toast" id="messageToast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+        <div class="toast-header">
+            <strong class="me-auto">Yeni Mesaj</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toastMessageBody">
+            Mesaj içeriği burada gösterilecek.
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.18/signalr.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 
@@ -159,6 +171,17 @@
                     link.style.transform = 'scale(1)';
                 });
             });
+
+            // SignalR bağlantısı
+            const connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+            connection.on("ReceiveMessage", (message) => {
+                document.getElementById('toastMessageBody').innerText = message.content;
+                const toast = new bootstrap.Toast(document.getElementById('messageToast'));
+                toast.show();
+            });
+
+            connection.start().catch(err => console.error(err.toString()));
         });
     </script>
 </body>

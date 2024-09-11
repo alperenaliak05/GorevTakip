@@ -1,46 +1,46 @@
 ﻿@model Models.UserProfileViewModel
 
 <div class="profile-container">
-    <div class="profile-picture" style="background-image: url('@Model.ProfilePicture');"></div>
-
-    <div class="profile-details">
-        <h2>Profil Bilgileri</h2>
-        <p><strong>Ad:</strong> @Model.FirstName</p>
-        <p><strong>Soyad:</strong> @Model.LastName</p>
-        <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Departman:</strong> @Model.DepartmentName</p>
-        <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
-        <p><strong>Durum:</strong> @Model.Status</p>
-        <p><strong>Çalışma Saatleri:</strong> @Model.WorkingHours</p>
+    <div class="profile-header">
+        <div class="profile-picture" style="background-image: url('@Model.ProfilePicture');"></div>
+        <div class="profile-details">
+            <h2>@Model.FirstName @Model.LastName</h2>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Departman:</strong> @Model.DepartmentName</p>
+            <p><strong>Telefon:</strong> @Model.PhoneNumber</p>
+            <p><strong>Durum:</strong> <span id="user-status">@Model.Status</span></p>
+        </div>
     </div>
 
     <!-- Kullanıcı durumunu seçmesi için form -->
     <form asp-action="UpdateStatus" method="post" class="status-form">
-        <select asp-for="Status" class="form-control">
-            <option value="Mesgul">Meşgul</option>
-            <option value="Musait">Müsait</option>
-            <option value="Izinli">İzinli</option>
-            <option value="Toplantıda">Toplantıda</option>
-        </select>
-
-        <!-- Onayla butonu -->
-        <button type="submit" class="btn btn-primary mt-3">Onayla</button>
+        <div class="status-select-container">
+            <select asp-for="Status" class="form-control">
+                <option value="Mesgul">Meşgul</option>
+                <option value="Musait">Müsait</option>
+                <option value="Izinli">İzinli</option>
+                <option value="Toplantıda">Toplantıda</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Durumu Güncelle</button>
+        </div>
     </form>
 
     <div class="user-badges">
         <h2>Rozetlerim</h2>
         @if (Model.UserBadges != null && Model.UserBadges.Any())
         {
-            <ul class="badges-list">
+            <div class="badges-grid">
                 @foreach (var badge in Model.UserBadges)
                 {
-                    <li class="badge-item">
+                    <div class="badge-item">
                         <img src="@badge.ImageUrl" alt="@badge.Name" class="badge-image" />
-                        <span class="badge-name">@badge.Name</span>
-                        <p class="badge-description">@badge.Description</p>
-                    </li>
+                        <div class="badge-info">
+                            <span class="badge-name">@badge.Name</span>
+                            <p class="badge-description">@badge.Description</p>
+                        </div>
+                    </div>
                 }
-            </ul>
+            </div>
         }
         else
         {
@@ -52,23 +52,26 @@
 <style>
     body {
         font-family: 'Lato', Arial, sans-serif;
-        background-color: #f7f7f9;
+        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
         color: #333;
         padding: 40px;
         margin: 0;
     }
 
     .profile-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-width: 600px;
+        max-width: 800px;
         margin: 0 auto;
-        padding: 30px;
         background-color: #fff;
         border-radius: 15px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        transition: all 0.3s ease;
+    }
+
+    .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
     }
 
     .profile-picture {
@@ -77,93 +80,119 @@
         height: 150px;
         background-size: cover;
         background-position: center;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        margin-right: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .profile-details {
-        text-align: center;
+        flex-grow: 1;
     }
 
         .profile-details h2 {
-            font-size: 28px;
-            color: #333;
-            margin-bottom: 20px;
-            transition: color 0.3s ease;
+            font-size: 32px;
+            margin-bottom: 10px;
+            color: #007bff;
         }
 
         .profile-details p {
             font-size: 18px;
-            margin: 10px 0;
-            transition: color 0.3s ease;
+            margin: 5px 0;
         }
 
-            .profile-details p:hover {
-                color: #007bff;
-            }
-
     .status-form {
-        margin-top: 20px;
         text-align: center;
-        width: 100%;
+        margin-top: 20px;
+    }
+
+    .status-select-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .form-control {
-        width: 100%;
+        width: 60%;
         padding: 10px;
-        margin-bottom: 10px;
+        margin-right: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
+        transition: border-color 0.3s ease;
     }
+
+        .form-control:focus {
+            border-color: #007bff;
+        }
 
     .btn {
-        display: inline-block;
-        font-weight: 400;
-        color: #fff;
-        text-align: center;
-        vertical-align: middle;
-        user-select: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
         background-color: #007bff;
-        border: 1px solid transparent;
-        padding: 0.375rem 0.75rem;
-        font-size: 1rem;
-        line-height: 1.5;
-        border-radius: 0.25rem;
-        transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        color: #fff;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
     }
 
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #004085;
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+    .user-badges {
+        margin-top: 40px;
     }
 
-    .badges-list {
-        list-style-type: none;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        padding: 0;
+        .user-badges h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+    .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 20px;
     }
 
     .badge-item {
-        margin: 10px;
         text-align: center;
+        background: #f7f7f9;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
+        .badge-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
     .badge-image {
-        width: 50px;
-        height: 50px;
-        border-radius: 25px;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+
+    .badge-item:hover .badge-image {
+        transform: rotate(360deg);
     }
 
     .badge-name {
         display: block;
+        font-size: 18px;
         font-weight: bold;
+        color: #007bff;
+        margin-bottom: 10px;
     }
 
     .badge-description {
         font-size: 14px;
+        color: #666;
     }
 </style>
 
@@ -172,12 +201,12 @@
         // Profil fotoğrafı üzerine gelindiğinde büyüme efekti
         const profilePicture = document.querySelector('.profile-picture');
         profilePicture.addEventListener('mouseover', function () {
-            this.style.transform = 'scale(1.1)';
-            this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+            this.style.transform = 'scale(1.15)';
+            this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
         });
         profilePicture.addEventListener('mouseout', function () {
             this.style.transform = 'scale(1)';
-            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
         });
     });
 </script>
