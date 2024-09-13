@@ -1,6 +1,6 @@
 # Görev Takip Sistemi
 
-Görev Takip Sistemi, kullanıcıların görevlerini yönetmelerine ve takip etmelerine olanak sağlayan bir web uygulamasıdır. Bu proje, C# ve ASP.NET Core kullanılarak geliştirilmiştir ve görevlerin atamasını, ilerlemesini, ve durumlarını kolayca takip etmeyi sağlar.
+Görev Takip Sistemi, kullanıcıların görevlerini yönetmelerine ve takip etmelerine olanak sağlayan bir web uygulamasıdır. Bu proje, C# ve ASP.NET Core kullanılarak geliştirilmiştir ve görevlerin atamasını, ilerlemesini, ve durumlarını kolayca takip etmeyi sağlar. (deneme cengo)
 
 ## İçindekiler
 
