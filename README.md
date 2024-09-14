@@ -6,6 +6,7 @@ Görev Takip Sistemi, kullanıcıların görevlerini yönetmelerine ve takip etm
 
 - [Başlarken](#başlarken)
 - [Proje Yapısı](#proje-yapısı)
+- [UML Diyagramı](#uml-diyagramı)
 - [Kurulum](#kurulum)
 - [Kullanım](#kullanım)
 - [Katkıda Bulunanlar](#katkıda-bulunanlar)
@@ -30,6 +31,207 @@ Bu proje aşağıdaki ana bileşenleri içerir:
 - **Views**: Kullanıcı arayüzü bileşenleri için Razor sayfaları.
 - **DTOs**: Veri transfer nesneleri.
 - **Repositories**: Veritabanı işlemlerini yöneten sınıflar.
+
+## UML Diyagramı
+
+```plaintext
++--------------------------------------+
+|              Users                   |
++--------------------------------------+
+| - Id: int                            |
+| - FirstName: string                  |
+| - LastName: string                   |
+| - Email: string                      |
+| - DepartmentId: int                  |
+| - Gender: string                     |
+| - PhoneNumber: string                |
+| - WorkingHours: string               |
+| - ProfilePicture: string             |
+| - CompletedTasksCount: int           |
+| - Status: string                     |
++--------------------------------------+
+| * TaskProcesses                      |
+| * ToDoLists                          |
+| * TaskReports                        |
+| * Notifications                      |
+| * UserBadges                         |
++--------------------------------------+
+```
+#### Metotlar:
+- **Login()**: Kullanıcının giriş yapmasını sağlar.
+- **AssignTask(Task task)**: Kullanıcıya görev atar.
+
+#### İlişkiler:
+- 1-N ilişkisi: Kullanıcı birden fazla göreve sahip olabilir → **Tasks**.
+- 1-N ilişkisi: Kullanıcı, birçok rapor oluşturabilir → **TaskReports**.
+
+```plaintext
++--------------------------------------+
+|              Tasks                   |
++--------------------------------------+
+| - Id: int                            |
+| - Title: string                      |
+| - Description: string                |
+| - DueDate: DateTime                  |
+| - Status: string                     |
+| - AssignedToUserId: int              |
+| - AssignedByUserId: int              |
+| - AssignedToDepartmentId: int        |
+| - Priority: string                   |
++--------------------------------------+
+| * TaskReports                        |
+| * TaskProcesses                      |
++--------------------------------------+
+```
+#### Metotlar:
+- **UpdateStatus(Status newStatus)**: Görevin durumunu günceller.
+- **AddProcess(TaskProcess process)**: Göreve yeni süreç ekler.
+- **GenerateReport()**: Görev hakkında rapor oluşturur.
+#### İlişkiler:
+- 1-N ilişkisi: Görev birden fazla süreç içerebilir → **TaskProcesses**.
+- 1-N ilişkisi: Görev birden fazla raporla ilişkili olabilir → **TaskReports**.
+
+```planintext
++--------------------------------------+
+|            TaskReports               |
++--------------------------------------+
+| - Id: int                            |
+| - TaskId: int                        |
+| - Report: string                     |
+| - CreatedByUserId: int               |
+| - CreatedAt: DateTime                |
+| - UpdatedAt: DateTime                |
++--------------------------------------+
+```
+#### İlişkiler:
+- 1-N ilişkisi: Her görev birden fazla rapora sahip olabilir → **Tasks**.
+- 1-N ilişkisi: Raporlar kullanıcılar tarafından oluşturulur → **Users**.
+
+
+```plaintext
++--------------------------------------+
+|           TaskProcesses              |
++--------------------------------------+
+| - Id: int                            |
+| - TaskId: int                        |
+| - ProcessDescription: string         |
+| - CreatedAt: DateTime                |
++--------------------------------------+
+```
+#### Metotlar:
+- **AddProcess(Task task)**: Göreve yeni süreç ekler.
+#### İlişkiler:
+- 1-N ilişkisi: Bir görev, birden fazla süreç aşamasına sahip olabilir → **Tasks**.
+
+
+```plaintext
++--------------------------------------+
+|           Notifications              |
++--------------------------------------+
+| - Id: int                            |
+| - Message: string                    |
+| - IsRead: bool                       |
+| - CreatedAt: DateTime                |
+| - UserId: int                        |
++--------------------------------------+
+```
+#### İlişkiler:
+- N-1 ilişkisi: Her kullanıcıya birden fazla bildirim gönderilebilir → **Users**.
+
+```plaintext
++--------------------------------------+
+|           UserBadges                 |
++--------------------------------------+
+| - UserBadgeId: int                   |
+| - UserId: int                        |
+| - BadgeId: int                       |
+| - EarnedDate: DateTime               |
++--------------------------------------+
+```
+#### İlişkiler:
+- N-1 ilişkisi: Kullanıcı birçok rozete sahip olabilir → **Badges**.
+
+```plaintext
++--------------------------------------+
+|           Badges                     |
++--------------------------------------+
+| - BadgeId: int                       |
+| - Name: string                       |
+| - Description: string                |
+| - ImageUrl: string                   |
+| - TaskCompletionCount: int           |
+| - IsSpecialBadge: bool               |
+| - TaskCompletionThreshold: int       |
++--------------------------------------+
+```
+#### İlişkiler:
+- N-1 ilişkisi: Bir rozet birçok kullanıcıya ait olabilir → **UserBadges**.
+
+```plaintext
++--------------------------------------+
+|           Informations               |
++--------------------------------------+
+| - Id: int                            |
+| - Title: string                      |
+| - Content: string                    |
+| - CreatedAt: DateTime                |
+| - CreatedByUserId: int               |
++--------------------------------------+
+```
+#### İlişkiler:
+- N-1 ilişkisi: Bir kullanıcı birden fazla bilgilendirme yapabilir → **Users**.
+```plaintext
++--------------------------------------+
+|           Messages                   |
++--------------------------------------+
+| - Content: string                    |
+| - Timestamp: DateTime                |
+| - IsRead: bool                       |
+| - SenderId: int                      |
+| - ReceiverId: int                    |
++--------------------------------------+
+```
+#### İlişkiler:
+- 1-N ilişkisi: Kullanıcılar birbirine mesaj gönderebilir → **Users**.
+```plaintext
++--------------------------------------+
+|           Departments                |
++--------------------------------------+
+| - Id: int                            |
+| - Name: string                       |
++--------------------------------------+
+```
+#### Metotlar:
+- **GetDepartmentUsers()**: Departmana ait kullanıcıları döner.
+
+#### İlişkiler:
+- N-1 ilişkisi: Bir departman birden fazla kullanıcıya sahip olabilir → **Users**.
+
+```plaintext
++--------------------------------------+
+|           UserToDoLists              |
++--------------------------------------+
+| - Id: int                            |
+| - UserId: int                        |
+| - Task: string                       |
+| - IsCompleted: bool                  |
+| - CreatedAt: DateTime                |
++--------------------------------------+
+```
+#### İlişkiler:
+- N-1 ilişkisi: Her kullanıcı kendi yapılacaklar listesine sahip olabilir.
+
+
+## UML İlişkileri
+
+- **User - Task**: Bir kullanıcı birçok görev alabilir (1-N).
+- **Task - TaskProcess**: Bir görev birçok süreç aşamasından geçebilir (1-N).
+- **Task - TaskReport**: Bir görev birden fazla rapora sahip olabilir (1-N).
+- **User - TaskReport**: Kullanıcılar görevler hakkında rapor oluşturabilir (1-N).
+- **User - Department**: Kullanıcılar bir departmana ait olabilir (N-1).
+- **User - Notification**: Kullanıcılara birden fazla bildirim gönderilebilir (1-N).
+- **User - Badge**: Kullanıcılar rozet kazanabilir ve bu rozetler kaydedilebilir (1-N).
+- **User - Information**: Kullanıcılar bilgilendirme yapabilir (N-1).
 
 ## Örnek Sınıflar
 
