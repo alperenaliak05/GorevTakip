@@ -1,12 +1,12 @@
 ﻿@model Models.Information
 
 @{
-    ViewData["Title"] = Model?.Id == 0 ? "Yeni Bilgilendirme Ekle" : "Bilgilendirmeyi Düzenle";
+    ViewData["Title"] = "Bilgilendirmeyi Düzenle";
 }
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-action="@(Model?.Id == 0 ? "CreateInformation" : "EditInformation")" method="post">
+<form asp-action="EditInformation" method="post">
     <div class="form-group">
         <label asp-for="Title" class="control-label"></label>
         <input asp-for="Title" class="form-control" />
@@ -25,5 +25,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-
-

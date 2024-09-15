@@ -9,58 +9,85 @@ namespace TaskApp_Web.Controllers
     public class InformationController : Controller
     {
         private readonly IInformationRepository _informationRepository;
+        private readonly IUserRepository _userRepository;
 
-        public InformationController(IInformationRepository informationRepository)
+        public InformationController(IInformationRepository informationRepository, IUserRepository userRepository)
         {
             _informationRepository = informationRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<IActionResult> Index()
         {
             var informations = await _informationRepository.GetAllInformationsAsync();
+
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            ViewBag.UserDepartment = currentUser?.Department?.Name ?? "Bilinmiyor";  
+
             return View(informations);
         }
 
         [Authorize]
-        public IActionResult CreateInformation()
+        public async Task<IActionResult> CreateInformation()
         {
-            var userDepartment = User.FindFirst("Department")?.Value;
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            var userDepartment = currentUser?.Department?.Name;
+
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized(); 
+                return Forbid();
             }
 
-            return View();
+            var model = new Information();
+            return View(model);
         }
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateInformation(Information model)
         {
-            var userDepartment = User.FindFirst("Department")?.Value;
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            var userDepartment = currentUser?.Department?.Name;
+
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized();
+                return Forbid();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)  
             {
                 model.CreatedAt = DateTime.Now;
-                model.CreatedByUserId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value);
-                await _informationRepository.AddInformationAsync(model);
-                return RedirectToAction("Index");
+                model.CreatedByUserId = currentUser.Id; 
+
+                bool result = await _informationRepository.AddInformationAsync(model);
+                if (result)
+                {
+                    TempData["SuccessMessage"] = "Bilgilendirme başarıyla kaydedildi!";
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Bilgi kaydedilirken bir hata oluştu.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("", "Girdiğiniz bilgiler geçerli değil.");
             }
 
-            return View(model);
+            return View(model);  
         }
 
         [Authorize]
         public async Task<IActionResult> EditInformation(int id)
         {
-            var userDepartment = User.FindFirst("Department")?.Value;
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            var userDepartment = currentUser?.Department?.Name;
+
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             var information = await _informationRepository.GetInformationByIdAsync(id);
@@ -74,17 +101,21 @@ namespace TaskApp_Web.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditInformation(Information model)
         {
-            var userDepartment = User.FindFirst("Department")?.Value;
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            var userDepartment = currentUser?.Department?.Name;
+
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized();
+                return Forbid();
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
             {
                 await _informationRepository.UpdateInformationAsync(model);
+                TempData["SuccessMessage"] = "Bilgilendirme başarıyla güncellendi!";
                 return RedirectToAction("Index");
             }
 
@@ -93,15 +124,19 @@ namespace TaskApp_Web.Controllers
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteInformation(int id)
         {
-            var userDepartment = User.FindFirst("Department")?.Value;
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+            var userDepartment = currentUser?.Department?.Name;
+
             if (userDepartment != "İnsan Kaynakları Bilgilendirme")
             {
-                return Unauthorized();
+                return Forbid();
             }
 
             await _informationRepository.DeleteInformationAsync(id);
+            TempData["SuccessMessage"] = "Bilgilendirme başarıyla silindi!";
             return RedirectToAction("Index");
         }
     }

@@ -1,27 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Models
+namespace Models;
+public class Information
 {
-    public class Information
-    {
-        [Key]
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        [Required]
-        [StringLength(200)]
-        public string Title { get; set; }
+    [Display(Name = "Başlık")]
+    [Required(ErrorMessage = "Başlık alanı zorunludur.")]
+    public string Title { get; set; }
 
-        [Required]
-        public string Content { get; set; }
+    [Display(Name = "İçerik")]
+    [Required(ErrorMessage = "İçerik alanı zorunludur.")]
+    public string Content { get; set; }
 
-        [Required]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    [Display(Name = "Oluşturulma Tarihi")]
+    public DateTime CreatedAt { get; set; }
 
-        [Required]
-        public int CreatedByUserId { get; set; }
+    public Users CreatedByUser { get; set; }   
 
-        [ForeignKey("CreatedByUserId")]
-        public Users CreatedByUser { get; set; }
-    }
+    public int CreatedByUserId { get; set; }
 }

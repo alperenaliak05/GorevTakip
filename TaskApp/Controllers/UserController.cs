@@ -97,6 +97,13 @@ namespace Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateUser([FromBody] UserCreatedDTO userCreatedDTO)
         {
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+
+            if (currentUser.Department.Name != "İnsan Kaynakları Uzmanı")
+            {
+                return Forbid("Bu işlemi sadece İnsan Kaynakları Uzmanı gerçekleştirebilir.");
+            }
+
             var user = new Users
             {
                 FirstName = userCreatedDTO.FirstName,
@@ -122,6 +129,7 @@ namespace Controllers
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, userDto);
         }
+
 
         [HttpPut("{id:int}", Name = "UpdateUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

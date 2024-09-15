@@ -86,7 +86,7 @@ namespace TaskApp_Web.Controllers
                     DepartmentName = user.Department?.Name,
                     PhoneNumber = user.PhoneNumber,
                     WorkingHours = user.WorkingHours,
-                    ProfilePicture = user.ProfilePicture ,
+                    ProfilePicture = user.ProfilePicture,
                     Status = user.Status
                 };
 
@@ -176,7 +176,7 @@ namespace TaskApp_Web.Controllers
                     PhoneNumber = model.PhoneNumber,
                     WorkingHours = model.WorkingHours,
                     Gender = model.Gender,
-                    ProfilePicture = profilePicturePath 
+                    ProfilePicture = profilePicturePath
                 };
 
                 bool isAdded = await _userRepository.AddUserAsync(user);
@@ -207,7 +207,7 @@ namespace TaskApp_Web.Controllers
                 AvailableBadges = availableBadges
             };
 
-            return View("Badges", model); 
+            return View("Badges", model);
         }
 
         [HttpPost]
@@ -225,6 +225,26 @@ namespace TaskApp_Web.Controllers
             return RedirectToAction("UserProfile");
         }
 
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
+
+            if (currentUser == null || currentUser.Department?.Name != "İnsan Kaynakları Uzmanı")
+            {
+                return Forbid(); 
+            }
+
+            var userToDelete = await _userRepository.GetUserByIdAsync(id);
+            if (userToDelete == null)
+            {
+                return NotFound(); 
+            }
+
+            await _userRepository.DeleteUserAsync(id);
+            return RedirectToAction("AllUsers"); 
+        }
 
     }
 }
