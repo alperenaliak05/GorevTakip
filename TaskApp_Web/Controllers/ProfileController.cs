@@ -36,7 +36,7 @@ namespace TaskApp_Web.Controllers
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var userToDoLists = await _userToDoListRepository.GetToDoListsByUserIdAsync(userId);
-            return View("UserToDoList", userToDoLists); 
+            return View("UserToDoList", userToDoLists);
         }
 
         [HttpPost]
@@ -50,7 +50,7 @@ namespace TaskApp_Web.Controllers
 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var userToDoLists = await _userToDoListRepository.GetToDoListsByUserIdAsync(userId);
-            return View("UserToDoList", userToDoLists); 
+            return View("UserToDoList", userToDoLists);
         }
 
         [HttpPost]

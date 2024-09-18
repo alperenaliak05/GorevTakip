@@ -15,7 +15,7 @@ public class Information
     [Display(Name = "Oluşturulma Tarihi")]
     public DateTime CreatedAt { get; set; }
 
-    public Users CreatedByUser { get; set; }   
+    public Users CreatedByUser { get; set; }
 
     public int CreatedByUserId { get; set; }
 }

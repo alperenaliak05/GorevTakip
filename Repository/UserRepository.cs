@@ -86,16 +86,16 @@ namespace Repositories
         public async Task<Users> GetUserWithTasksAsync(int id)
         {
             return await _context.Users
-                .Include(u => u.Tasks)  
-                .Include(u => u.Department)  
+                .Include(u => u.Tasks)
+                .Include(u => u.Department)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IEnumerable<Users>> GetAllWithTasksAndDepartment()
         {
             return await _context.Users
-                .Include(u => u.Tasks)  
-                .Include(u => u.Department)  
+                .Include(u => u.Tasks)
+                .Include(u => u.Department)
                 .ToListAsync();
         }
         // Yeni eklenen metodlar

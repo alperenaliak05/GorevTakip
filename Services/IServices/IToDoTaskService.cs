@@ -22,7 +22,7 @@ namespace Services.IServices
         Task<IEnumerable<Users>> GetUsersByDepartmentIdAsync(int departmentId);
         Task<IEnumerable<TaskProcess>> GetTaskProcessesByTaskIdAsync(int taskId);
         Task<bool> AddTaskProcessAsync(TaskProcess taskProcess);
-        Task<bool> CompleteTaskAsync(int taskId); 
-        Task UpdateUserCompletedTasksCountAsync(int userId); 
+        Task<bool> CompleteTaskAsync(int taskId);
+        Task UpdateUserCompletedTasksCountAsync(int userId);
     }
 }

@@ -233,17 +233,17 @@ namespace TaskApp_Web.Controllers
 
             if (currentUser == null || currentUser.Department?.Name != "İnsan Kaynakları Uzmanı")
             {
-                return Forbid(); 
+                return Forbid();
             }
 
             var userToDelete = await _userRepository.GetUserByIdAsync(id);
             if (userToDelete == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             await _userRepository.DeleteUserAsync(id);
-            return RedirectToAction("AllUsers"); 
+            return RedirectToAction("AllUsers");
         }
 
     }

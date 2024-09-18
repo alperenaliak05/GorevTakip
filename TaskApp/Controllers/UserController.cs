@@ -27,7 +27,7 @@ namespace Controllers
 
             var userDtos = users.Select(user => new UserDTO
             {
-                Id = ((Users)user).Id,  
+                Id = ((Users)user).Id,
                 FirstName = ((Users)user).FirstName,
                 LastName = ((Users)user).LastName,
                 Email = ((Users)user).Email,

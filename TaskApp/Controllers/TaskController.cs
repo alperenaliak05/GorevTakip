@@ -18,7 +18,7 @@ public class TasksController : ControllerBase
     {
         var tasks = await _context.Tasks
             .Where(task => task.AssignedToUserId == userId)
-            .Include(task => task.AssignedByUser) 
+            .Include(task => task.AssignedByUser)
             .ToListAsync();
 
         return Ok(tasks);

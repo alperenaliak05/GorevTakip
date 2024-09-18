@@ -53,21 +53,39 @@
 <style>
     body {
         font-family: 'Lato', Arial, sans-serif;
-        background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+        background: linear-gradient(135deg, #eef2f3, #8e9eab);
         color: #333;
         padding: 40px;
         margin: 0;
     }
 
     .profile-container {
-        max-width: 800px;
+        max-width: 900px;
         margin: 0 auto;
         background-color: #fff;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        padding: 40px;
-        transition: all 0.3s ease;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        padding: 50px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
     }
+
+        .profile-container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: rgba(0, 123, 255, 0.15);
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-container:hover::before {
+            transform: scale(1.2);
+        }
 
     .profile-header {
         display: flex;
@@ -77,122 +95,145 @@
 
     .profile-picture {
         border-radius: 50%;
-        width: 150px;
-        height: 150px;
+        width: 160px;
+        height: 160px;
         background-size: cover;
         background-position: center;
-        margin-right: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-right: 40px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
+
+        .profile-picture:hover {
+            transform: rotate(360deg);
+        }
 
     .profile-details {
         flex-grow: 1;
+        color: #444;
     }
 
         .profile-details h2 {
-            font-size: 32px;
+            font-size: 36px;
             margin-bottom: 10px;
             color: #007bff;
+            position: relative;
         }
+
+            .profile-details h2::after {
+                content: '';
+                width: 60px;
+                height: 4px;
+                background: #007bff;
+                display: block;
+                margin-top: 10px;
+            }
 
         .profile-details p {
             font-size: 18px;
-            margin: 5px 0;
+            margin: 10px 0;
         }
 
     .status-form {
         text-align: center;
-        margin-top: 20px;
+        margin-top: 30px;
     }
 
     .status-select-container {
         display: flex;
         align-items: center;
         justify-content: center;
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(0, 123, 255, 0.05);
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15);
     }
 
     .form-control {
-        width: 60%;
-        padding: 10px;
-        margin-right: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        transition: border-color 0.3s ease;
+        width: 50%;
+        padding: 12px;
+        margin-right: 15px;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
         .form-control:focus {
-            border-color: #007bff;
+            border-color: #0056b3;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.25);
         }
 
     .btn {
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 12px 30px;
+        font-size: 18px;
         border: none;
-        border-radius: 4px;
+        border-radius: 8px;
         background-color: #007bff;
         color: #fff;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.3s ease;
+        transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     }
 
         .btn:hover {
             background-color: #0056b3;
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
         }
 
     .user-badges {
-        margin-top: 40px;
+        margin-top: 50px;
     }
 
         .user-badges h2 {
-            font-size: 28px;
+            font-size: 30px;
             margin-bottom: 20px;
             color: #333;
+            text-align: center;
         }
 
     .badges-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+        gap: 25px;
+        justify-items: center;
     }
 
     .badge-item {
         text-align: center;
-        background: #f7f7f9;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
         .badge-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
         }
 
     .badge-image {
-        width: 80px;
-        height: 80px;
+        width: 90px;
+        height: 90px;
         margin-bottom: 15px;
         border-radius: 50%;
-        transition: transform 0.3s ease;
+        transition: transform 0.4s ease;
     }
 
     .badge-item:hover .badge-image {
-        transform: rotate(360deg);
+        transform: rotateY(360deg);
     }
 
     .badge-name {
         display: block;
-        font-size: 18px;
+        font-size: 20px;
         font-weight: bold;
         color: #007bff;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
 
     .badge-description {
-        font-size: 14px;
+        font-size: 16px;
         color: #666;
     }
 </style>
@@ -201,12 +242,24 @@
     document.addEventListener('DOMContentLoaded', function () {
         const profilePicture = document.querySelector('.profile-picture');
         profilePicture.addEventListener('mouseover', function () {
-            this.style.transform = 'scale(1.15)';
-            this.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
+            this.style.transform = 'scale(1.2)';
+            this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.3)';
         });
         profilePicture.addEventListener('mouseout', function () {
             this.style.transform = 'scale(1)';
-            this.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+            this.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.2)';
+        });
+
+        const badgeItems = document.querySelectorAll('.badge-item');
+        badgeItems.forEach(function (badgeItem) {
+            badgeItem.addEventListener('mouseover', function () {
+                badgeItem.style.transform = 'translateY(-5px)';
+                badgeItem.style.boxShadow = '0 8px 25px rgba(0, 123, 255, 0.3)';
+            });
+            badgeItem.addEventListener('mouseout', function () {
+                badgeItem.style.transform = 'translateY(0)';
+                badgeItem.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            });
         });
     });
 </script>

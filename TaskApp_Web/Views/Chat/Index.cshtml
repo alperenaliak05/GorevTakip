@@ -12,15 +12,14 @@
                 <button class="btn btn-sm btn-light chat-btn-effect" data-bs-toggle="modal" data-bs-target="#userListModal">+</button>
             </div>
             <ul class="list-group list-group-flush" id="chatList">
+                <!-- Dinamik olarak SignalR ile doldurulacak -->
             </ul>
         </div>
 
         <div class="chat-window shadow-lg rounded-lg" id="chatWindow">
-            <div class="chat-window-header" id="chatWindowHeader">
-               
-            </div>
+            <div class="chat-window-header" id="chatWindowHeader">Sohbet Seçin</div>
             <div class="chat-messages p-3" id="chatMessages">
-          
+                <!-- Mesajlar buraya yüklenecek -->
             </div>
             <div class="chat-input">
                 <input type="text" id="messageInput" class="form-control rounded-pill" placeholder="Bir mesaj yaz..." aria-label="Bir mesaj yaz..." aria-describedby="button-send" onkeypress="checkEnter(event)">
@@ -29,6 +28,7 @@
         </div>
     </div>
 
+    <!-- Yeni Sohbet Modal -->
     <div class="modal fade" id="userListModal" tabindex="-1" aria-labelledby="userListModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -53,16 +53,16 @@
 
 <style>
     body {
-        background-color: #f8f9fa;
+        background-color: #f3f4f6;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .chat-container {
         display: flex;
-        height: calc(80vh - 56px);
+        height: calc(85vh - 56px);
         overflow: hidden;
         gap: 20px;
-        animation: fadeIn 0.7s ease-in-out;
+        animation: fadeIn 0.8s ease-in-out;
     }
 
     .chat-list {
@@ -71,10 +71,6 @@
         transition: all 0.3s ease;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         border-radius: 12px;
-    }
-
-    .chat-list:hover {
-        background-color: #f7f7f7;
     }
 
     .chat-list-header {
@@ -97,43 +93,49 @@
         display: flex;
         flex-direction: column;
         animation: slideIn 0.5s ease-in-out;
+        transition: all 0.3s ease;
     }
 
     .chat-window-header {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         color: #333;
         font-weight: bold;
         border-bottom: 2px solid #ddd;
         margin-bottom: 15px;
+        padding-bottom: 10px;
     }
 
     .chat-messages {
         flex: 1;
         overflow-y: auto;
         padding: 20px;
-        background-color: #dddddd;
+        background-color: #f1f1f1;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
 
     .sent, .received {
-        padding: 10px;
+        padding: 12px;
         border-radius: 12px;
         margin-bottom: 10px;
-        max-width: 60%;
+        max-width: 70%;
         word-wrap: break-word;
         font-size: 0.9rem;
         animation: messageSlide 0.5s ease-in-out;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
     }
 
     .sent {
         background-color: #dcf8c6;
         align-self: flex-end;
+        animation: sentMessage 0.5s ease-in-out;
     }
 
     .received {
         background-color: #ffffff;
         align-self: flex-start;
+        animation: receivedMessage 0.5s ease-in-out;
     }
 
     .chat-input {
@@ -164,15 +166,6 @@
         transform: scale(0.95);
     }
 
-    .date-separator {
-        text-align: center;
-        font-size: 0.85rem;
-        background-color: #e6e6e6;
-        padding: 5px;
-        margin: 10px 0;
-        border-radius: 50px;
-    }
-
     @@keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
@@ -192,12 +185,21 @@
         from { transform: translateY(30px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
+
+    @@keyframes sentMessage {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    @@keyframes receivedMessage {
+        from { opacity: 0; transform: scale(1.05); }
+        to { opacity: 1; transform: scale(1); }
+    }
 </style>
 
 @section Scripts {
     <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
     <script type="text/javascript">
-       
         let selectedUser = null;
         let senderId = null;
         let lastMessageDate = null;
@@ -239,7 +241,7 @@
             return "";
         }
 
-              function getUserIdFromToken(token) {
+        function getUserIdFromToken(token) {
             const base64Url = token.split('.')[1];
             const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
             const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {

@@ -22,7 +22,7 @@ namespace TaskApp_Web.Controllers
             var informations = await _informationRepository.GetAllInformationsAsync();
 
             var currentUser = await _userRepository.GetUserByEmailAsync(User.Identity.Name);
-            ViewBag.UserDepartment = currentUser?.Department?.Name ?? "Bilinmiyor";  
+            ViewBag.UserDepartment = currentUser?.Department?.Name ?? "Bilinmiyor";
 
             return View(informations);
         }
@@ -55,10 +55,10 @@ namespace TaskApp_Web.Controllers
                 return Forbid();
             }
 
-            if (ModelState.IsValid)  
+            if (ModelState.IsValid)
             {
                 model.CreatedAt = DateTime.Now;
-                model.CreatedByUserId = currentUser.Id; 
+                model.CreatedByUserId = currentUser.Id;
 
                 bool result = await _informationRepository.AddInformationAsync(model);
                 if (result)
@@ -76,7 +76,7 @@ namespace TaskApp_Web.Controllers
                 ModelState.AddModelError("", "Girdiğiniz bilgiler geçerli değil.");
             }
 
-            return View(model);  
+            return View(model);
         }
 
         [Authorize]
@@ -112,7 +112,7 @@ namespace TaskApp_Web.Controllers
                 return Forbid();
             }
 
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
             {
                 await _informationRepository.UpdateInformationAsync(model);
                 TempData["SuccessMessage"] = "Bilgilendirme başarıyla güncellendi!";

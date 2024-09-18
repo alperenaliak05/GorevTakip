@@ -1,14 +1,14 @@
 using Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Repositories;
 using Repositories.IReporsitory;
 using Services;
 using Services.IServices;
-using TaskApp_Web.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TaskApp_Web.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -78,8 +78,8 @@ namespace Repositories
         public async Task<IEnumerable<ToDoTasks>> GetTasksByStatusAsync(TaskStatus status)
         {
             return await _context.Tasks
-                .Include(t => t.AssignedToUser) 
-                .Include(t => t.AssignedByUser)  
+                .Include(t => t.AssignedToUser)
+                .Include(t => t.AssignedByUser)
                 .Where(t => t.Status == status)
                 .ToListAsync();
         }
@@ -95,7 +95,7 @@ namespace Repositories
                     Description = t.Description,
                     AssignedToUserName = t.AssignedToUser.FirstName + " " + t.AssignedToUser.LastName,
                     DueDate = t.DueDate,
-                    Status = t.Status  
+                    Status = t.Status
                 })
                 .ToListAsync();
         }

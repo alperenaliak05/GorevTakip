@@ -45,10 +45,10 @@ namespace TaskApp_Web.Controllers
                 return View("Login");
             }
 
-            int userId = response.UserId ?? 0;  
+            int userId = response.UserId ?? 0;
 
-            var userTasks = await _taskService.GetTasksByUserIdAsync(userId); 
-            int? latestTaskId = userTasks.OrderByDescending(t => t.DueDate).FirstOrDefault()?.Id; 
+            var userTasks = await _taskService.GetTasksByUserIdAsync(userId);
+            int? latestTaskId = userTasks.OrderByDescending(t => t.DueDate).FirstOrDefault()?.Id;
 
             string token = GenerateJwtToken(userId.ToString(), latestTaskId);
 
@@ -56,7 +56,7 @@ namespace TaskApp_Web.Controllers
             {
                 HttpOnly = true,
                 Expires = DateTime.UtcNow.AddMinutes(30),
-                Secure = true, 
+                Secure = true,
                 SameSite = SameSiteMode.Strict
             });
 
@@ -81,7 +81,7 @@ namespace TaskApp_Web.Controllers
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, userId),
+                new  Claim(ClaimTypes.NameIdentifier, userId),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
