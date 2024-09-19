@@ -10,31 +10,31 @@
     @Html.AntiForgeryToken()
 
     <div class="form-group">
-        <label for="Title">Başlık</label>
+        <label for="Title" class="form-label">Başlık</label>
         <input type="text" class="form-control" id="Title" asp-for="Title" required />
     </div>
 
     <div class="form-group">
-        <label for="Description">Açıklama</label>
+        <label for="Description" class="form-label">Açıklama</label>
         <textarea class="form-control" id="Description" asp-for="Description" required></textarea>
     </div>
 
     <div class="form-group">
-        <label for="AssignedToUserId">Görevi Atanan Kullanıcı</label>
+        <label for="AssignedToUserId" class="form-label">Görevi Atanan Kullanıcı</label>
         <select class="form-control" id="AssignedToUserId" asp-for="AssignedToUserId" asp-items="@(new SelectList(Model.Users, "Id", "FullName"))">
             <option value="">Lütfen bir kullanıcı seçin</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="AssignedToDepartmentId">Görevi Atanan Departman</label>
+        <label for="AssignedToDepartmentId" class="form-label">Görevi Atanan Departman</label>
         <select class="form-control" id="AssignedToDepartmentId" asp-for="AssignedToDepartmentId" asp-items="@(new SelectList(Model.Departments, "Id", "Name"))">
             <option value="">Lütfen bir departman seçin</option>
         </select>
     </div>
 
     <div class="form-group">
-        <label for="Priority">Öncelik</label>
+        <label for="Priority" class="form-label">Öncelik</label>
         <select class="form-control" id="Priority" asp-for="Priority">
             <option value="1">Düşük</option>
             <option value="2">Orta</option>
@@ -43,7 +43,7 @@
     </div>
 
     <div class="form-group">
-        <label for="DueDate">Bitiş Tarihi</label>
+        <label for="DueDate" class="form-label">Bitiş Tarihi</label>
         <input type="date" class="form-control" id="DueDate" asp-for="DueDate" value="@DateTime.Now.ToString("yyyy-MM-dd")" required />
     </div>
 
@@ -51,7 +51,6 @@
 </form>
 
 <script>
-    // Kullanıcı veya departman seçildiğinde diğeri devre dışı kalır
     document.getElementById('AssignedToUserId').addEventListener('change', function () {
         if (this.value) {
             document.getElementById('AssignedToDepartmentId').selectedIndex = 0;
@@ -70,7 +69,6 @@
         }
     });
 
-    // Form alanlarına focus ve blur animasyonları ekle
     document.querySelectorAll('.form-control').forEach(element => {
         element.addEventListener('focus', function () {
             this.parentNode.classList.add('focused');
@@ -81,8 +79,6 @@
             }
         });
     });
-
-    // Form gönder butonuna tıklanınca animasyon ekle
     document.querySelector('.submit-btn').addEventListener('click', function () {
         this.classList.add('button-animate');
         setTimeout(() => this.classList.remove('button-animate'), 300);
@@ -114,10 +110,10 @@
         transition: transform 0.3s ease;
     }
 
-        .task-form:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
+    .task-form:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
 
     .form-group {
         margin-bottom: 20px;
@@ -125,17 +121,23 @@
         transition: all 0.3s ease;
     }
 
-        .form-group.focused label {
-            color: #007bff;
-            transform: translateY(-30px) scale(0.8);
-        }
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        transition: all 0.3s ease;
+        position: absolute;
+        top: 15px;
+        left: 10px;
+        background-color: white;
+        padding: 0 5px;
+        color: #495057;
+    }
 
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-            transition: all 0.3s ease;
-        }
+    .focused .form-label {
+        color: #007bff;
+        transform: translateY(-30px) scale(0.85);
+    }
 
     .form-control {
         display: block;
@@ -149,13 +151,14 @@
         border: 1px solid #ced4da;
         border-radius: 5px;
         transition: all 0.3s ease;
+        padding-left: 15px;
     }
 
-        .form-control:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
-        }
+    .form-control:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+    }
 
     .submit-btn {
         width: 100%;
@@ -169,9 +172,9 @@
         transition: all 0.3s ease;
     }
 
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
+    .submit-btn:hover {
+        background-color: #0056b3;
+    }
 
     .button-animate {
         animation: button-pop 0.3s ease;
@@ -181,11 +184,9 @@
         0% {
             transform: scale(1);
         }
-
         50% {
             transform: scale(1.1);
         }
-
         100% {
             transform: scale(1);
         }
