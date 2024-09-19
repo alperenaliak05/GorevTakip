@@ -12,17 +12,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: 20px;
-        margin-bottom: 30px;
-        background-color: rgba(52, 58, 64, 0.8); 
-        border-bottom: 2px solid #222;
+        margin-top: 20px; 
     }
 
     .digital-clock {
         font-size: 3em;
-        color: #fff;
         font-weight: bold;
-        animation: pulse 2s infinite;
+        font-family: 'Courier New', Courier, monospace; 
+        letter-spacing: 0.1em; 
     }
 
     .centered-content {
@@ -30,58 +27,38 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        height: 100vh;
         padding-top: 60px;
         text-align: center;
     }
 
     .welcome-message {
-        font-size: 10em;
-        color: #000; 
+        font-size: 6em;
+        color: #000;
         font-weight: bold;
         margin-top: 20px;
         position: relative;
-        text-shadow: 2px 2px 4px #888; 
+        text-shadow: 2px 2px 4px #888;
     }
 
     .centered-content p {
-        font-size: 1.8em;
-        color: #000; 
+        font-size: 1.5em;
+        color: #000;
         margin: 10px 0;
         transition: transform 0.3s ease, font-size 0.3s ease;
     }
 
         .centered-content p:hover {
-            transform: scale(1.2);
-            font-size: 2em; 
+            transform: scale(1.05);
         }
 
     #main-title {
-        font-size: 4em;
-        color: #000; 
+        font-size: 3.5em;
+        color: #000;
         text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.5);
         font-weight: 900;
         margin-bottom: 20px;
     }
-
-    @@keyframes pulse {
-        0% {
-            transform: scale(1);
-        }
-
-        50% {
-            transform: scale(1.1);
-        }
-
-        100% {
-            transform: scale(1);
-        }
-    }
 </style>
-
-<div class="digital-clock-container" id="clock-container">
-    <div id="clock" class="digital-clock"></div>
-</div>
 
 <div class="centered-content" id="content">
     <h1 id="main-title">GÖREV YÖNETİM SİSTEMİ</h1>
@@ -90,6 +67,10 @@
         <p>Bu uygulamada görevlerinizi görebilir, görev durumunu güncelleyebilirsiniz.</p>
         <p>Verilen görevi zamanında yapmaya özen gösterelim. İyi çalışmalar!</p>
     </div>
+</div>
+
+<div class="digital-clock-container" id="clock-container">
+    <div id="clock" class="digital-clock"></div>
 </div>
 
 <script>
